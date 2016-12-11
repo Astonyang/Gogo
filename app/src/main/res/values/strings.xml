@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Gogo</string>
+
+    <string name="favo">常购</string>
+    <string name="category">分类</string>
+    <string name="shop_cart">购物车</string>
+    <string name="myself">我的</string>
+
+    <string name="not_login">未登录</string>
+    <string name="login">登录/注册</string>
+    <string name="go_login">登录</string>
+    <string name="register">用户注册</string>
+    <string name="phone">手机:</string>
+    <string name="password">密码:</string>
+    <string name="input_phone">请输入您的手机号</string>
+    <string name="input_password">请输入密码</string>
+    <string name="fast_checkin">快速注册</string>
+    <string name="forget_password">找回密码</string>
+    <string name="confirm">确认</string>
+    <string name="input_correct_pass_phone">请输入手机号和密码</string>
+    <string name="loging_pending">登陆中...</string>
+</resources>

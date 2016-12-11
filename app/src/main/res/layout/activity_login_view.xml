@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/login_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/login_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <View
+        android:id="@+id/div1"
+        android:layout_marginTop="10dp"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/login_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+    <LinearLayout
+        android:id="@+id/phone"
+        android:background="#fff"
+        android:layout_below="@id/div1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/phone_tv"
+            android:text="@string/phone"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/id_edit_phone"
+            style="@style/MyEditviewApperance"
+            android:inputType="number"
+            android:hint="@string/input_phone"
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_phone"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div2"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/pwd"
+        android:background="#fff"
+        android:layout_below="@id/div2"
+        android:layout_alignLeft="@id/phone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:gravity="center_vertical"
+            android:text="@string/password"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <EditText
+            android:id="@+id/id_edit_password"
+            style="@style/MyEditviewApperance"
+            android:inputType="textPassword"
+            android:hint="@string/input_password"
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_pass"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div3"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/pwd"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <FrameLayout
+        android:id="@+id/util"
+        android:layout_below="@id/div3"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/pwd"
+        android:layout_marginRight="16dp">
+        <TextView
+            android:id="@+id/fast_register"
+            android:gravity="center"
+            android:layout_marginLeft="16dp"
+            android:text="@string/fast_checkin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/forget_pass"
+            android:gravity="center"
+            android:text="@string/forget_password"
+            android:layout_gravity="center_vertical|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/go_login"
+        android:layout_below="@id/util"
+        android:layout_marginLeft="16dp"
+        android:layout_alignLeft="@id/util"
+        android:layout_alignRight="@id/util"
+        android:layout_marginTop="12dp"
+        android:text="@string/go_login"
+        android:background="@drawable/login_btn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+</RelativeLayout>

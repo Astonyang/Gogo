@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.xxx.gogo.view.NotLoginView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_bg">
+
+    <LinearLayout
+        android:id="@+id/login_btn"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/unlogin_default"
+            android:layout_marginBottom="38dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="@string/not_login"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:textSize="16sp"
+            android:textColor="@color/unlogin_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="@string/login"
+            android:background="@drawable/login_bg"
+            android:layout_gravity="center"
+            android:textSize="17sp"
+            android:textColor="@color/colorPrimary"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</com.xxx.gogo.view.NotLoginView>
