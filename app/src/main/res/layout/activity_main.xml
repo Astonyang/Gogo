@@ -37,7 +37,7 @@
         app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabSelectedTextColor="@color/tabTextColor"
         app:tabTextColor="#000">
     </android.support.design.widget.TabLayout>
 

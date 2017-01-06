@@ -1,4 +1,4 @@
-package com.xxx.gogo.view;
+package com.xxx.gogo.view.user;
 
 import android.content.Context;
 import android.util.AttributeSet;

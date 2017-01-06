@@ -6,4 +6,5 @@
     <dimen name="toolbar_text_size">18sp</dimen>
     <dimen name="toolbar_img_size">28dp</dimen>
     <dimen name="cancel_btn_size">18dp</dimen>
+
 </resources>

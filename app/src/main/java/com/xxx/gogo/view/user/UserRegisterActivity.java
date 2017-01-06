@@ -1,4 +1,4 @@
-package com.xxx.gogo;
+package com.xxx.gogo.view.user;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.xxx.gogo.R;
 
 public class UserRegisterActivity extends AppCompatActivity implements View.OnClickListener{
     @Override

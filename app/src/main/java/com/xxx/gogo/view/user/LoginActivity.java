@@ -1,4 +1,4 @@
-package com.xxx.gogo;
+package com.xxx.gogo.view.user;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.xxx.gogo.R;
+import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.ToastManager;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
@@ -68,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void initLoadingDialog(){
         mLoadingDialog = new Dialog(this, R.style.CustomDialog);
-        mLoadingDialog.setContentView(R.layout.dialog_login_loading);
+        mLoadingDialog.setContentView(R.layout.loading);
         mLoadingDialog.setCanceledOnTouchOutside(false);
     }
 
@@ -91,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String user = mPhoneEditView.getText().toString();
         String pass = mPasswordEdit.getText().toString();
         if(TextUtils.isEmpty(user) || TextUtils.isEmpty(pass)){
-            ToastManager.showToast(this, getResources().getString(R.string.input_correct_pass_phone));
+            ToastManager.showToast(this, getResources().getString(R.string.input_correct_pass_phone_hit));
         }else {
             mLoadingDialog.show();
             Handler handler = new Handler(Looper.getMainLooper());
@@ -99,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void run() {
                     mLoadingDialog.dismiss();
+                    setResult(RESULT_OK);
                     finish();
                 }
             }, 1000);

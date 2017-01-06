@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.xxx.gogo.view.category.CategoryFragment;
+import com.xxx.gogo.view.provider.ProviderFragment;
 import com.xxx.gogo.view.offen_buy.OffenBuyFragment;
 import com.xxx.gogo.view.me.MySelfFragment;
 import com.xxx.gogo.view.shopcart.ShopCartFragment;
@@ -21,7 +21,7 @@ class MainFragmentAdapter extends FragmentPagerAdapter {
 
         mTitles = new String[]{
                 context.getResources().getString(R.string.favo),
-                context.getResources().getString(R.string.category),
+                context.getResources().getString(R.string.provider),
                 context.getResources().getString(R.string.shop_cart),
                 context.getResources().getString(R.string.myself)
         };
@@ -40,7 +40,7 @@ class MainFragmentAdapter extends FragmentPagerAdapter {
         };
         mFragments = new Fragment[mTitles.length];
         mFragments[0] = new OffenBuyFragment();
-        mFragments[1] = new CategoryFragment();
+        mFragments[1] = new ProviderFragment();
         mFragments[2] = new ShopCartFragment();
         mFragments[3] = new MySelfFragment();
     }

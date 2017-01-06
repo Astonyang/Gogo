@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,4 +13,240 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-</LinearLayout>
+    <View
+        android:id="@+id/div1"
+        android:layout_marginTop="10dp"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/register_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+    <LinearLayout
+        android:id="@+id/phone"
+        android:background="#fff"
+        android:layout_below="@id/div1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/phone_tv"
+            android:text="@string/phone"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/id_edit_phone"
+            style="@style/MyEditviewApperance"
+            android:inputType="number"
+            android:hint="@string/input_phone"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_phone"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/get_check_num"
+            android:text="@string/get_check_num"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/login_btn_bg"
+            android:layout_marginRight="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div2"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+    <LinearLayout
+        android:id="@+id/check_num"
+        android:background="#fff"
+        android:layout_below="@id/div2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/check_num_tv"
+            android:text="@string/check_num"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/check_num_edit"
+            style="@style/MyEditviewApperance"
+            android:inputType="number"
+            android:hint="@string/check_num_hit"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_check_num"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div3"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/check_num"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/pass"
+        android:background="#fff"
+        android:layout_below="@id/div3"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/pass_tv"
+            android:text="@string/password"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/pass_edit"
+            style="@style/MyEditviewApperance"
+            android:inputType="numberPassword"
+            android:hint="@string/register_pass_hint"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_pass"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div4"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/pass"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/confirm_pass"
+        android:background="#fff"
+        android:layout_below="@id/div4"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/confirm_pass_tv"
+            android:text="@string/confirm_pass"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/confirm_pass_edit"
+            style="@style/MyEditviewApperance"
+            android:inputType="numberPassword"
+            android:hint="@string/confirm_register_pass_hint"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_confirm_pass"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div5"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/confirm_pass"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/invite"
+        android:background="#fff"
+        android:layout_below="@id/div5"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/invite_num"
+            android:text="@string/invite_num"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/invite_edit"
+            style="@style/MyEditviewApperance"
+            android:inputType="number"
+            android:hint="@string/invite_num_hint"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/cancel_invite"
+            android:visibility="gone"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_cancel_black_24dp"
+            android:layout_width="@dimen/cancel_btn_size"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div6"
+        android:background="@color/unlogin_text_color"
+        android:layout_below="@id/invite"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <Button
+        android:id="@+id/go_register"
+        android:layout_below="@id/div6"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_alignLeft="@id/phone"
+        android:layout_alignRight="@id/phone"
+        android:layout_marginTop="18dp"
+        android:text="@string/register"
+        android:background="@drawable/login_btn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+</RelativeLayout>

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.xxx.gogo.LoginActivity;
+import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.offen_buy.OffenBuyModel;
 

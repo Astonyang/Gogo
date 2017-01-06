@@ -5,10 +5,20 @@
 
     <color name="colorPrimary">#FF6100</color>
     <color name="colorPrimaryDark">#BF360C</color>
-    <color name="colorAccent">#FF4081</color>
 
+    <color name="colorAccent">#FF4081</color>
+    <color name="tabTextColor">#FF6100</color>
+
+    <color name="background_color">#e0e0e0</color>
     <color name="unlogin_text_color">#C0C0C0</color>
     <color name="login_bg">#F5F5F5</color>
     <color name="textColor">#fff</color>
     <color name="transparent">#000000</color>
+
+    <color name="me_item_bg">#F5F5F5</color>
+    <color name="div">#19000000</color>
+    <color name="pressed_color">#e0e0e0</color>
+    <color name="goods_item_bg">#ffffff</color>
+
+    <color name="search_provider_toolbar">@color/colorPrimary</color>
 </resources>
