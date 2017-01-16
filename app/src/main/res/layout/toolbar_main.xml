@@ -22,15 +22,22 @@
             android:src="@drawable/ic_search_white_36dp"
             android:layout_marginRight="16dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="@dimen/toolbar_img_size"
-            android:layout_height="@dimen/toolbar_img_size" />
+            android:layout_width="@dimen/main_toolbar_img_size"
+            android:layout_height="@dimen/main_toolbar_img_size" />
 
-        <ImageView
-            android:id="@+id/add"
-            android:src="@drawable/ic_add_white_36dp"
-            android:layout_marginRight="12dp"
-            android:layout_gravity="center_vertical"
-            android:layout_width="@dimen/toolbar_img_size"
-            android:layout_height="@dimen/toolbar_img_size" />
+        <FrameLayout
+            android:id="@+id/add_container"
+            android:layout_width="52dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/add"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_add_white_36dp"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/main_toolbar_img_size"
+                android:layout_height="@dimen/main_toolbar_img_size" />
+
+        </FrameLayout>
     </LinearLayout>
 </FrameLayout>

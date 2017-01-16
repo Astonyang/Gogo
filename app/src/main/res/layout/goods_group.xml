@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/name"
-        android:textSize="18sp"
+        android:textSize="@dimen/list_group_item_text_size"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:gravity="center"

@@ -8,7 +8,10 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.xxx.gogo.R;
+import com.xxx.gogo.model.goods.GoodsCategoryModel;
+import com.xxx.gogo.model.goods.GoodsItemInfo;
 
 public class GoodsSecondaryCategoryAdapter extends BaseExpandableListAdapter {
 
@@ -86,18 +89,30 @@ public class GoodsSecondaryCategoryAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        ChildViewHolder childViewHolder;
+        GoodsViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.shop_cart_goods_item,
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_item,
                     parent, false);
-            childViewHolder = new ChildViewHolder();
-            childViewHolder.tvTitle = (TextView) convertView.findViewById(
-                    R.id.name);
-            convertView.setTag(childViewHolder);
+            viewHolder = new GoodsViewHolder();
+            viewHolder.imageView = (SimpleDraweeView) convertView.findViewById(R.id.img);
+            viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
+            viewHolder.tvIntroduce = (TextView) convertView.findViewById(R.id.introduce);
+            viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.price);
+            viewHolder.tvCount = (TextView) convertView.findViewById(R.id.num);
+            viewHolder.tvIndex = (TextView) convertView.findViewById(R.id.index);
+
+            convertView.setTag(viewHolder);
         } else {
-            childViewHolder = (ChildViewHolder) convertView.getTag();
+            viewHolder = (GoodsViewHolder) convertView.getTag();
         }
-        //childViewHolder.tvTitle.setText(childStrings[groupPosition][childPosition]);
+
+        GoodsItemInfo info = GoodsCategoryModel.getInstance().getGoodsItem(childPosition);
+        viewHolder.tvName.setText(info.name);
+        viewHolder.imageView.setImageURI(info.imgUrl);
+        viewHolder.tvCount.setText("0");
+        viewHolder.tvPrice.setText(info.price);
+        viewHolder.tvIntroduce.setText(info.introduce);
+
         return convertView;
     }
 
@@ -108,10 +123,6 @@ public class GoodsSecondaryCategoryAdapter extends BaseExpandableListAdapter {
 
     static class GroupViewHolder {
         ImageView imageView;
-        TextView tvTitle;
-    }
-
-    static class ChildViewHolder {
         TextView tvTitle;
     }
 }

@@ -3,65 +3,60 @@ package com.xxx.gogo;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.xxx.gogo.net.VolleyWrapper;
 import com.xxx.gogo.utils.Constants;
-import com.xxx.gogo.utils.ThreadManager;
+import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.view.provider.SearchProviderActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends BaseToolBarActivity implements View.OnClickListener{
+    private ViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        StartupMetrics.Log("before MainActivity::onCreate");
 
-        ThreadManager.start();
-        VolleyWrapper.getInstance().init(this);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        createToolBar();
 
         initViews();
+
+        StartupMetrics.Log("after MainActivity::onCreate");
+    }
+
+    @Override
+    protected void onResume() {
+        StartupMetrics.Log("MainActivity::onResume");
+
+        super.onResume();
+    }
+
+    @Override
+    protected View createToolBarContentView() {
+        View view = LayoutInflater.from(this).inflate(R.layout.toolbar_main, null);
+        view.findViewById(R.id.add_container).setOnClickListener(this);
+
+        return view;
     }
 
     private void initViews() {
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayShowCustomEnabled(true);
-            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-            View view = LayoutInflater.from(this).inflate(R.layout.toolbar_main, null);
-            actionBar.setCustomView(view, layoutParams);
-
-            view.findViewById(R.id.add).setOnClickListener(this);
-        }
-
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        mPager = (ViewPager) findViewById(R.id.viewPager);
 
         final MainFragmentAdapter adapter = new MainFragmentAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        mPager.setAdapter(adapter);
+        mPager.setOffscreenPageLimit(1);
+        tabLayout.setupWithViewPager(mPager);
         for (int i = 0; i < tabLayout.getTabCount(); ++i){
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if(tab != null){
                 tab.setIcon(adapter.getResourceId(i, false));
             }
-        }
-        TabLayout.Tab tab = tabLayout.getTabAt(1);
-        if(tab != null){
-            tab.select();
-            tab.setIcon(adapter.getResourceId(1, true));
         }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             private TabLayout.Tab mPreTab;
@@ -69,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onTabSelected(TabLayout.Tab tab) {
                 tab.setIcon(adapter.getResourceId(tab.getPosition(), true));
                 mPreTab.setIcon(adapter.getResourceId(mPreTab.getPosition(), false));
-                viewPager.setCurrentItem(tab.getPosition(), false);
+                mPager.setCurrentItem(tab.getPosition(), false);
             }
 
             @Override
@@ -88,13 +83,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ThreadManager.stop();
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, SearchProviderActivity.class);
-        startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
-        overridePendingTransition(0, 0);
+        if(v.getId() == R.id.add_container){
+            Intent intent = new Intent(this, SearchProviderActivity.class);
+            startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
+            overridePendingTransition(0, 0);
+        }
+    }
+
+    public void switchPage(int pos){
+        mPager.setCurrentItem(pos, false);
     }
 }

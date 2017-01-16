@@ -4,13 +4,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.xxx.gogo.utils.ThreadManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
 public class ProviderModel {
-    private Callback mCb;
+    private WeakReference<Callback> mCb;
     private LocalDataSource mDataSource;
     private ArrayList<ProviderItemInfo> mDatas;
     private HashMap<String, ProviderItemInfo> mIds;
@@ -29,7 +30,7 @@ public class ProviderModel {
     }
 
     public void setCallback(Callback cb){
-        mCb = cb;
+        mCb = new WeakReference<>(cb);
     }
 
     public void setDbHelper(SQLiteOpenHelper dbHelper){
@@ -51,7 +52,10 @@ public class ProviderModel {
             }
         });
         mDataSource.addItem(info);
-        mCb.onAddItem();
+        Callback callback = mCb.get();
+        if(callback != null){
+            callback.onAddItem();
+        }
     }
 
     public void deleteItem(final ProviderItemInfo info){
@@ -65,7 +69,10 @@ public class ProviderModel {
         }
         mIds.remove(info.id);
         mDataSource.deleteItem(info);
-        mCb.onDeleteItem();
+        Callback callback = mCb.get();
+        if(callback != null){
+            callback.onDeleteItem();
+        }
     }
 
     public void deleteItem(int pos){
@@ -74,7 +81,10 @@ public class ProviderModel {
         ProviderItemInfo info = mDatas.remove(pos);
         mDataSource.deleteItem(info);
         mIds.remove(info.id);
-        mCb.onDeleteItem();
+        Callback callback = mCb.get();
+        if(callback != null){
+            callback.onDeleteItem();
+        }
     }
 
     public int getCount(){
@@ -121,11 +131,12 @@ public class ProviderModel {
             mDatas = datas;
             mIds = idSets;
         }
-        if(mCb != null){
+        Callback callback = mCb.get();
+        if(callback != null){
             if(mDatas != null && !mDatas.isEmpty()){
-                mCb.onLoadSuccess();
+                callback.onLoadSuccess();
             }else {
-                mCb.onLoadFail();
+                callback.onLoadFail();
             }
         }
     }

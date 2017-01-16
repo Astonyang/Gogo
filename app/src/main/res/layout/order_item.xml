@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/order_num_key"
+            android:text="@string/order_index"
+            android:gravity="center"
+            android:textSize="@dimen/order_large_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/order_num_value"
+            android:layout_toRightOf="@id/order_num_key"
+            android:gravity="center"
+            android:textSize="@dimen/order_large_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/state"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:textSize="@dimen/order_large_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <View
+        android:background="@color/div"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/shop"
+            android:text="@string/shop_name"
+            android:gravity="center"
+            android:textSize="@dimen/order_large_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/shop_name"
+            android:layout_toRightOf="@id/shop"
+            android:gravity="center"
+            android:textSize="@dimen/order_large_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/div"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/order_total_price"
+            android:gravity="center"
+            android:textSize="@dimen/order_small_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/order_total_price_value"
+            android:textSize="@dimen/order_small_size"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/goods_num"
+            android:gravity="center"
+            android:textSize="@dimen/order_small_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/goods_num_value"
+            android:gravity="center"
+            android:textSize="@dimen/order_small_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/order_start_time"
+            android:gravity="center"
+            android:textSize="@dimen/order_small_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/order_start_time_value"
+            android:gravity="center"
+            android:textSize="@dimen/order_small_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

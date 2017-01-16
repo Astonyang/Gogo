@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.xxx.gogo.utils.Constants;
+import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.offen_buy.OffenBuyModel;
@@ -25,29 +28,33 @@ public class OffenBuyFragment extends Fragment
     private static final int LIST_VIEW = 2;
 
     private OffenBuyView mContainer;
-    private PullToRefreshListView mPullRefreshListView;
+    private PullToRefreshExpandableListView mPullRefreshListView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        StartupMetrics.Log("OffenBuyFragment::onCreateView");
+
         mContainer = (OffenBuyView) inflater.inflate(R.layout.offen_buy, container, false);
-        mContainer.setDisplayedChild(NOT_LOGIN_VIEW);
+        mContainer.setDisplayedChild(LIST_VIEW);
 
         mContainer.findViewById(R.id.login_btn).setOnClickListener(this);
-        mPullRefreshListView = (PullToRefreshListView)mContainer.findViewById(
-                R.id.pull_refresh_list);
-        OffenBuyListViewAdapter adapter = new OffenBuyListViewAdapter();
-        adapter.setModel(new OffenBuyModel());
-        mPullRefreshListView.setAdapter(adapter);
+        mPullRefreshListView = (PullToRefreshExpandableListView) mContainer.findViewById(
+                R.id.list_view);
+        OffenBuyListViewAdapter adapter = new OffenBuyListViewAdapter(getContext());
+        mPullRefreshListView.getRefreshableView().setAdapter(adapter);
 
         return mContainer;
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        startActivityForResult(intent, 0);
+        if(v.getId() == R.id.login_btn){
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivityForResult(intent, Constants.START_LOGIN_FROM_FAVO);
+        }
     }
 
     @Override

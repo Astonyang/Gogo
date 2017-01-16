@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
+    android:paddingLeft="12dp"
     android:layout_width="match_parent"
-    android:paddingLeft="14dp"
-    android:paddingRight="14dp"
     android:layout_height="wrap_content">
-
-    <!--<ImageView-->
-        <!--android:id="@+id/contact_img"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:scaleType="center"-->
-        <!--android:src="@drawable/contact_name_shape"-->
-        <!--android:layout_marginRight="12dp"-->
-        <!--android:layout_width="30dp"-->
-        <!--android:layout_height="30dp" />-->
 
     <TextView
         android:id="@+id/contact_img"
@@ -25,12 +15,24 @@
         android:layout_width="45dp"
         android:layout_height="45dp" />
 
-    <TextView
-        android:id="@+id/contact_name"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:textSize="16sp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/contact_name"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/list_item_text_size"
+            android:layout_width="match_parent"
+            android:layout_height="65dp" />
+
+        <View
+            android:layout_gravity="bottom"
+            android:background="@color/div"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+    </FrameLayout>
 
 </LinearLayout>

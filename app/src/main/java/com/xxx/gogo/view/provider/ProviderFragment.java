@@ -14,6 +14,7 @@ import android.widget.ViewSwitcher;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.provider.ProviderModel;
 import com.xxx.gogo.utils.Constants;
+import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.utils.ThreadManager;
 
 public class ProviderFragment extends Fragment implements ProviderModel.Callback,
@@ -27,7 +28,11 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        StartupMetrics.Log("ProviderFragment::onCreateView");
+
         FrameLayout root = (FrameLayout) inflater.inflate(R.layout.provider, container, false);
 
         mEmptyView = (ViewSwitcher) root.findViewById(R.id.empty);

@@ -4,16 +4,16 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/forget_pass_bar_back"
         android:layout_gravity="center_vertical"
+        android:id="@+id/bar_back"
         android:src="@drawable/ic_arrow_back_white_36dp"
         android:layout_width="@dimen/toolbar_img_size"
         android:layout_height="@dimen/toolbar_img_size" />
 
     <TextView
+        android:id="@+id/toolbar_tv"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/forget_password"
         android:textColor="@color/textColor"
         android:textSize="@dimen/toolbar_text_size"
         android:layout_width="wrap_content"

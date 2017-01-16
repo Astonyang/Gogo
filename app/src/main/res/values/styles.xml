@@ -9,8 +9,13 @@
     </style>
 
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/tab_text_color</item>
+    </style>
+
+    <style name="TopTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tab_text_color</item>
     </style>
 
     <style name="MyEditviewApperance" parent="Base.Widget.AppCompat.EditText">

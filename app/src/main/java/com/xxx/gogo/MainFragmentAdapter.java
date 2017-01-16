@@ -20,27 +20,27 @@ class MainFragmentAdapter extends FragmentPagerAdapter {
         super((fm));
 
         mTitles = new String[]{
-                context.getResources().getString(R.string.favo),
                 context.getResources().getString(R.string.provider),
+                context.getResources().getString(R.string.favo),
                 context.getResources().getString(R.string.shop_cart),
                 context.getResources().getString(R.string.myself)
         };
 
         mNormalResourceIds = new int[]{
-                R.drawable.bt_alwby_nm,
                 R.drawable.bt_home_nm,
+                R.drawable.bt_alwby_nm,
                 R.drawable.bt_car_nm,
                 R.drawable.bt_user_nm
         };
         mSelectedResourceIds = new int[]{
-                R.drawable.bt_alwby_sel,
                 R.drawable.bt_home_sel,
+                R.drawable.bt_alwby_sel,
                 R.drawable.bt_car_sel,
                 R.drawable.bt_user_sel
         };
         mFragments = new Fragment[mTitles.length];
-        mFragments[0] = new OffenBuyFragment();
-        mFragments[1] = new ProviderFragment();
+        mFragments[0] = new ProviderFragment();
+        mFragments[1] = new OffenBuyFragment();
         mFragments[2] = new ShopCartFragment();
         mFragments[3] = new MySelfFragment();
     }

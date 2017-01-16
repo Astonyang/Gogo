@@ -6,23 +6,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
-import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.ToastManager;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends BaseToolBarActivity implements View.OnClickListener{
     private EditText mPhoneEditView;
     private EditText mPasswordEdit;
     private ImageView mCancelPhone;
@@ -36,26 +31,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         setContentView(R.layout.activity_login_view);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
-        setSupportActionBar(myToolbar);
+        createNormalToolBar(R.string.go_login, this);
 
         initView();
         initLoadingDialog();
     }
 
     private void initView(){
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayShowCustomEnabled(true);
-            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-            View view = LayoutInflater.from(this).inflate(R.layout.toolbar_login, null);
-            actionBar.setCustomView(view, layoutParams);
-
-            View imgView = view.findViewById(R.id.login_bar_back);
-            imgView.setOnClickListener(this);
-        }
         findViewById(R.id.forget_pass).setOnClickListener(this);
         findViewById(R.id.fast_register).setOnClickListener(this);
         findViewById(R.id.go_login).setOnClickListener(this);
@@ -76,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.login_bar_back){
+        if(v.getId() == R.id.bar_back){
             finish();
         }else if(v.getId() == R.id.go_login){
             doLogin();

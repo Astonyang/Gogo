@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/register_toolbar"
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -17,7 +17,7 @@
         android:id="@+id/div1"
         android:layout_marginTop="10dp"
         android:background="@color/unlogin_text_color"
-        android:layout_below="@id/register_toolbar"
+        android:layout_below="@id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
     <LinearLayout

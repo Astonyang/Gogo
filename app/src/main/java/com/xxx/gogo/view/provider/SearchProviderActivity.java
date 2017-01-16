@@ -29,7 +29,7 @@ public class SearchProviderActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_provider);
+        setContentView(R.layout.activity_provider_searcher);
 
         mDiv1 = findViewById(R.id.div1);
         mViewSwitcher = (ViewSwitcher) findViewById(R.id.switcher);
@@ -64,6 +64,9 @@ public class SearchProviderActivity extends AppCompatActivity
         }
         if(!TextUtils.isEmpty(newText)){
             String str = getResources().getString(R.string.search) + newText;
+            if(mDiv1.getVisibility() == View.GONE){
+                mDiv1.setVisibility(View.VISIBLE);
+            }
             mSearchTip.setText(str);
         }
         return true;

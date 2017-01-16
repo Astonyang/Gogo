@@ -19,12 +19,12 @@
 
     <TextView
         android:id="@+id/search_tip"
-        android:textSize="16sp"
-        android:layout_marginTop="22dp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="80dp" />
 
     <View
         android:id="@+id/div1"
@@ -49,16 +49,19 @@
             android:layout_height="wrap_content" />
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="80dp">
             <TextView
                 android:layout_gravity="center_vertical|start"
                 android:id="@+id/contact_name"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/add"
                 android:text="@string/add"
+                android:background="@color/colorPrimary"
+                android:textSize="18sp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
