@@ -6,6 +6,7 @@ import android.util.Log;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.xxx.gogo.net.VolleyWrapper;
 import com.xxx.gogo.setting.SettingModel;
+import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.utils.ThreadManager;
 
@@ -15,6 +16,8 @@ public class MainApplication extends Application{
         super.onCreate();
 
         StartupMetrics.Log("before MainApplication::onCreate");
+
+        FileManager.sRootDir = getFilesDir().getAbsolutePath();
 
         SettingModel.getInstance().init(getApplicationContext());
         Fresco.initialize(this);

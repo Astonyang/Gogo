@@ -49,6 +49,7 @@ class ProviderAdapter extends BaseAdapter {
                 mContext.getResources().getColor(R.color.textColor),
                 mContext.getResources().getColor(R.color.pressed_color));
         convertView.setBackgroundDrawable(drawable);
+
         convertView.setLongClickable(true);
         convertView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

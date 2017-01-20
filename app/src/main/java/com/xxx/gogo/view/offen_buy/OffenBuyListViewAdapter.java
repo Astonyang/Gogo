@@ -1,10 +1,12 @@
 package com.xxx.gogo.view.offen_buy;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,17 +14,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.offen_buy.OffenBuyModel;
+import com.xxx.gogo.model.shopcart.ShopCartModel;
+import com.xxx.gogo.utils.ToastManager;
 import com.xxx.gogo.view.goods.GoodsViewHolder;
 
 public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
-    String[] groupStrings = {"牛肉", "羊肉", "鸡肉", "猪肉"};
-    String[][] childStrings = {
-            {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
-            {"宋江", "林冲", "李逵", "鲁智深"},
-            {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
-            {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
-    };
-
     private Context mContext;
 
     public OffenBuyListViewAdapter(Context context){
@@ -31,22 +27,22 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return groupStrings.length;
+        return OffenBuyModel.getInstance().getGroupCount();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return childStrings[groupPosition].length;
+        return OffenBuyModel.getInstance().getChildrenCount(groupPosition);
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return groupStrings[groupPosition];
+        return OffenBuyModel.getInstance().getGroup(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return childStrings[groupPosition][childPosition];
+        return OffenBuyModel.getInstance().getChild(groupPosition, childPosition);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
-        groupViewHolder.tvTitle.setText(groupStrings[groupPosition]);
+        groupViewHolder.tvTitle.setText(String.valueOf(OffenBuyModel.getInstance().getGroup(groupPosition)));
         if(isExpanded){
             groupViewHolder.imageView.setImageResource(R.drawable.ic_expand_more_black_24dp);
         }else {
@@ -89,7 +85,7 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        GoodsViewHolder viewHolder;
+        final GoodsViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_item,
                     parent, false);
@@ -98,20 +94,34 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
             viewHolder.tvIntroduce = (TextView) convertView.findViewById(R.id.introduce);
             viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.price);
-            viewHolder.tvCount = (TextView) convertView.findViewById(R.id.num);
             viewHolder.tvIndex = (TextView) convertView.findViewById(R.id.index);
+
+            convertView.findViewById(R.id.id_count_container).setVisibility(View.GONE);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (GoodsViewHolder) convertView.getTag();
         }
 
-        GoodsItemInfo info = OffenBuyModel.getInstance().getGoodsItem(childPosition);
+        final GoodsItemInfo info = OffenBuyModel.getInstance().getGoodsItem(childPosition);
         viewHolder.tvName.setText(info.name);
         viewHolder.imageView.setImageURI(info.imgUrl);
-        viewHolder.tvCount.setText("0");
-        viewHolder.tvPrice.setText(info.price);
+        viewHolder.tvPrice.setText(String.valueOf(info.price));
         viewHolder.tvIntroduce.setText(info.introduce);
+
+        final Button button = (Button) convertView.findViewById(R.id.id_add_cart);
+        if(ShopCartModel.getInstance().contains(info.generateId())){
+            setAddCartButtonState(true, button);
+        }else {
+            setAddCartButtonState(false, button);
+        }
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShopCartModel.getInstance().addItem(info);
+                setAddCartButtonState(true, button);
+            }
+        });
 
         return convertView;
     }
@@ -119,6 +129,20 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    private void setAddCartButtonState(boolean atShopCart, Button button){
+        if(atShopCart){
+            button.setText(mContext.getString(R.string.already_at_shopcart));
+            button.setEnabled(false);
+            button.setTextColor(Color.GRAY);
+            button.setBackgroundResource(R.drawable.bg_at_shop_cart);
+        }else {
+            button.setText(mContext.getString(R.string.add_shop_cart));
+            button.setEnabled(true);
+            button.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            button.setBackgroundResource(R.drawable.login_bg);
+        }
     }
 
     static class GroupViewHolder {

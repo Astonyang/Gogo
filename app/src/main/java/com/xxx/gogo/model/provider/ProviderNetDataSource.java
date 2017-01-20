@@ -11,8 +11,8 @@ import com.xxx.gogo.utils.ThreadManager;
 
 import java.util.ArrayList;
 
-class NetDataSource {
-    private LocalDataSource mCb;
+class ProviderNetDataSource {
+    private ProviderLocalDataSource mCb;
 
     private StringRequest loadDataRequest = new StringRequest(Request.Method.GET,
             NetworkInterface.LOAD_PROVIDER_URL,
@@ -33,7 +33,7 @@ class NetDataSource {
         }
     });
 
-    NetDataSource(LocalDataSource callback){
+    ProviderNetDataSource(ProviderLocalDataSource callback){
         mCb = callback;
     }
 

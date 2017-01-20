@@ -42,7 +42,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/order"
             android:background="@color/me_item_bg"
             android:orientation="horizontal"
@@ -53,18 +53,27 @@
             android:layout_width="match_parent"
             android:layout_height="55dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-
             <TextView
+                android:id="@+id/id_order_tv"
                 android:text="@string/order"
                 android:gravity="center"
                 android:textSize="@dimen/me_text_size"
                 android:layout_marginLeft="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/id_badge"
+                android:visibility="gone"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/badge_bg_shape"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+        </RelativeLayout>
 
         <View
             android:background="@color/div"

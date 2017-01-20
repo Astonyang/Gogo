@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.ProviderSearcher;
+import com.xxx.gogo.model.provider.ProviderSearcher;
 import com.xxx.gogo.model.provider.ProviderItemInfo;
 import com.xxx.gogo.model.provider.ProviderModel;
 

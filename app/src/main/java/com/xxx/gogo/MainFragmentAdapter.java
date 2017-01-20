@@ -4,13 +4,19 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.view.provider.ProviderFragment;
 import com.xxx.gogo.view.offen_buy.OffenBuyFragment;
 import com.xxx.gogo.view.me.MySelfFragment;
 import com.xxx.gogo.view.shopcart.ShopCartFragment;
 
 class MainFragmentAdapter extends FragmentPagerAdapter {
+    private Context mContext;
     private String[] mTitles;
     private Fragment[] mFragments;
     private int[] mNormalResourceIds;
@@ -18,6 +24,8 @@ class MainFragmentAdapter extends FragmentPagerAdapter {
 
     MainFragmentAdapter(Context context, FragmentManager fm){
         super((fm));
+
+        mContext = context;
 
         mTitles = new String[]{
                 context.getResources().getString(R.string.provider),
@@ -55,11 +63,34 @@ class MainFragmentAdapter extends FragmentPagerAdapter {
         return mTitles.length;
     }
 
-    public int getResourceId(int position, boolean selected){
+    int getResourceId(int position, boolean selected){
         if(selected){
             return mSelectedResourceIds[position];
         }
         return mNormalResourceIds[position];
+    }
+
+    View getTabView(int pos, boolean selected){
+        View tabView = LayoutInflater.from(mContext).inflate(R.layout.tab_main_custom_view, null);
+        ImageView imageView = (ImageView) tabView.findViewById(R.id.id_img);
+        imageView.setImageResource(getResourceId(pos, selected));
+
+        TextView tvTitle = (TextView) tabView.findViewById(R.id.id_title);
+        tvTitle.setText(mTitles[pos]);
+
+        if(pos == 2){
+            TextView badgeView = (TextView) tabView.findViewById(R.id.id_badge);
+            badgeView.setVisibility(View.VISIBLE);
+            int count = ShopCartModel.getInstance().getCount();
+            count = count > 99 ? 99 : count;
+            if(count == 0){
+                badgeView.setVisibility(View.INVISIBLE);
+            }else {
+                badgeView.setVisibility(View.VISIBLE);
+            }
+            badgeView.setText(String.valueOf(count));
+        }
+        return tabView;
     }
 
     @Override

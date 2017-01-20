@@ -36,6 +36,8 @@
     <string name="input_old_password">请输入旧密码</string>
     <string name="input_new_password">请输入新密码</string>
     <string name="quit">退出登录</string>
+    <string name="find_pwd_again">请重新发送手机号</string>
+    <string name="input_again">输入有误，请重新输入</string>
 
     <!--provider-->
     <string name="add">添加</string>
@@ -50,6 +52,7 @@
     <string name="name">用户名： </string>
     <string name="mobile_phone">手机： </string>
     <string name="goods_detail">商品详情</string>
+    <string name="goods_list">商品列表</string>
     <string name="goods_cat">商品种类</string>
     <string name="provider_icon">供货</string>
 
@@ -60,6 +63,10 @@
     <string name="next">下一步</string>
     <string name="go_shoppping">去逛逛</string>
     <string name="clear_cart">清空</string>
+    <string name="add_shop_cart">加入购物车</string>
+    <string name="already_at_shopcart">已在购物车</string>
+    <string name="succeed_add_shop_cart">成功加入购物车</string>
+    <string name="delete_goods_from_cart">删除商品?</string>
 
     <!--order-->
     <string name="order_confirm">订单确认</string>

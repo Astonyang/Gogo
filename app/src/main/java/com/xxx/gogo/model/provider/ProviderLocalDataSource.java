@@ -12,17 +12,19 @@ import com.xxx.gogo.utils.ThreadManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class LocalDataSource {
-    private static final String QUERY_SQL = "select id, name, phone from provider";
+class ProviderLocalDataSource {
+    private static final String QUERY_SQL = "select id, name, phone from "
+            + MainDatabaseHelper.TABLE_PROVIDER;
+
     private static final long REQUEST_LOAD_INTERVAL = 1000*60*60*24;
 
     private SQLiteOpenHelper mDb;
     private ProviderModel mCb;
-    private NetDataSource mDataSource;
+    private ProviderNetDataSource mDataSource;
 
-    LocalDataSource(ProviderModel callback){
+    ProviderLocalDataSource(ProviderModel callback){
         mCb = callback;
-        mDataSource = new NetDataSource(this);
+        mDataSource = new ProviderNetDataSource(this);
     }
 
     void setDbHelper(SQLiteOpenHelper dbHelper){
@@ -135,6 +137,7 @@ class LocalDataSource {
                     try {
                         for (ProviderItemInfo item : datas){
                             ContentValues contentValues = new ContentValues();
+
                             contentValues.put("id", item.id);
                             contentValues.put("name", item.name);
                             contentValues.put("phone", item.phone);
@@ -142,6 +145,7 @@ class LocalDataSource {
                             contentValues.put("url", item.url);
                             contentValues.put("lat", item.lat);
                             contentValues.put("lng", item.lng);
+
                             db.insertOrThrow(MainDatabaseHelper.TABLE_PROVIDER, null, contentValues);
                         }
 

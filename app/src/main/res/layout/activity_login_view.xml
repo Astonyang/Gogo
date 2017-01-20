@@ -105,7 +105,7 @@
     <FrameLayout
         android:id="@+id/util"
         android:layout_below="@id/div3"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="18dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/pwd"
@@ -133,7 +133,7 @@
         android:layout_marginLeft="16dp"
         android:layout_alignLeft="@id/util"
         android:layout_alignRight="@id/util"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="18dp"
         android:text="@string/go_login"
         android:textColor="@android:color/white"
         android:background="@drawable/login_btn_bg"

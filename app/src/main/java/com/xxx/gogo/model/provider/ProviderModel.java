@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class ProviderModel {
     private WeakReference<Callback> mCb;
-    private LocalDataSource mDataSource;
+    private ProviderLocalDataSource mDataSource;
     private ArrayList<ProviderItemInfo> mDatas;
     private HashMap<String, ProviderItemInfo> mIds;
 
@@ -26,7 +26,7 @@ public class ProviderModel {
 
     private ProviderModel(){
         mDatas = new ArrayList<>();
-        mDataSource = new LocalDataSource(this);
+        mDataSource = new ProviderLocalDataSource(this);
     }
 
     public void setCallback(Callback cb){

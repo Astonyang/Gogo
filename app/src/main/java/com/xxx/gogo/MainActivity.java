@@ -6,13 +6,21 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.shopcart.ShopCartEvent;
+import com.xxx.gogo.model.MainDatabaseHelper;
+import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.Constants;
+import com.xxx.gogo.utils.LogUtil;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.view.provider.SearchProviderActivity;
 
 public class MainActivity extends BaseToolBarActivity implements View.OnClickListener{
     private ViewPager mPager;
+    private TabLayout mTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +34,17 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
 
         initViews();
 
+        ShopCartModel.getInstance().setDbHelper(MainDatabaseHelper.getDataBaseHelper(this));
+        ShopCartModel.getInstance().load();
+
+        BusFactory.getBus().register(this);
+
         StartupMetrics.Log("after MainActivity::onCreate");
     }
 
     @Override
     protected void onResume() {
         StartupMetrics.Log("MainActivity::onResume");
-
         super.onResume();
     }
 
@@ -45,32 +57,36 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
     }
 
     private void initViews() {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        mTabs = (TabLayout) findViewById(R.id.tabLayout);
         mPager = (ViewPager) findViewById(R.id.viewPager);
 
         final MainFragmentAdapter adapter = new MainFragmentAdapter(this, getSupportFragmentManager());
         mPager.setAdapter(adapter);
         mPager.setOffscreenPageLimit(1);
-        tabLayout.setupWithViewPager(mPager);
-        for (int i = 0; i < tabLayout.getTabCount(); ++i){
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
+        mTabs.setupWithViewPager(mPager);
+        for (int i = 0; i < mTabs.getTabCount(); ++i){
+            TabLayout.Tab tab = mTabs.getTabAt(i);
             if(tab != null){
-                tab.setIcon(adapter.getResourceId(i, false));
+                if(i == 0){
+                    tab.setCustomView(adapter.getTabView(i, true));
+                }else {
+                    tab.setCustomView(adapter.getTabView(i, false));
+                }
             }
         }
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            private TabLayout.Tab mPreTab;
+        mTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                tab.setIcon(adapter.getResourceId(tab.getPosition(), true));
-                mPreTab.setIcon(adapter.getResourceId(mPreTab.getPosition(), false));
+                tab.setCustomView(null);
+                tab.setCustomView(adapter.getTabView(tab.getPosition(), true));
+
                 mPager.setCurrentItem(tab.getPosition(), false);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                mPreTab = tab;
-                tab.setIcon(adapter.getResourceId(tab.getPosition(), false));
+                tab.setCustomView(null);
+                tab.setCustomView(adapter.getTabView(tab.getPosition(), false));
             }
 
             @Override
@@ -83,6 +99,10 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        LogUtil.unInit();
+        ShopCartModel.getInstance().save();
+        BusFactory.getBus().unregister(this);
     }
 
     @Override
@@ -94,7 +114,31 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
         }
     }
 
-    public void switchPage(int pos){
-        mPager.setCurrentItem(pos, false);
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if(event instanceof BusEvent.TabSwitcher){
+            mPager.setCurrentItem(((BusEvent.TabSwitcher)event).mPos, false);
+
+        }else if(event instanceof ShopCartEvent.ShopCartDataChanged ||
+                event instanceof ShopCartEvent.ShopCartDataLoaded){
+
+            TabLayout.Tab tab = mTabs.getTabAt(BusEvent.TabSwitcher.TAB_SHOPCART);
+            if(tab != null){
+                View container = tab.getCustomView();
+                if(container != null){
+                    TextView tvCount = (TextView) container.findViewById(R.id.id_badge);
+
+                    int count = ShopCartModel.getInstance().getCount();
+                    count = count > 99 ? 99 : count;
+                    if(count == 0){
+                        tvCount.setVisibility(View.INVISIBLE);
+                    }else {
+                        tvCount.setVisibility(View.VISIBLE);
+                    }
+                    tvCount.setText(String.valueOf(count));
+                }
+            }
+        }
     }
 }

@@ -13,16 +13,15 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <include android:id="@+id/bar"
-        layout="@layout/shopping_cart_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentBottom="true"/>
+    <!--<include android:id="@+id/bar"-->
+        <!--layout="@layout/shopping_cart_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="55dp"-->
+        <!--android:layout_alignParentBottom="true"/>-->
 
     <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
         android:id="@+id/list_view"
         android:layout_below="@id/my_toolbar"
-        android:layout_above="@id/bar"
         android:cacheColorHint="#00000000"
         android:divider="@color/div"
         android:dividerHeight="1dp"

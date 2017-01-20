@@ -12,7 +12,9 @@ import android.widget.ViewFlipper;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.xxx.gogo.model.provider.ProviderModel;
+import com.squareup.otto.Subscribe;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.shopcart.ShopCartEvent;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.StartupMetrics;
@@ -24,7 +26,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class ShopCartFragment extends Fragment
         implements View.OnClickListener,
-        ShopCartModel.Callback,
         PullToRefreshBase.OnRefreshListener,
         PullToRefreshBase.OnLastItemVisibleListener{
 
@@ -51,8 +52,13 @@ public class ShopCartFragment extends Fragment
         mContainer.setDisplayedChild(LIST_VIEW);
 
         mTotalValueTextView = (TextView) mContainer.findViewById(R.id.total_value);
+        mTotalValueTextView.setText(String.valueOf(ShopCartModel.getInstance().getTotalPrice()));
+
         mDiv = mContainer.findViewById(R.id.div);
         mNextBtn = mContainer.findViewById(R.id.next_container);
+        if(ShopCartModel.getInstance().getCount() != 0){
+            showNextView();
+        }
 
         mContainer.findViewById(R.id.next_btn).setOnClickListener(this);
         mContainer.findViewById(R.id.login_btn).setOnClickListener(this);
@@ -61,11 +67,18 @@ public class ShopCartFragment extends Fragment
         mPullRefreshListView = (PullToRefreshListView)mContainer.findViewById(
                 R.id.pull_refresh_list);
 
-        ShopCartModel.getInstance().setCallback(this);
         mAdapter = new ShopCartListViewAdapter(getContext());
         mPullRefreshListView.setAdapter(mAdapter);
 
+        BusFactory.getBus().register(this);
+
         return mContainer;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        BusFactory.getBus().unregister(this);
     }
 
     @Override
@@ -78,7 +91,6 @@ public class ShopCartFragment extends Fragment
             startActivity(intent);
         }else if(v.getId() == R.id.clear_btn){
             ShopCartModel.getInstance().clear();
-            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -99,26 +111,29 @@ public class ShopCartFragment extends Fragment
 
     }
 
-    @Override
-    public void onShopCartChanged() {
-        mAdapter.notifyDataSetChanged();
-        if(ProviderModel.getInstance().getCount() != 0){
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if(event instanceof ShopCartEvent.ShopCartDataLoaded){
+            mAdapter.notifyDataSetChanged();
             showNextView();
-        }else if(mDiv.getVisibility() == View.VISIBLE) {
-            mDiv.setVisibility(View.GONE);
-            mNextBtn.setVisibility(View.GONE);
+
+        }else if (event instanceof ShopCartEvent.ShopCartDataChanged){
+            ShopCartEvent.ShopCartDataChanged changed = (ShopCartEvent.ShopCartDataChanged)event;
+            if(changed.mChangedType != ShopCartEvent.ShopCartDataChanged.TYPE_COUNT_CHANGED){
+                mAdapter.notifyDataSetChanged();
+
+                if(ShopCartModel.getInstance().getCount() != 0){
+                    showNextView();
+
+                }else if(mDiv.getVisibility() == View.VISIBLE) {
+                    mDiv.setVisibility(View.GONE);
+                    mNextBtn.setVisibility(View.GONE);
+                }
+            }else {
+                mTotalValueTextView.setText(String.valueOf(ShopCartModel.getInstance().getTotalPrice()));
+            }
         }
-    }
-
-    @Override
-    public void onFail() {
-
-    }
-
-    @Override
-    public void onSuccess() {
-        mAdapter.notifyDataSetChanged();
-        showNextView();
     }
 
     private void showNextView(){

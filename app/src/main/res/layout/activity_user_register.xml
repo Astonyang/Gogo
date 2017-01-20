@@ -55,6 +55,7 @@
         <TextView
             android:id="@+id/get_check_num"
             android:text="@string/get_check_num"
+            android:textColor="@android:color/white"
             android:gravity="center"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
@@ -244,6 +245,7 @@
         android:layout_alignLeft="@id/phone"
         android:layout_alignRight="@id/phone"
         android:layout_marginTop="18dp"
+        android:textColor="@android:color/white"
         android:text="@string/register"
         android:background="@drawable/login_btn_bg"
         android:layout_width="match_parent"

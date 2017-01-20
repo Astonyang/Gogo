@@ -22,6 +22,8 @@
     <LinearLayout
         android:weightSum="1"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_height">
@@ -42,7 +44,7 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:background="@color/unlogin_text_color"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
@@ -50,6 +52,8 @@
     <LinearLayout
         android:weightSum="1"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_height">
@@ -70,7 +74,7 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:background="@color/unlogin_text_color"
         android:layout_width="match_parent"
         android:layout_height="1px"/>
@@ -78,6 +82,8 @@
     <LinearLayout
         android:weightSum="1"
         android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/edit_text_height">
@@ -98,7 +104,7 @@
     </LinearLayout>
 
     <View
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:background="@color/unlogin_text_color"
         android:layout_width="match_parent"
         android:layout_height="1px"/>

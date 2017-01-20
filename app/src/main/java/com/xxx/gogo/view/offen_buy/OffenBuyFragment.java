@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.squareup.otto.Subscribe;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.shopcart.ShopCartEvent;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.offen_buy.OffenBuyModel;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -23,12 +24,14 @@ public class OffenBuyFragment extends Fragment
         implements View.OnClickListener,
         PullToRefreshBase.OnRefreshListener,
         PullToRefreshBase.OnLastItemVisibleListener{
+
     private static final int NOT_LOGIN_VIEW = 0;
     private static final int LOADING_VIEW = 1;
     private static final int LIST_VIEW = 2;
 
     private OffenBuyView mContainer;
     private PullToRefreshExpandableListView mPullRefreshListView;
+    private OffenBuyListViewAdapter mAdapter;
 
     @Nullable
     @Override
@@ -43,10 +46,18 @@ public class OffenBuyFragment extends Fragment
         mContainer.findViewById(R.id.login_btn).setOnClickListener(this);
         mPullRefreshListView = (PullToRefreshExpandableListView) mContainer.findViewById(
                 R.id.list_view);
-        OffenBuyListViewAdapter adapter = new OffenBuyListViewAdapter(getContext());
-        mPullRefreshListView.getRefreshableView().setAdapter(adapter);
+        mAdapter = new OffenBuyListViewAdapter(getContext());
+        mPullRefreshListView.getRefreshableView().setAdapter(mAdapter);
+
+        BusFactory.getBus().register(this);
 
         return mContainer;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        BusFactory.getBus().unregister(this);
     }
 
     @Override
@@ -72,5 +83,13 @@ public class OffenBuyFragment extends Fragment
     @Override
     public void onLastItemVisible() {
 
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if (event instanceof ShopCartEvent.ShopCartDataChanged){
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

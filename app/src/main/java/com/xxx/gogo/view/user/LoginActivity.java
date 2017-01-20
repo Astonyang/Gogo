@@ -3,8 +3,6 @@ package com.xxx.gogo.view.user;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,8 +11,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.squareup.otto.Subscribe;
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.user.UserEvent;
+import com.xxx.gogo.manager.user.UserManager;
+import com.xxx.gogo.utils.DialogHelper;
 import com.xxx.gogo.utils.ToastManager;
 
 public class LoginActivity extends BaseToolBarActivity implements View.OnClickListener{
@@ -34,7 +37,13 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         createNormalToolBar(R.string.go_login, this);
 
         initView();
-        initLoadingDialog();
+        BusFactory.getBus().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BusFactory.getBus().unregister(this);
     }
 
     private void initView(){
@@ -48,12 +57,8 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         mPasswordEdit = (EditText)findViewById(R.id.id_edit_password);
         mPhoneEditView.addTextChangedListener(new MyTextWatcher(mCancelPhone));
         mPasswordEdit.addTextChangedListener(new MyTextWatcher(mCancelPassword));
-    }
 
-    private void initLoadingDialog(){
-        mLoadingDialog = new Dialog(this, R.style.CustomDialog);
-        mLoadingDialog.setContentView(R.layout.loading);
-        mLoadingDialog.setCanceledOnTouchOutside(false);
+        mLoadingDialog = DialogHelper.createDialog(this);
     }
 
     @Override
@@ -66,7 +71,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             Intent intent = new Intent(this, UserRegisterActivity.class);
             startActivity(intent);
         }else if(v.getId() == R.id.forget_pass){
-            Intent intent = new Intent(this, ForgetPwdActivity.class);
+            Intent intent = new Intent(this, FindPwdActivity.class);
             startActivity(intent);
         }
     }
@@ -78,15 +83,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             ToastManager.showToast(this, getResources().getString(R.string.input_correct_pass_phone_hit));
         }else {
             mLoadingDialog.show();
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mLoadingDialog.dismiss();
-                    setResult(RESULT_OK);
-                    finish();
-                }
-            }, 1000);
+            UserManager.getInstance().login(user, pass);
         }
     }
 
@@ -99,22 +96,32 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            //Log.v("123---", "beforeTextChanged: " + s.toString() + " count= " + count);
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //Log.v("123---", "onTextChanged: " + s.toString() + " count= " + count);
-            if(TextUtils.isEmpty(s)){
-                mView.setVisibility(View.GONE);
-            }else {
-                mView.setVisibility(View.VISIBLE);
-            }
+//            if(TextUtils.isEmpty(s)){
+//                mView.setVisibility(View.GONE);
+//            }else {
+//                mView.setVisibility(View.VISIBLE);
+//            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            //Log.v("123---", "afterTextChanged: " + s.toString());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if(event instanceof UserEvent.UserLoginSuccess){
+            mLoadingDialog.dismiss();
+            setResult(RESULT_OK);
+            finish();
+        }else if (event instanceof UserEvent.UserLoginFail){
+            mLoadingDialog.dismiss();
+            ToastManager.showToast(this, getString(R.string.input_again));
         }
     }
 }

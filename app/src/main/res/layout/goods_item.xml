@@ -2,7 +2,7 @@
 <com.xxx.gogo.view.goods.GoodsItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:paddingLeft="14dp"
+    android:paddingLeft="8dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:background="@color/goods_item_bg"
@@ -59,35 +59,81 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_gravity="end"
-                android:layout_marginRight="8dp"
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/id_view_switcher"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/minus"
-                    android:src="@drawable/reduce_new"
+                <LinearLayout
+                    android:id="@+id/id_count_container"
+                    android:orientation="horizontal"
+                    android:layout_gravity="end"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="8dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/num"
-                    android:text="2"
-                    android:textSize="16sp"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:text="@string/count"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                    <EditText
+                        android:id="@+id/id_edit_count"
+                        android:background="@drawable/shop_count_edit_bg"
+                        android:textSize="14sp"
+                        android:maxLines="1"
+                        android:inputType="numberDecimal"
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/id_add_cart"
+                    android:text="@string/add_shop_cart"
+                    android:textSize="12sp"
+                    android:background="@drawable/login_bg"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_gravity="end"
                     android:gravity="center"
-                    android:maxLines="1"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="8dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
-                <ImageView
-                    android:id="@+id/add"
-                    android:src="@drawable/add_new"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
+            </FrameLayout>
+
+            <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_gravity="end"-->
+                <!--android:layout_marginRight="8dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/minus"-->
+                    <!--android:clickable="true"-->
+                    <!--android:src="@drawable/reduce_new"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<TextView-->
+                    <!--android:id="@+id/num"-->
+                    <!--android:text="2"-->
+                    <!--android:textSize="16sp"-->
+                    <!--android:gravity="center"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:layout_marginLeft="16dp"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent" />-->
+                <!--<ImageView-->
+                    <!--android:id="@+id/add"-->
+                    <!--android:clickable="true"-->
+                    <!--android:src="@drawable/add_new"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent" />-->
+            <!--</LinearLayout>-->
 
         </FrameLayout>
     </LinearLayout>

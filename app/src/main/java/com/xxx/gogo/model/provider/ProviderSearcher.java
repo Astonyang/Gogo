@@ -1,6 +1,5 @@
-package com.xxx.gogo.model;
+package com.xxx.gogo.model.provider;
 
-import com.xxx.gogo.model.provider.ProviderItemInfo;
 import com.xxx.gogo.utils.ThreadManager;
 
 public class ProviderSearcher {

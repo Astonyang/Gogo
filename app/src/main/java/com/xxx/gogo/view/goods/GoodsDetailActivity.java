@@ -15,7 +15,7 @@ public class GoodsDetailActivity extends BaseToolBarActivity implements View.OnC
 
         setContentView(R.layout.activity_goods_detail);
 
-        createNormalToolBar(R.string.goods_detail, this);
+        createNormalToolBar(R.string.goods_list, this);
 
         initView();
     }

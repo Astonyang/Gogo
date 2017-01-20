@@ -8,9 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+import com.xxx.gogo.BusEvent;
 import com.xxx.gogo.MainActivity;
 import com.xxx.gogo.R;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.user.UserEvent;
+import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.utils.ToastManager;
@@ -21,6 +27,16 @@ import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.view.user.UserInfoActivity;
 
 public class MySelfFragment extends Fragment implements View.OnClickListener{
+    private TextView mBadgeView;
+    private View mLoginView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        BusFactory.getBus().register(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -30,7 +46,7 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
 
         ScrollView root = (ScrollView) inflater.inflate(R.layout.me, container, false);
 
-        root.findViewById(R.id.login_btn).setOnClickListener(this);
+        (mLoginView = root.findViewById(R.id.login_btn)).setOnClickListener(this);
         root.findViewById(R.id.order).setOnClickListener(this);
         root.findViewById(R.id.user_profile).setOnClickListener(this);
         root.findViewById(R.id.restaurant_manager).setOnClickListener(this);
@@ -38,7 +54,23 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
         root.findViewById(R.id.about_us).setOnClickListener(this);
         root.findViewById(R.id.update).setOnClickListener(this);
 
+        if(UserManager.getInstance().isLogin()){
+            mLoginView.setVisibility(View.GONE);
+        }else {
+            mLoginView.setVisibility(View.VISIBLE);
+        }
+
+        mBadgeView = (TextView) root.findViewById(R.id.id_badge);
+
+        testBadge();
+
         return root;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusFactory.getBus().unregister(this);
     }
 
     @Override
@@ -72,8 +104,24 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
         if(requestCode == Constants.START_ORDER_LIST_ACTIVITY && data != null){
             boolean exit = data.getBooleanExtra(Constants.KEY_SWITCH_SHOP_CART, false);
             if(exit){
-                ((MainActivity) getActivity()).switchPage(2);
+                BusFactory.getBus().post(new BusEvent.TabSwitcher(BusEvent.TabSwitcher.TAB_SHOPCART));
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if(event instanceof UserEvent.UserLoginSuccess){
+            mLoginView.setVisibility(View.GONE);
+        }else if (event instanceof UserEvent.UserLoginFail){
+            mLoginView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    //// TODO: 17/1/17
+    private void testBadge(){
+        mBadgeView.setVisibility(View.VISIBLE);
+        mBadgeView.setText("3");
     }
 }
