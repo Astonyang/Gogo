@@ -10,4 +10,7 @@ public interface Constants {
 
     String KEY_EXIT_ACTIVITY = "exit_activity";
     String KEY_SWITCH_SHOP_CART = "switch_to_shop_cart";
+
+    String KEY_PROVIDER_ID = "provider_id";
+    String KEY_GOODS_CATEGORY_ID = "goods_category_id";
 }

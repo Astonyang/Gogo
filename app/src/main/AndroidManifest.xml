@@ -21,7 +21,7 @@
 
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan|stateUnspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,16 +41,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateVisible"/>
         <activity android:name=".view.provider.ProviderDetailActivity" android:screenOrientation="portrait" />
-        <activity android:name=".view.goods.GoodsDetailActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".view.goods.GoodsCategoryActivity" android:screenOrientation="portrait"/>
         <activity android:name=".view.order.OrderConfirmActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.order.OrderListActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.order.OrderDetailActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.user.UserInfoActivity" android:screenOrientation="portrait" />
-        <activity android:name=".view.shop_mgr.ShopManagerActivity" android:screenOrientation="portrait" />
+        <activity android:name=".view.store_mgr.StoreManagerActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.about_us.AboutUsActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.me.SettingActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.user.ChangePasswordActivity" android:screenOrientation="portrait" />
-        <activity android:name=".view.goods.GoodsItemDetailActivity" android:screenOrientation="portrait" />
+        <activity android:name=".view.goods.GoodsDetailActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

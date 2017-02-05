@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">测试</string>
 
+    <string name="crash">出问题了~</string>
+
     <!--tab-->
     <string name="favo">常购</string>
     <string name="provider">供货商</string>
@@ -67,6 +69,12 @@
     <string name="already_at_shopcart">已在购物车</string>
     <string name="succeed_add_shop_cart">成功加入购物车</string>
     <string name="delete_goods_from_cart">删除商品?</string>
+    <string name="go_back">返回</string>
+    <string name="modify">修改</string>
+    <string name="input_number">输入数量：</string>
+    <string name="select_number">选择商品数量</string>
+    <string name="pic_only_for_reference">图片仅供参考，请以实物为准</string>
+    <string name="specific">规格：</string>
 
     <!--order-->
     <string name="order_confirm">订单确认</string>

@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.user.UserEvent;
 import com.xxx.gogo.view.user.ChangePasswordActivity;
 
 public class SettingActivity extends BaseToolBarActivity implements View.OnClickListener{
@@ -19,6 +21,7 @@ public class SettingActivity extends BaseToolBarActivity implements View.OnClick
 
         findViewById(R.id.id_change_pwd).setOnClickListener(this);
         findViewById(R.id.id_change_pwd).setOnClickListener(this);
+        findViewById(R.id.id_quit_btn).setOnClickListener(this);
     }
 
     @Override
@@ -28,8 +31,9 @@ public class SettingActivity extends BaseToolBarActivity implements View.OnClick
         }else if (R.id.id_change_pwd == v.getId()){
             Intent intent = new Intent(this, ChangePasswordActivity.class);
             startActivity(intent);
-        }else if (R.id.id_change_pwd == v.getId()){
-
+        }else if (R.id.id_quit_btn == v.getId()){
+            BusFactory.getBus().post(new UserEvent.UserLogout());
+            finish();
         }
     }
 }

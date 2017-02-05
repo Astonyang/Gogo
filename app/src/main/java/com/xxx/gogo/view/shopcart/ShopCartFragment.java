@@ -22,6 +22,8 @@ import com.xxx.gogo.view.order.OrderConfirmActivity;
 import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.R;
 
+import java.util.Locale;
+
 import static android.app.Activity.RESULT_OK;
 
 public class ShopCartFragment extends Fragment
@@ -120,9 +122,9 @@ public class ShopCartFragment extends Fragment
 
         }else if (event instanceof ShopCartEvent.ShopCartDataChanged){
             ShopCartEvent.ShopCartDataChanged changed = (ShopCartEvent.ShopCartDataChanged)event;
-            if(changed.mChangedType != ShopCartEvent.ShopCartDataChanged.TYPE_COUNT_CHANGED){
-                mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
 
+            if(changed.mChangedType != ShopCartEvent.ShopCartDataChanged.TYPE_PRICE_CHANGED){
                 if(ShopCartModel.getInstance().getCount() != 0){
                     showNextView();
 
@@ -131,7 +133,9 @@ public class ShopCartFragment extends Fragment
                     mNextBtn.setVisibility(View.GONE);
                 }
             }else {
-                mTotalValueTextView.setText(String.valueOf(ShopCartModel.getInstance().getTotalPrice()));
+                double total = Double.parseDouble(String.format(Locale.getDefault(), "%.1f",
+                        ShopCartModel.getInstance().getTotalPrice()));
+                mTotalValueTextView.setText(String.valueOf(total));
             }
         }
     }

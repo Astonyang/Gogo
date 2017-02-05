@@ -10,7 +10,17 @@ public class OffenBuyModel {
             {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
             {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
     };
-    long[] GOODS_ID = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+
+    //todo
+    int GOODS_ID[][] = new int[4][20];
+    {
+          int index = 1;
+          for (int i = 0; i < groupStrings.length; ++i){
+              for (int j = 0; j < 20; ++j){
+                  GOODS_ID[i][j] = index++;
+              }
+          }
+    }
 
     private static class InstanceHolder{
         private static OffenBuyModel sInstance = new OffenBuyModel();
@@ -46,9 +56,9 @@ public class OffenBuyModel {
         return childStrings[groupPosition][childPosition];
     }
 
-    public GoodsItemInfo getGoodsItem(int pos){
+    public GoodsItemInfo getGoodsItem(int groupPos, int childPos){
         GoodsItemInfo itemInfo = new GoodsItemInfo();
-        itemInfo.id = GOODS_ID[pos];
+        itemInfo.id = GOODS_ID[groupPos][childPos];
         itemInfo.imgUrl = "";
         itemInfo.introduce = "Black meal";
         itemInfo.name = "Meal (kg)";

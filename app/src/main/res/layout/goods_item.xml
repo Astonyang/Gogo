@@ -7,7 +7,7 @@
     android:paddingBottom="10dp"
     android:background="@color/goods_item_bg"
     android:layout_width="match_parent"
-    android:layout_height="120dp">
+    android:layout_height="@dimen/goods_item_height">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img"
@@ -77,30 +77,40 @@
                         android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent" />
-                    <EditText
-                        android:id="@+id/id_edit_count"
-                        android:background="@drawable/shop_count_edit_bg"
-                        android:textSize="14sp"
-                        android:maxLines="1"
-                        android:inputType="numberDecimal"
+                    <!--<EditText-->
+                        <!--android:id="@+id/id_edit_count"-->
+                        <!--android:background="@drawable/shop_count_edit_bg"-->
+                        <!--android:textSize="14sp"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:focusable="true"-->
+                        <!--android:focusableInTouchMode="true"-->
+                        <!--android:inputType="number"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_width="70dp"-->
+                        <!--android:layout_height="match_parent" />-->
+
+                    <TextView
+                        android:id="@+id/id_count_value"
                         android:gravity="center"
-                        android:layout_width="60dp"
+                        android:background="@drawable/login_bg"
+                        android:layout_width="70dp"
                         android:layout_height="match_parent" />
+
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/id_add_cart"
-                    android:text="@string/add_shop_cart"
-                    android:textSize="12sp"
-                    android:background="@drawable/login_bg"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_gravity="end"
-                    android:gravity="center"
-                    android:layout_marginRight="8dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                <!--<Button-->
+                    <!--android:id="@+id/id_add_cart"-->
+                    <!--android:text="@string/add_shop_cart"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:background="@drawable/login_bg"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:layout_gravity="end"-->
+                    <!--android:gravity="center"-->
+                    <!--android:layout_marginRight="8dp"-->
+                    <!--android:paddingLeft="2dp"-->
+                    <!--android:paddingRight="2dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent" />-->
             </FrameLayout>
 
             <!--<LinearLayout-->

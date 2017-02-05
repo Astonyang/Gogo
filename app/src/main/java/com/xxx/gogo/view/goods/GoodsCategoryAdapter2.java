@@ -1,84 +1,142 @@
-package com.xxx.gogo.view.goods;
-
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.xxx.gogo.R;
-import com.xxx.gogo.model.goods.GoodsCategoryModel;
-
-public class GoodsCategoryAdapter2 extends
-        RecyclerView.Adapter <GoodsCategoryAdapter2.ViewHolder> {
-    private static final int ITEM_VIEW_TYPE_HEADER = 0;
-    private static final int ITEM_VIEW_TYPE_ITEM = 1;
-
-    private GoodsCategoryModel mModel;
-    private View mHeader;
-
-    public GoodsCategoryAdapter2(GoodsCategoryModel model, View header) {
-        super();
-        mModel = model;
-        mHeader = header;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        if(position == 0){
-            return;
-        }
-        SimpleDraweeView imgView = (SimpleDraweeView) holder.itemView.findViewById(R.id.img);
-        final TextView textView = (TextView) holder.itemView.findViewById(R.id.name);
-
-        final String testUrl = "";//http://goo.gl/gEgYUd";
-
-        Uri uri = Uri.parse(testUrl);
-        imgView.setImageURI(uri);
-        textView.setText(mModel.getName(position -1));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(textView.getContext(), GoodsDetailActivity.class);
-                textView.getContext().startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == ITEM_VIEW_TYPE_HEADER){
-            return new ViewHolder(mHeader);
-        }
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.goods_category_item, parent, false));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mModel.getCount() + 1;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if(position == 0){
-            return ITEM_VIEW_TYPE_HEADER;
-        }
-        return ITEM_VIEW_TYPE_ITEM;
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-}
+//package com.xxx.gogo.view.goods;
+//
+//import android.content.Context;
+//import android.view.LayoutInflater;
+//import android.view.View;
+//import android.view.ViewGroup;
+//import android.widget.BaseExpandableListAdapter;
+//import android.widget.ImageView;
+//import android.widget.TextView;
+//
+//import com.facebook.drawee.view.SimpleDraweeView;
+//import com.xxx.gogo.R;
+//import com.xxx.gogo.model.goods.GoodsCategoryModel;
+//import com.xxx.gogo.model.goods.GoodsItemInfo;
+//import com.xxx.gogo.model.shopcart.ShopCartModel;
+//import com.xxx.gogo.utils.DialogHelper;
+//
+//@Deprecated
+//class GoodsCategoryAdapter2 extends BaseExpandableListAdapter {
+//
+//    private String[] groupStrings = {"牛肉", "羊肉", "鸡肉", "猪肉"};
+//    private String[][] childStrings = {
+//            {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
+//            {"宋江", "林冲", "李逵", "鲁智深"},
+//            {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
+//            {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
+//    };
+//
+//    private Context mContext;
+//
+//    GoodsCategoryAdapter2(Context context){
+//        mContext = context;
+//    }
+//
+//    @Override
+//    public int getGroupCount() {
+//        return groupStrings.length;
+//    }
+//
+//    @Override
+//    public int getChildrenCount(int groupPosition) {
+//        return childStrings[groupPosition].length;
+//    }
+//
+//    @Override
+//    public Object getGroup(int groupPosition) {
+//        return groupStrings[groupPosition];
+//    }
+//
+//    @Override
+//    public Object getChild(int groupPosition, int childPosition) {
+//        return childStrings[groupPosition][childPosition];
+//    }
+//
+//    @Override
+//    public long getGroupId(int groupPosition) {
+//        return groupPosition;
+//    }
+//
+//    @Override
+//    public long getChildId(int groupPosition, int childPosition) {
+//        return childPosition;
+//    }
+//
+//    @Override
+//    public boolean hasStableIds() {
+//        return true;
+//    }
+//
+//    @Override
+//    public View getGroupView(int groupPosition, boolean isExpanded,
+//                             View convertView, ViewGroup parent) {
+//        GroupViewHolder groupViewHolder;
+//        if (convertView == null) {
+//            convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_group, parent, false);
+//            groupViewHolder = new GroupViewHolder();
+//            groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.name);
+//            groupViewHolder.imageView = (ImageView) convertView.findViewById(R.id.img);
+//            convertView.setTag(groupViewHolder);
+//        } else {
+//            groupViewHolder = (GroupViewHolder) convertView.getTag();
+//        }
+//        groupViewHolder.tvTitle.setText(groupStrings[groupPosition]);
+//        if(isExpanded){
+//            groupViewHolder.imageView.setImageResource(R.drawable.ic_expand_more_black_24dp);
+//        }else {
+//            groupViewHolder.imageView.setImageResource(R.drawable.ic_chevron_right_black_24dp);
+//        }
+//        return convertView;
+//    }
+//
+//    @Override
+//    public View getChildView(int groupPosition, int childPosition,
+//                             boolean isLastChild, View convertView, ViewGroup parent) {
+//        GoodsViewHolder viewHolder;
+//        if (convertView == null) {
+//            convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_item,
+//                    parent, false);
+//            viewHolder = new GoodsViewHolder();
+//            viewHolder.imageView = (SimpleDraweeView) convertView.findViewById(R.id.img);
+//            viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
+//            viewHolder.tvIntroduce = (TextView) convertView.findViewById(R.id.introduce);
+//            viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.price);
+//            viewHolder.tvCount = (TextView) convertView.findViewById(R.id.id_count_value);
+//
+//            convertView.setTag(viewHolder);
+//        } else {
+//            viewHolder = (GoodsViewHolder) convertView.getTag();
+//        }
+//
+//        final GoodsItemInfo info = GoodsCategoryModel.getInstance().getGoodsItem(childPosition);
+//        viewHolder.tvName.setText(info.name);
+//        viewHolder.imageView.setImageURI(info.imgUrl);
+//        viewHolder.tvPrice.setText(String.valueOf(info.price));
+//        viewHolder.tvIntroduce.setText(info.introduce);
+//
+//        String id = info.generateId();
+//        if(ShopCartModel.getInstance().contains(id)){
+//            info.count = ShopCartModel.getInstance().getGoodsItem(id).count;
+//        }
+//        viewHolder.tvCount.setText(String.valueOf(info.count));
+//
+//        viewHolder.tvCount.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DialogHelper.showCountSelectDialog(mContext, info);
+//            }
+//        });
+//
+//        return convertView;
+//    }
+//
+//    @Override
+//    public boolean isChildSelectable(int groupPosition, int childPosition) {
+//        return true;
+//    }
+//
+//    static private class GroupViewHolder {
+//        ImageView imageView;
+//        TextView tvTitle;
+//    }
+//}

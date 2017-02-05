@@ -15,6 +15,7 @@ import com.xxx.gogo.R;
 import com.xxx.gogo.model.MainDatabaseHelper;
 import com.xxx.gogo.model.provider.ProviderModel;
 import com.xxx.gogo.utils.CommonUtils;
+import com.xxx.gogo.utils.Constants;
 
 class ProviderAdapter extends BaseAdapter {
     private Context mContext;
@@ -62,7 +63,7 @@ class ProviderAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProviderDetailActivity.class);
-                intent.putExtra("id", ProviderModel.getInstance().getId(position));
+                intent.putExtra(Constants.KEY_PROVIDER_ID, ProviderModel.getInstance().getId(position));
                 mContext.startActivity(intent);
             }
         });

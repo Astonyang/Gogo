@@ -120,6 +120,7 @@
             android:id="@+id/id_phone"
             android:layout_weight="1"
             style="@style/MyEditviewApperance"
+            android:inputType="phone"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
     </LinearLayout>
@@ -141,27 +142,47 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 
-        <EditText
+        <!--<EditText-->
+            <!--android:id="@+id/id_send_time_begin"-->
+            <!--style="@style/MyEditviewApperance"-->
+            <!--android:gravity="center"-->
+            <!--android:inputType="number"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent" />-->
+
+        <TextView
             android:id="@+id/id_send_time_begin"
-            style="@style/MyEditviewApperance"
             android:gravity="center"
+            android:background="@drawable/login_bg"
             android:layout_weight="0.5"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
 
         <View
-            android:background="@color/unlogin_text_color"
+            android:background="@android:color/black"
             android:layout_gravity="center_vertical"
-            android:layout_width="18dp"
+            android:layout_width="16dp"
             android:layout_height="2px" />
 
-        <EditText
+        <TextView
             android:id="@+id/id_sent_time_end"
-            android:layout_weight="0.5"
-            style="@style/MyEditviewApperance"
             android:gravity="center"
+            android:background="@drawable/login_bg"
+            android:layout_marginRight="12dp"
+            android:layout_weight="0.5"
             android:layout_width="0dp"
             android:layout_height="match_parent" />
+
+        <!--<EditText-->
+            <!--android:id="@+id/id_sent_time_end"-->
+            <!--android:layout_weight="0.5"-->
+            <!--style="@style/MyEditviewApperance"-->
+            <!--android:inputType="number"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent" />-->
+
     </LinearLayout>
 
     <View

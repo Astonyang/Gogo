@@ -47,8 +47,8 @@ public class ShopInfoModel implements LowMemoryListener{
         public String addr;
         public String owner;
         public String phone;
-        public short startTime;
-        public short endTime;
+        public String startTime;
+        public String endTime;
     }
 
     @Override

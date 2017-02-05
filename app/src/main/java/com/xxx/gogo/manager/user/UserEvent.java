@@ -23,4 +23,8 @@ public class UserEvent {
     public static class UserLoginFail{
 
     }
+
+    public static class UserLogout{
+
+    }
 }

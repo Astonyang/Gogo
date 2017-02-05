@@ -52,6 +52,28 @@ public class ShopCartModel {
         }
     }
 
+    public void modifyTotalPrice(final double oldValue, final double newValue){
+        /**
+         * just in case that onDataReady was not called before delete or add called
+         * we post "modify" to db thread to queue after "load" operation
+         */
+        if(mGoodsList == null){
+            ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
+                @Override
+                public void run() {
+                    ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+                        @Override
+                        public void run() {
+                            modifyInternal(oldValue, newValue);
+                        }
+                    });
+                }
+            });
+        }else {
+            modifyInternal(oldValue, newValue);
+        }
+    }
+
     public void deleteItem(final GoodsItemInfo info){
         if(mGoodsList == null){
             ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
@@ -92,64 +114,74 @@ public class ShopCartModel {
         }
     }
 
-    public void remove(int pos){
+//    public void remove(int pos){
+//        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+//
+//        GoodsItemInfo info = mGoodsList.get(pos);
+//        remove(info);
+//        mTotalPrice -= info.count * info.price;
+//    }
+
+//    public void remove(GoodsItemInfo info){
+//        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+//
+//        mGoodsList.remove(info);
+//        mGoodsMap.remove(info.generateId());
+//
+//        mTotalPrice -= info.count * info.price;
+//
+//        BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
+//                ShopCartEvent.ShopCartDataChanged.TYPE_DELETE));
+//    }
+
+    private void modifyInternal(double oldValue, double newValue){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
-        GoodsItemInfo info = mGoodsList.get(pos);
-        remove(info);
-        mTotalPrice -= info.count * info.price;
-    }
-
-    public void remove(GoodsItemInfo info){
-        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
-
-        mGoodsList.remove(info);
-        mGoodsMap.remove(info.generateId());
-
-        mTotalPrice -= info.count * info.price;
+        mTotalPrice -= oldValue;
+        mTotalPrice += newValue;
 
         BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
-                ShopCartEvent.ShopCartDataChanged.TYPE_DELETE));
+                ShopCartEvent.ShopCartDataChanged.TYPE_PRICE_CHANGED));
     }
 
     private void addInternal(GoodsItemInfo info){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
         String id = info.generateId();
-        if(!mGoodsMap.containsKey(id)){
-            info.count = 1;
+        if(!mGoodsMap.containsKey(id) && info.count != 0){
             mGoodsList.add(info);
             mGoodsMap.put(info.generateId(), info);
 
-            mTotalPrice += info.price;
-        }
+            mTotalPrice += info.price * info.count;
 
-        BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
+            BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
                 ShopCartEvent.ShopCartDataChanged.TYPE_ADD));
+        }
     }
 
     private void deleteInternal(GoodsItemInfo info){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
-        if(info.count == 0){
-            remove(info);
-        }else {
-            info.count -= 1;
-            if(info.count == 0){
-                remove(info);
-            }else {
-                mTotalPrice -= info.price;
-            }
-        }
+        if(mGoodsMap.containsKey(info.generateId())){
+            mGoodsList.remove(mGoodsMap.remove(info.generateId()));
 
-        BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
-                ShopCartEvent.ShopCartDataChanged.TYPE_DELETE));
+            mTotalPrice -= info.count * info.price;
+
+            BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
+                    ShopCartEvent.ShopCartDataChanged.TYPE_DELETE));
+        }
     }
 
     public int getCount(){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
         return (mGoodsList == null || mGoodsList.isEmpty()) ? 0 : mGoodsList.size();
+    }
+
+    public GoodsItemInfo getGoodsItem(String id){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        return mGoodsMap.containsKey(id) ? mGoodsMap.get(id) : null;
     }
 
     public GoodsItemInfo getGoodsItem(int pos){
@@ -160,14 +192,6 @@ public class ShopCartModel {
 
     public double getTotalPrice(){
         return mTotalPrice;
-    }
-
-    public void modifyTotalPrice(double oldValue, double newValue){
-        mTotalPrice -= oldValue;
-        mTotalPrice += newValue;
-
-        BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
-                ShopCartEvent.ShopCartDataChanged.TYPE_COUNT_CHANGED));
     }
 
     public void clear(){

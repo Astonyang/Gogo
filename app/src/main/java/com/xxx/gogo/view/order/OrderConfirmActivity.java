@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
@@ -33,6 +34,9 @@ public class OrderConfirmActivity extends BaseToolBarActivity implements View.On
         for (int i = 0; i < count; ++i){
             listView.expandGroup(i);
         }
+
+        TextView totalValue = (TextView) findViewById(R.id.total_value);
+        totalValue.setText(String.valueOf(ShopCartModel.getInstance().getTotalPrice()));
     }
 
     @Override

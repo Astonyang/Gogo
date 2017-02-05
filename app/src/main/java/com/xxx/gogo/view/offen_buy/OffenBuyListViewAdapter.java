@@ -1,12 +1,10 @@
 package com.xxx.gogo.view.offen_buy;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,13 +13,18 @@ import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.offen_buy.OffenBuyModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
-import com.xxx.gogo.utils.ToastManager;
+import com.xxx.gogo.utils.DialogHelper;
 import com.xxx.gogo.view.goods.GoodsViewHolder;
 
 public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
-    private Context mContext;
+    private Activity mContext;
 
-    public OffenBuyListViewAdapter(Context context){
+    static private class GroupViewHolder {
+        ImageView imageView;
+        TextView tvTitle;
+    }
+
+    OffenBuyListViewAdapter(Activity context){
         mContext = context;
     }
 
@@ -83,43 +86,39 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final GoodsViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_item,
-                    parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_item, parent, false);
             viewHolder = new GoodsViewHolder();
             viewHolder.imageView = (SimpleDraweeView) convertView.findViewById(R.id.img);
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
             viewHolder.tvIntroduce = (TextView) convertView.findViewById(R.id.introduce);
             viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.price);
             viewHolder.tvIndex = (TextView) convertView.findViewById(R.id.index);
-
-            convertView.findViewById(R.id.id_count_container).setVisibility(View.GONE);
+            viewHolder.tvCount = (TextView) convertView.findViewById(R.id.id_count_value);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (GoodsViewHolder) convertView.getTag();
         }
 
-        final GoodsItemInfo info = OffenBuyModel.getInstance().getGoodsItem(childPosition);
+        final GoodsItemInfo info = OffenBuyModel.getInstance().getGoodsItem(groupPosition, childPosition);
         viewHolder.tvName.setText(info.name);
         viewHolder.imageView.setImageURI(info.imgUrl);
         viewHolder.tvPrice.setText(String.valueOf(info.price));
         viewHolder.tvIntroduce.setText(info.introduce);
 
-        final Button button = (Button) convertView.findViewById(R.id.id_add_cart);
-        if(ShopCartModel.getInstance().contains(info.generateId())){
-            setAddCartButtonState(true, button);
-        }else {
-            setAddCartButtonState(false, button);
+        String id = info.generateId();
+        if(ShopCartModel.getInstance().contains(id)){
+            info.count = ShopCartModel.getInstance().getGoodsItem(id).count;
         }
-        button.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvCount.setText(String.valueOf(info.count));
+        viewHolder.tvCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShopCartModel.getInstance().addItem(info);
-                setAddCartButtonState(true, button);
+                DialogHelper.showCountSelectDialog(mContext, info);
             }
         });
 
@@ -129,24 +128,5 @@ public class OffenBuyListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
-    }
-
-    private void setAddCartButtonState(boolean atShopCart, Button button){
-        if(atShopCart){
-            button.setText(mContext.getString(R.string.already_at_shopcart));
-            button.setEnabled(false);
-            button.setTextColor(Color.GRAY);
-            button.setBackgroundResource(R.drawable.bg_at_shop_cart);
-        }else {
-            button.setText(mContext.getString(R.string.add_shop_cart));
-            button.setEnabled(true);
-            button.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
-            button.setBackgroundResource(R.drawable.login_bg);
-        }
-    }
-
-    static class GroupViewHolder {
-        ImageView imageView;
-        TextView tvTitle;
     }
 }

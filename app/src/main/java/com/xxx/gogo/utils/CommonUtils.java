@@ -13,7 +13,9 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -337,4 +339,17 @@ public final class CommonUtils {
         return (multipliedAlpha << 24) | (color & 0x00FFFFFF);
     }
 
+    public static void showInputMethod(Context context, View view) {
+        InputMethodManager im = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        im.showSoftInput(view, 0);
+    }
+
+    public static void hideInputMethod(View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
+        }
+    }
 }

@@ -1,4 +1,4 @@
 package com.xxx.gogo.model.goods;
 
-public class LocalDataSoure {
+public class LocalDataSource {
 }

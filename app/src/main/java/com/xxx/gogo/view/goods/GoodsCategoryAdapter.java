@@ -1,74 +1,49 @@
 package com.xxx.gogo.view.goods;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
-import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsCategoryModel;
+import com.xxx.gogo.utils.Constants;
 
-public class GoodsCategoryAdapter extends BaseAdapter {
-    private GoodsCategoryModel mModel;
-    private Context mContext;
+class GoodsCategoryAdapter extends FragmentPagerAdapter {
+    private Fragment[] mFragments;
+    private String mProviderId;
 
-    public GoodsCategoryAdapter(Context context, GoodsCategoryModel model){
-        mModel = model;
-        mContext = context;
-    }
+    GoodsCategoryAdapter(FragmentManager fm, String providerId){
+        super(fm);
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.goods_category_item,
-                    parent, false);
-            viewHolder = new ViewHolder();
-            convertView.setTag(viewHolder);
-            viewHolder.imgView = (ImageView) convertView.findViewById(R.id.img);
-            viewHolder.textView = (TextView) convertView.findViewById(R.id.name);
-        }else{
-            viewHolder = (ViewHolder)convertView.getTag();
+        mProviderId = providerId;
+
+        int count = GoodsCategoryModel.getInstance().getCategoryCount(mProviderId);
+        mFragments = new Fragment[count];
+
+        for (int i = 0; i < count; ++i){
+            mFragments[i] = new GoodsFragment();
+
+            Bundle b0 = new Bundle();
+            b0.putString(Constants.KEY_PROVIDER_ID, mProviderId);
+            b0.putString(Constants.KEY_GOODS_CATEGORY_ID,
+                    GoodsCategoryModel.getInstance().getCategoryId(mProviderId, i));
+
+            mFragments[i].setArguments(b0);
         }
-
-        String testUrl = "";//http://goo.gl/gEgYUd";
-
-        Uri uri = Uri.parse(testUrl);
-        viewHolder.imgView.setImageURI(uri);
-        viewHolder.textView.setText(mModel.getName(position));
-
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, GoodsDetailActivity.class);
-                mContext.startActivity(intent);
-            }
-        });
-        return convertView;
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
+    public Fragment getItem(int position) {
+        return mFragments[position];
     }
 
     @Override
     public int getCount() {
-        return mModel.getCount();
+        return GoodsCategoryModel.getInstance().getCategoryCount(mProviderId);
     }
 
-    class ViewHolder{
-        ImageView imgView;
-        TextView textView;
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return GoodsCategoryModel.getInstance().getCategoryName(mProviderId, position);
     }
 }

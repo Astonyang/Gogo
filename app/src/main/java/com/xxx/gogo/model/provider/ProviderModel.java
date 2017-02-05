@@ -25,6 +25,7 @@ public class ProviderModel {
     }
 
     private ProviderModel(){
+        mIds = new HashMap<>();
         mDatas = new ArrayList<>();
         mDataSource = new ProviderLocalDataSource(this);
     }

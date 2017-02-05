@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.order.AllOrderModel;
 
 public class OrderFragmentAdapter extends FragmentPagerAdapter {
     private String[] mTitles;

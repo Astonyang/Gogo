@@ -40,18 +40,20 @@ public class OffenBuyFragment extends Fragment
 
         StartupMetrics.Log("OffenBuyFragment::onCreateView");
 
-        mContainer = (OffenBuyView) inflater.inflate(R.layout.offen_buy, container, false);
+        View root = inflater.inflate(R.layout.offen_buy, container, false);
+        mContainer = (OffenBuyView) root.findViewById(R.id.id_offen_buy);
         mContainer.setDisplayedChild(LIST_VIEW);
 
         mContainer.findViewById(R.id.login_btn).setOnClickListener(this);
         mPullRefreshListView = (PullToRefreshExpandableListView) mContainer.findViewById(
                 R.id.list_view);
-        mAdapter = new OffenBuyListViewAdapter(getContext());
+        mAdapter = new OffenBuyListViewAdapter(getActivity());
+
         mPullRefreshListView.getRefreshableView().setAdapter(mAdapter);
 
         BusFactory.getBus().register(this);
 
-        return mContainer;
+        return root;
     }
 
     @Override
@@ -89,6 +91,7 @@ public class OffenBuyFragment extends Fragment
     @Subscribe
     public void onEvent(Object event){
         if (event instanceof ShopCartEvent.ShopCartDataChanged){
+            //ShopCartEvent.ShopCartDataChanged changed = (ShopCartEvent.ShopCartDataChanged) event;
             mAdapter.notifyDataSetChanged();
         }
     }

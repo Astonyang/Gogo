@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.BusEvent;
-import com.xxx.gogo.MainActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.user.UserEvent;
@@ -22,7 +21,7 @@ import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.utils.ToastManager;
 import com.xxx.gogo.view.about_us.AboutUsActivity;
 import com.xxx.gogo.view.order.OrderListActivity;
-import com.xxx.gogo.view.shop_mgr.ShopManagerActivity;
+import com.xxx.gogo.view.store_mgr.StoreManagerActivity;
 import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.view.user.UserInfoActivity;
 
@@ -85,7 +84,7 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
             Intent intent = new Intent(getContext(), UserInfoActivity.class);
             startActivity(intent);
         }else if(R.id.restaurant_manager == v.getId()) {
-            Intent intent = new Intent(getContext(), ShopManagerActivity.class);
+            Intent intent = new Intent(getContext(), StoreManagerActivity.class);
             startActivity(intent);
         }else if(R.id.setting == v.getId()){
             Intent intent = new Intent(getContext(), SettingActivity.class);
@@ -115,6 +114,8 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
         if(event instanceof UserEvent.UserLoginSuccess){
             mLoginView.setVisibility(View.GONE);
         }else if (event instanceof UserEvent.UserLoginFail){
+            mLoginView.setVisibility(View.VISIBLE);
+        }else if (event instanceof UserEvent.UserLogout){
             mLoginView.setVisibility(View.VISIBLE);
         }
     }
