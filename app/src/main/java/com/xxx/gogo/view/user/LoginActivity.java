@@ -58,7 +58,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         mPhoneEditView.addTextChangedListener(new MyTextWatcher(mCancelPhone));
         mPasswordEdit.addTextChangedListener(new MyTextWatcher(mCancelPassword));
 
-        mLoadingDialog = DialogHelper.createDialog(this);
+        mLoadingDialog = DialogHelper.createLoadingDialog(this);
     }
 
     @Override

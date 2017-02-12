@@ -4,21 +4,20 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.shopcart.ShopCartEvent;
-import com.xxx.gogo.model.MainDatabaseHelper;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.LogUtil;
 import com.xxx.gogo.utils.StartupMetrics;
-import com.xxx.gogo.view.provider.SearchProviderActivity;
+import com.xxx.gogo.view.provider.ProviderSearchActivity;
 
-public class MainActivity extends BaseToolBarActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private ViewPager mPager;
     private TabLayout mTabs;
 
@@ -30,11 +29,10 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
 
         setContentView(R.layout.activity_main);
 
-        createToolBar();
+        //createToolBar();
 
         initViews();
 
-        ShopCartModel.getInstance().setDbHelper(MainDatabaseHelper.getDataBaseHelper(this));
         ShopCartModel.getInstance().load();
 
         BusFactory.getBus().register(this);
@@ -48,13 +46,12 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
         super.onResume();
     }
 
-    @Override
-    protected View createToolBarContentView() {
-        View view = LayoutInflater.from(this).inflate(R.layout.toolbar_main, null);
-        view.findViewById(R.id.add_container).setOnClickListener(this);
-
-        return view;
-    }
+//    protected View createToolBarContentView() {
+//        View view = LayoutInflater.from(this).inflate(R.layout.toolbar_main, null);
+//        view.findViewById(R.id.add_container).setOnClickListener(this);
+//
+//        return view;
+//    }
 
     private void initViews() {
         mTabs = (TabLayout) findViewById(R.id.tabLayout);
@@ -62,7 +59,7 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
 
         final MainFragmentAdapter adapter = new MainFragmentAdapter(this, getSupportFragmentManager());
         mPager.setAdapter(adapter);
-        mPager.setOffscreenPageLimit(1);
+        mPager.setOffscreenPageLimit(4);
         mTabs.setupWithViewPager(mPager);
         for (int i = 0; i < mTabs.getTabCount(); ++i){
             TabLayout.Tab tab = mTabs.getTabAt(i);
@@ -108,7 +105,7 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.add_container){
-            Intent intent = new Intent(this, SearchProviderActivity.class);
+            Intent intent = new Intent(this, ProviderSearchActivity.class);
             startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
             overridePendingTransition(0, 0);
         }

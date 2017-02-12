@@ -1,9 +1,9 @@
 package com.xxx.gogo.model.shopcart;
 
-import android.database.sqlite.SQLiteOpenHelper;
-
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.shopcart.ShopCartEvent;
+import com.xxx.gogo.model.BaseModel;
+import com.xxx.gogo.model.LowMemoryListener;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.order.OrderConfirmModel;
 import com.xxx.gogo.utils.ThreadManager;
@@ -11,7 +11,7 @@ import com.xxx.gogo.utils.ThreadManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ShopCartModel {
+public class ShopCartModel extends BaseModel implements LowMemoryListener{
     private HashMap<String, GoodsItemInfo> mGoodsMap;
     private ArrayList<GoodsItemInfo> mGoodsList;
     private ShopCartDataSource mDataSource;
@@ -30,17 +30,17 @@ public class ShopCartModel {
         mDataSource = new ShopCartDataSource(this);
     }
 
-    public void setDbHelper(SQLiteOpenHelper dbHelper){
-        mDataSource.setDbHelper(dbHelper);
-    }
-
     public boolean contains(String id){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
-        return mGoodsMap.containsKey(id);
+        return mGoodsMap != null && mGoodsMap.containsKey(id);
     }
 
     public void load(){
+        if(mGoodsList != null && !mGoodsList.isEmpty()){
+            return;
+        }
+        mState = STATE_LOADING;
         mDataSource.load();
     }
 
@@ -205,6 +205,7 @@ public class ShopCartModel {
         }
         mTotalPrice = 0.0;
         mDataSource.clear();
+        mState = STATE_INIT;
 
         BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
                 ShopCartEvent.ShopCartDataChanged.TYPE_DELETE));
@@ -217,10 +218,16 @@ public class ShopCartModel {
         mTotalPrice = totalPrice;
         mGoodsMap = goodsMap;
         mGoodsList = list;
+        mState = STATE_LOADED;
         BusFactory.getBus().post(new ShopCartEvent.ShopCartDataLoaded());
     }
 
     public OrderConfirmModel createOrderConfirmModel(){
-        return new OrderConfirmModel();
+        return new OrderConfirmModel(mGoodsList);
+    }
+
+    @Override
+    public void onLowMemory() {
+
     }
 }

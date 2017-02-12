@@ -26,7 +26,7 @@ public class FindPwdActivity extends BaseToolBarActivity implements View.OnClick
 
         findViewById(R.id.send_phone).setOnClickListener(this);
         createNormalToolBar(R.string.forget_password, this);
-        mLoadingDialog = DialogHelper.createDialog(this);
+        mLoadingDialog = DialogHelper.createLoadingDialog(this);
 
         BusFactory.getBus().register(this);
     }

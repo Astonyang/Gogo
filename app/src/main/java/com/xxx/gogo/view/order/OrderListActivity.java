@@ -10,6 +10,7 @@ import android.view.View;
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.MainActivity;
 import com.xxx.gogo.R;
+import com.xxx.gogo.model.order.OrderModel;
 import com.xxx.gogo.utils.Constants;
 
 public class OrderListActivity extends BaseToolBarActivity implements View.OnClickListener{
@@ -19,6 +20,8 @@ public class OrderListActivity extends BaseToolBarActivity implements View.OnCli
         setContentView(R.layout.activity_order_list);
 
         createNormalToolBar(R.string.order_list, this);
+
+        OrderModel.getInstance().load();
 
         initViews();
     }

@@ -3,15 +3,23 @@ package com.xxx.gogo.manager.user;
 import com.google.gson.Gson;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.model.user.UserLoginInfo;
+import com.xxx.gogo.setting.SettingModel;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.ThreadManager;
 
+import java.io.File;
+
 public class UserManager implements UserAgent.Callback{
     private static final String USER_INFO = "user/user_login";
 
+    private String mUserDir;
+    private String mUserId;
+
     private UserAgent mAgent;
-    private boolean mIsLogin;
+
+    private volatile boolean mIsLogin;
+    private volatile boolean mShouldStartMainActivity;
 
     private static class InstanceHolder{
         private static UserManager sInstance = new UserManager();
@@ -21,8 +29,25 @@ public class UserManager implements UserAgent.Callback{
         return InstanceHolder.sInstance;
     }
 
+    public void init(String rootDir){
+        mUserDir += rootDir;
+    }
+
     private UserManager(){
         mAgent = new UserAgent(this);
+    }
+
+    public String getUserId(){
+        return mUserId;
+    }
+
+    public String getUserDir(){
+        return mUserDir;
+    }
+
+    //// TODO: 17/2/10 should remove later
+    public boolean shouldStartMainActivity(){
+        return mShouldStartMainActivity;
     }
 
     public boolean isLogin(){
@@ -38,12 +63,64 @@ public class UserManager implements UserAgent.Callback{
         mAgent.register(userName, password, checkSum, invitationNum);
     }
 
+    public void login(){
+        if(mIsLogin){
+            return;
+        }
+        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+            @Override
+            public void run() {
+                Gson gson = new Gson();
+                byte[] data = CryptoUtil.deEncrypt(FileManager.readGlobalFile(USER_INFO));
+                UserLoginInfo userLoginInfo = null;
+                if(data != null){
+                    userLoginInfo = gson.fromJson(new String(data), UserLoginInfo.class);
+                }
+
+                final UserLoginInfo info = userLoginInfo;
+                ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+                    @Override
+                    public void run() {
+                        if(info != null){
+                            login(info.userName, info.pwd);
+                        }else {
+                            onLoginFail();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     public void login(String userName, String password){
+        if(mIsLogin){
+            return;
+        }
         mAgent.login(userName, password);
+    }
+
+    public void logout(){
+        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+            @Override
+            public void run() {
+                FileManager.deleteGlobalFile(USER_INFO);
+
+                ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+                    @Override
+                    public void run() {
+                        mIsLogin = false;
+
+                        BusFactory.getBus().post(new UserEvent.UserLogout());
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void onLoginFail() {
+        mShouldStartMainActivity = true;
+
         BusFactory.getBus().post(new UserEvent.UserLoginFail());
     }
 
@@ -58,7 +135,12 @@ public class UserManager implements UserAgent.Callback{
     }
 
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String userId) {
+        mUserId = userId;
+        mUserDir += File.separator;
+        mUserDir += mUserId;
+        SettingModel.getInstance().getString(SettingModel.KEY_USER_ID, mUserId);
+
         mIsLogin = true;
         BusFactory.getBus().post(new UserEvent.UserLoginSuccess());
 
@@ -70,9 +152,11 @@ public class UserManager implements UserAgent.Callback{
 
                 byte[] data = CryptoUtil.encrypt(gson.toJson(userLoginInfo).getBytes());
 
-                FileManager.writeFile(USER_INFO, data);
+                FileManager.writeGlobalFile(USER_INFO, data);
             }
         });
+
+        mShouldStartMainActivity = true;
     }
 
     @Override

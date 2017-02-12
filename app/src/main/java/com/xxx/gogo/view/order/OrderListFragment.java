@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.xxx.gogo.MainApplication;
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.order.AllOrderModel;
-import com.xxx.gogo.model.order.CompletedOrderModel;
-import com.xxx.gogo.model.order.PendingOrderModel;
+import com.xxx.gogo.model.order.OrderModel;
+import com.xxx.gogo.utils.Constants;
 
-public class OrderListFragment extends Fragment implements AllOrderModel.Callback{
-    public static final int TYPE_ALL_ORDER = 0;
-    public static final int TYPE_PENDING_ORDER = 1;
-    public static final int TYPE_COMPLETED_ORDER = 2;
-
+public class OrderListFragment extends Fragment implements OrderModel.Callback{
     private int mType;
     private OrderListAdapter mAdapter;
 
@@ -30,21 +26,16 @@ public class OrderListFragment extends Fragment implements AllOrderModel.Callbac
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            mType = bundle.getInt("type");
+            mType = bundle.getInt(Constants.KEY_ORDER_TYPE);
         }
-        switch (mType){
-            case TYPE_ALL_ORDER:
-                AllOrderModel.getInstance().setCallback(this);
-                break;
-            case TYPE_COMPLETED_ORDER:
-                CompletedOrderModel.getInstance().setCallback(this);
-                break;
-            case TYPE_PENDING_ORDER:
-                PendingOrderModel.getInstance().setCallback(this);
-                break;
-            default:
-                break;
-        }
+        OrderModel.getInstance().setCallback(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        MainApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @Nullable
@@ -56,35 +47,26 @@ public class OrderListFragment extends Fragment implements AllOrderModel.Callbac
         mAdapter = new OrderListAdapter(getActivity(), mType);
         listView.setAdapter(mAdapter);
 
-        switch (mType){
-            case TYPE_ALL_ORDER:
-                AllOrderModel.getInstance().load();
-                break;
-            case TYPE_COMPLETED_ORDER:
-                CompletedOrderModel.getInstance().load();
-                break;
-            case TYPE_PENDING_ORDER:
-                PendingOrderModel.getInstance().load();
-                break;
-            default:
-                break;
-        }
-
         return root;
     }
 
     @Override
-    public void onSuccess() {
+    public void onAddFail() {
+
+    }
+
+    @Override
+    public void onAddSuccess() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaded() {
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onOrderChanged() {
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onFail() {
-
     }
 }

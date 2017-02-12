@@ -45,7 +45,11 @@ public class ThreadManager {
     public synchronized static void postTask(int type, Runnable runnable){
         Handler handler = sMaps.get(type);
         if(handler != null){
-            handler.post(runnable);
+            if(handler.getLooper() == Looper.myLooper()){
+                runnable.run();
+            }else {
+                handler.post(runnable);
+            }
         }
     }
 

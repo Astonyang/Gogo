@@ -17,15 +17,21 @@
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
 
-        </activity>
-
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateUnspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan|stateUnspecified">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity android:name=".view.user.LoginActivity"
@@ -37,9 +43,8 @@
         <activity android:name=".view.user.UserRegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateVisible"/>
-        <activity android:name=".view.provider.SearchProviderActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateVisible"/>
+        <activity android:name=".view.provider.ProviderSearchActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".view.provider.ProviderDetailActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.goods.GoodsCategoryActivity" android:screenOrientation="portrait"/>
         <activity android:name=".view.order.OrderConfirmActivity" android:screenOrientation="portrait" />

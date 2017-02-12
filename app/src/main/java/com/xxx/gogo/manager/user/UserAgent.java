@@ -64,7 +64,13 @@ class UserAgent {
                 NetworkInterface.USER_LOGIN_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                mCb.onLoginSuccess();
+                UserLoginProtocol.UserLoginResponse userLoginResponse
+                        = UserLoginProtocol.parseLoginResponse(response);
+                if(userLoginResponse == null || userLoginResponse.data.result == 0){
+                    mCb.onLoginFail();
+                }else {
+                    mCb.onLoginSuccess(userLoginResponse.data.data.customer_id);
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -72,7 +78,7 @@ class UserAgent {
                 ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
                     @Override
                     public void run() {
-                        mCb.onLoginSuccess();
+                        mCb.onLoginSuccess("0000000001");
                     }
                 }, 2000);
                 //mCb.onLoginFail();
@@ -83,7 +89,7 @@ class UserAgent {
     public interface Callback{
         void onFindPasswordSuccess();
         void onRegisterSuccess();
-        void onLoginSuccess();
+        void onLoginSuccess(String userId);
         void onFindPasswordFail();
         void onRegisterFail();
         void onLoginFail();

@@ -17,7 +17,6 @@
 
         <TextView
             android:id="@+id/order_num_tv"
-            android:text="2"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />

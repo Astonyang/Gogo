@@ -17,10 +17,10 @@ public class OrderItemInfo {
 
     public String id;
     public int state;
-    public String shopName;
-    public String price;
-    public String goodsNum;
-    public String startTime;
+    public String storeName;
+    public double price;
+    public int goodsNum;
+    public long startTime;
 
     public String toStringState(Context context){
         int resId = -1;

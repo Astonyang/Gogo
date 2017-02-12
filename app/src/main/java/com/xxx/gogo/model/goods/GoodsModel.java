@@ -18,13 +18,15 @@ public class GoodsModel {
 
     public GoodsItemInfo getGoods(String providerId, String categoryId, int position){
         GoodsItemInfo itemInfo = new GoodsItemInfo();
-        itemInfo.id = 100045;
+        itemInfo.id = GID[position % GID.length];
         itemInfo.imgUrl = "";
         itemInfo.introduce = "Black meal";
         itemInfo.name = "Meal (kg)";
         itemInfo.price = 98.2;
-        itemInfo.providerId = 10930;
+        itemInfo.providerId = Long.valueOf(providerId);
 
         return itemInfo;
     }
+
+    int GID[] = {100001, 100002, 100003, 100004, 100005, 100006, 100007, 100008, 100009, 1100000};
 }

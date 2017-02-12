@@ -7,6 +7,7 @@ public class SettingModel {
     private static final String PREF_FILE_NAME = "xxx_gogo_pref";
 
     public static final String KEY_LAST_LOAD_PROVIDER_TIME = "last_load_provider_time";
+    public static final String KEY_USER_ID = "user_id";
 
     private Context mContext;
     private SharedPreferences mPref;

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
+import com.xxx.gogo.MainApplication;
 import com.xxx.gogo.R;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.shopcart.ShopCartEvent;
@@ -28,6 +29,13 @@ public class GoodsFragment extends Fragment{
             mProviderId = bundle.getString(Constants.KEY_PROVIDER_ID);
             mCategoryId = bundle.getString(Constants.KEY_GOODS_CATEGORY_ID);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        MainApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override

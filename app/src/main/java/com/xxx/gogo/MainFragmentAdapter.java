@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.view.provider.ProviderFragment;
-import com.xxx.gogo.view.offen_buy.OffenBuyFragment;
+import com.xxx.gogo.view.often_buy.OftenBuyFragment;
 import com.xxx.gogo.view.me.MySelfFragment;
 import com.xxx.gogo.view.shopcart.ShopCartFragment;
 
@@ -48,7 +48,7 @@ class MainFragmentAdapter extends FragmentPagerAdapter {
         };
         mFragments = new Fragment[mTitles.length];
         mFragments[0] = new ProviderFragment();
-        mFragments[1] = new OffenBuyFragment();
+        mFragments[1] = new OftenBuyFragment();
         mFragments[2] = new ShopCartFragment();
         mFragments[3] = new MySelfFragment();
     }

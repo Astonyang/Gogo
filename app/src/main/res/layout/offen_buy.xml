@@ -3,39 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.xxx.gogo.view.offen_buy.OffenBuyView
-        android:id="@+id/id_offen_buy"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/not_login" />
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
-            android:id="@+id/list_view"
-            android:cacheColorHint="#00000000"
-            android:divider="@color/div"
-            android:dividerHeight="1dp"
-            android:childDivider="#19000000"
-            android:fadingEdge="none"
-            android:fastScrollEnabled="false"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
-            android:scrollbars="none"
-            android:groupIndicator="@null"
-            android:childIndicator="@null"
+        <include layout="@layout/main_toolbar2"
+            android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="?attr/actionBarSize"/>
 
-    </com.xxx.gogo.view.offen_buy.OffenBuyView>
+        <com.xxx.gogo.view.often_buy.OftenBuyView
+            android:id="@+id/id_offen_buy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <!--<include layout="@layout/dialog_add_shopcart"-->
+            <include layout="@layout/not_login" />
+
+            <ProgressBar
+                android:id="@+id/id_loading"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.handmark.pulltorefresh.library.PullToRefreshListView
+                android:id="@+id/list_view"
+                android:cacheColorHint="#00000000"
+                android:divider="@color/div"
+                android:dividerHeight="1dp"
+                android:childDivider="#19000000"
+                android:fadingEdge="none"
+                android:fastScrollEnabled="false"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"
+                android:scrollbars="none"
+                android:groupIndicator="@null"
+                android:childIndicator="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.xxx.gogo.view.often_buy.OftenBuyView>
+
+        <!--<include layout="@layout/dialog_add_shopcart"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="@dimen/goods_item_height"-->
         <!--android:id="@+id/id_add_cart"-->
         <!--android:visibility="invisible"/>-->
+
+    </LinearLayout>
 
 </FrameLayout>

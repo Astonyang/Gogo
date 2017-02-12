@@ -8,18 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.order.OrderDetailGoodsItem;
-import com.xxx.gogo.model.order.OrderDetailGoodsItemModel;
+import com.xxx.gogo.model.order.OrderItemDetailInfo;
+import com.xxx.gogo.model.order.OrderItemDetailModel;
 
-public class OrderDetailListAdapter extends BaseAdapter
-        implements OrderDetailGoodsItemModel.Callback{
+class OrderDetailListAdapter extends BaseAdapter {
     private Context mContext;
-    private OrderDetailGoodsItemModel mModel;
+    private OrderItemDetailModel mModel;
 
-    public OrderDetailListAdapter(Context context){
+    OrderDetailListAdapter(Context context, OrderItemDetailModel model){
         mContext = context;
-        mModel = new OrderDetailGoodsItemModel(this);
-        mModel.load();
+        mModel = model;
     }
 
     @Override
@@ -45,7 +43,7 @@ public class OrderDetailListAdapter extends BaseAdapter
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        OrderDetailGoodsItem item = mModel.getItem(position);
+        OrderItemDetailInfo item = mModel.getItem(position);
         viewHolder.tvName.setText(item.name);
         viewHolder.tvCount.setText(String.valueOf(item.count));
         viewHolder.tvActualCount.setText(String.valueOf(item.actualCount));
@@ -65,12 +63,7 @@ public class OrderDetailListAdapter extends BaseAdapter
         return null;
     }
 
-    @Override
-    public void onSuccess() {
-        notifyDataSetChanged();
-    }
-
-    class ViewHolder{
+    private static class ViewHolder{
         TextView tvName;
         TextView tvCount;
         TextView tvActualCount;

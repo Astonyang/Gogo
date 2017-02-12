@@ -38,7 +38,7 @@ public class UserRegisterActivity extends BaseToolBarActivity implements View.On
     }
 
     private void initView(){
-        mLoadingDialog = DialogHelper.createDialog(this);
+        mLoadingDialog = DialogHelper.createLoadingDialog(this);
         findViewById(R.id.go_register).setOnClickListener(this);
     }
 

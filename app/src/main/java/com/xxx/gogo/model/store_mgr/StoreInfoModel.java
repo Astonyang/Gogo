@@ -1,4 +1,4 @@
-package com.xxx.gogo.model.shop_mgr;
+package com.xxx.gogo.model.store_mgr;
 
 import com.google.gson.Gson;
 import com.xxx.gogo.model.LowMemoryListener;
@@ -6,23 +6,23 @@ import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.Preconditions;
 
-public class ShopInfoModel implements LowMemoryListener{
+public class StoreInfoModel implements LowMemoryListener{
     private static final String SHOP_INFO = "user/shop_info";
 
-    private ShopInfo mInfo;
+    private StoreInfo mInfo;
 
     public static class InstanceHolder{
-        static ShopInfoModel infoModel = new ShopInfoModel();
+        static StoreInfoModel infoModel = new StoreInfoModel();
     }
 
-    public static ShopInfoModel getInstance(){
+    public static StoreInfoModel getInstance(){
         return InstanceHolder.infoModel;
     }
 
-    private ShopInfoModel(){
+    private StoreInfoModel(){
     }
 
-    public void save(ShopInfo info){
+    public void save(StoreInfo info){
         Preconditions.checkNotNull(info);
 
         mInfo = info;
@@ -30,19 +30,23 @@ public class ShopInfoModel implements LowMemoryListener{
         FileManager.writeFile(SHOP_INFO, CryptoUtil.encrypt(gson.toJson(info).getBytes()));
     }
 
-    public ShopInfo getInfo(){
+    public StoreInfo getInfo(){
         if(mInfo != null){
             return mInfo;
         }
-        byte[] data = CryptoUtil.deEncrypt(FileManager.readFile(SHOP_INFO));
-        if(data == null){
-            return null;
+        byte[] rawData = FileManager.readFile(SHOP_INFO);
+        if(rawData != null && rawData.length != 0){
+            byte[] data = CryptoUtil.deEncrypt(rawData);
+            if(data == null){
+                return null;
+            }
+            Gson gson = new Gson();
+            return gson.fromJson(new String(data), StoreInfo.class);
         }
-        Gson gson = new Gson();
-        return gson.fromJson(new String(data), ShopInfo.class);
+        return null;
     }
 
-    public static class ShopInfo{
+    public static class StoreInfo{
         public String name;
         public String addr;
         public String owner;

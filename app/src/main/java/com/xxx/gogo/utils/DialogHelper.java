@@ -3,8 +3,11 @@ package com.xxx.gogo.utils;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.xxx.gogo.R;
@@ -13,7 +16,8 @@ import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.view.shopcart.GoodsItemCountAdapter;
 
 public class DialogHelper {
-    public static Dialog createDialog(Context context) {
+
+    public static Dialog createLoadingDialog(Context context) {
         Dialog dialog = new Dialog(context, R.style.CustomDialog);
         dialog.setContentView(R.layout.loading);
         dialog.setCanceledOnTouchOutside(false);
@@ -28,6 +32,15 @@ public class DialogHelper {
 
         final AlertDialog dialog = builder.create();
         dialog.show();
+
+        Window dialogWindow = dialog.getWindow();
+        if(dialogWindow != null){
+            WindowManager.LayoutParams p = dialogWindow.getAttributes();
+            p.gravity = Gravity.CENTER;
+            p.height = (int) (CommonUtils.getScreenHeight(context) * 0.6);
+            p.width = (int) (CommonUtils.getScreenWidth(context) * 0.45);
+            dialogWindow.setAttributes(p);
+        }
 
         ListView listView = (ListView) view.findViewById(R.id.list_view);
         listView.setAdapter(new GoodsItemCountAdapter(context,

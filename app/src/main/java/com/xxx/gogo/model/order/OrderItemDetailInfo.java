@@ -1,6 +1,6 @@
 package com.xxx.gogo.model.order;
 
-public class OrderDetailGoodsItem {
+public class OrderItemDetailInfo {
     public String name;
     public double unitPrice;
     public double totalPrice;

@@ -23,7 +23,6 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:text="Provider_12"
         android:id="@+id/provider_name"
         android:layout_alignParentRight="true"
         android:gravity="center"

@@ -17,11 +17,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.xxx.gogo.model.shopcart.ShopCartModel;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 @SuppressWarnings("unused")
 public final class CommonUtils {
@@ -35,6 +38,9 @@ public final class CommonUtils {
     public static final int NET_DEFAULT = NET_WIFI + NET_3G + NET_4G;
 
     private static int sNavigationBarHeight = Integer.MIN_VALUE;
+
+    private static int sScreenWidth;
+    private static int sScreenHeight;
 
     private static class OperatorInfo {
         String mSimMcc;
@@ -351,5 +357,31 @@ public final class CommonUtils {
         if (imm.isActive()) {
             imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
         }
+    }
+
+    public static void toggleSoftInput(Context context){
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    public static int getScreenHeight(Context context){
+        if(sScreenHeight == 0){
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            sScreenHeight = wm.getDefaultDisplay().getHeight();
+        }
+        return sScreenHeight;
+    }
+
+    public static int getScreenWidth(Context context){
+        if(sScreenWidth == 0){
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            sScreenWidth = wm.getDefaultDisplay().getHeight();
+        }
+        return sScreenWidth;
+    }
+
+    public static String formatPrice(double price){
+        return String.format(Locale.getDefault(), "%.1f", price);
     }
 }

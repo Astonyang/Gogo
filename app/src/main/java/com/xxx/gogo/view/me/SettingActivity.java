@@ -9,6 +9,7 @@ import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.user.UserEvent;
+import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.view.user.ChangePasswordActivity;
 
 public class SettingActivity extends BaseToolBarActivity implements View.OnClickListener{
@@ -32,7 +33,7 @@ public class SettingActivity extends BaseToolBarActivity implements View.OnClick
             Intent intent = new Intent(this, ChangePasswordActivity.class);
             startActivity(intent);
         }else if (R.id.id_quit_btn == v.getId()){
-            BusFactory.getBus().post(new UserEvent.UserLogout());
+            UserManager.getInstance().logout();
             finish();
         }
     }

@@ -4,25 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class MainDatabaseHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+import com.xxx.gogo.utils.Constants;
 
+public class MainDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "main.db";
 
-    public static final String TABLE_PROVIDER = "provider";
-    public static final String TABLE_FAVORITE = "favorite";
     public static final String TABLE_SHOPCART = "shopcart";
-
-    private static final String SQL_CREATE_PROVIDER_TABLE = "create table if not exists "
-            + TABLE_PROVIDER
-            + "(    id      INTEGER PRIMARY KEY NOT NULL, "
-            + "     name    TEXT    NOT NULL, "
-            + "     phone   TEXT, "
-            + "     addr    TEXT, "
-            + "     url     TEXT, "
-            + "     lat     REAL, "
-            + "     lng     REAL "
-            + ")";
 
     private static final String SQL_CREATE_SHOPCART_TABLE = "create table if not exists "
             + TABLE_SHOPCART
@@ -41,19 +28,19 @@ public class MainDatabaseHelper extends SQLiteOpenHelper {
 
     private static MainDatabaseHelper sInstance;
 
-    public static synchronized SQLiteOpenHelper getDataBaseHelper(Context context){
-        if(sInstance == null){
-            sInstance = new MainDatabaseHelper(context);
-        }
+    public static void init(Context context){
+        sInstance = new MainDatabaseHelper(context);
+    }
+
+    public static synchronized SQLiteOpenHelper getDataBaseHelper(){
         return sInstance;
     }
 
     private MainDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, Constants.DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_PROVIDER_TABLE);
         db.execSQL(SQL_CREATE_SHOPCART_TABLE);
     }
 

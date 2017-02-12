@@ -12,18 +12,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.MainDatabaseHelper;
+import com.xxx.gogo.model.often_buy.OftenBuyModel;
+import com.xxx.gogo.model.provider.ProviderItemInfo;
 import com.xxx.gogo.model.provider.ProviderModel;
 import com.xxx.gogo.utils.CommonUtils;
-import com.xxx.gogo.utils.Constants;
 
 class ProviderAdapter extends BaseAdapter {
     private Context mContext;
 
     ProviderAdapter(Context context){
         mContext = context;
-        ProviderModel.getInstance().setDbHelper(MainDatabaseHelper.getDataBaseHelper(mContext));
-        ProviderModel.getInstance().checkIfNeedLoad();
     }
 
     @Override
@@ -63,7 +61,8 @@ class ProviderAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProviderDetailActivity.class);
-                intent.putExtra(Constants.KEY_PROVIDER_ID, ProviderModel.getInstance().getId(position));
+                ProviderItemInfo info = ProviderModel.getInstance().getProviderInfo(position);
+                ProviderItemDetailModel.getInstance().setProviderItem(info);
                 mContext.startActivity(intent);
             }
         });
@@ -86,7 +85,9 @@ class ProviderAdapter extends BaseAdapter {
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                String providerId = ProviderModel.getInstance().getId(pos);
                 ProviderModel.getInstance().deleteItem(pos);
+                OftenBuyModel.getInstance().removeByProviderId(providerId);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -98,7 +99,7 @@ class ProviderAdapter extends BaseAdapter {
         dialog.show();
     }
 
-    class ViewHolder{
+    static private class ViewHolder{
         TextView imgView;
         TextView textView;
     }

@@ -7,12 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.xxx.gogo.R;
+import com.xxx.gogo.model.order.OrderModel;
+import com.xxx.gogo.utils.Constants;
 
-public class OrderFragmentAdapter extends FragmentPagerAdapter {
+class OrderFragmentAdapter extends FragmentPagerAdapter {
     private String[] mTitles;
     private Fragment[] mFragments;
 
-    public OrderFragmentAdapter(Context context, FragmentManager fm) {
+    OrderFragmentAdapter(Context context, FragmentManager fm) {
         super(fm);
 
         mTitles = new String[]{
@@ -25,17 +27,17 @@ public class OrderFragmentAdapter extends FragmentPagerAdapter {
 
         mFragments[0] = new OrderListFragment();
         Bundle b0 = new Bundle();
-        b0.putInt("type", OrderListFragment.TYPE_ALL_ORDER);
+        b0.putInt(Constants.KEY_ORDER_TYPE, OrderModel.TYPE_ALL);
         mFragments[0].setArguments(b0);
 
         mFragments[1] = new OrderListFragment();
         Bundle b1 = new Bundle();
-        b1.putInt("type", OrderListFragment.TYPE_PENDING_ORDER);
+        b1.putInt(Constants.KEY_ORDER_TYPE, OrderModel.TYPE_PENDING);
         mFragments[1].setArguments(b1);
 
         mFragments[2] = new OrderListFragment();
         Bundle b2 = new Bundle();
-        b2.putInt("type", OrderListFragment.TYPE_COMPLETED_ORDER);
+        b2.putInt(Constants.KEY_ORDER_TYPE, OrderModel.TYPE_COMPLETED);
         mFragments[2].setArguments(b2);
     }
 

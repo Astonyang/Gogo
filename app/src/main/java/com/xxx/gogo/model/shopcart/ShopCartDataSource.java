@@ -3,7 +3,6 @@ package com.xxx.gogo.model.shopcart;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.xxx.gogo.model.MainDatabaseHelper;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
@@ -17,22 +16,17 @@ class ShopCartDataSource {
     private static final String QUERY_SQL = "select * from " + MainDatabaseHelper.TABLE_SHOPCART;
     private static final String CLEAR_SQL = "delete from " + MainDatabaseHelper.TABLE_SHOPCART;
 
-    private SQLiteOpenHelper mDb;
     private ShopCartModel mCb;
 
     ShopCartDataSource(ShopCartModel model){
         mCb = model;
     }
 
-    void setDbHelper(SQLiteOpenHelper dbHelper){
-        mDb = dbHelper;
-    }
-
     void add(final ArrayList<GoodsItemInfo> list){
         ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = mDb.getWritableDatabase();
+                SQLiteDatabase db = MainDatabaseHelper.getDataBaseHelper().getWritableDatabase();
                 db.beginTransaction();
 
                 try {
@@ -68,7 +62,7 @@ class ShopCartDataSource {
         ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = mDb.getWritableDatabase();
+                SQLiteDatabase db = MainDatabaseHelper.getDataBaseHelper().getWritableDatabase();
                 db.beginTransaction();
 
                 try {
@@ -89,7 +83,7 @@ class ShopCartDataSource {
         ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = mDb.getReadableDatabase();
+                SQLiteDatabase db = MainDatabaseHelper.getDataBaseHelper().getReadableDatabase();
                 Cursor cursor = db.rawQuery(QUERY_SQL, null);
 
                 double totalPrice = 0;

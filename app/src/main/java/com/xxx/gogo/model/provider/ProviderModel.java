@@ -1,7 +1,6 @@
 package com.xxx.gogo.model.provider;
 
-import android.database.sqlite.SQLiteOpenHelper;
-
+import com.xxx.gogo.model.BaseModel;
 import com.xxx.gogo.utils.ThreadManager;
 
 import java.lang.ref.WeakReference;
@@ -10,7 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class ProviderModel {
+public class ProviderModel extends BaseModel{
     private WeakReference<Callback> mCb;
     private ProviderLocalDataSource mDataSource;
     private ArrayList<ProviderItemInfo> mDatas;
@@ -34,10 +33,6 @@ public class ProviderModel {
         mCb = new WeakReference<>(cb);
     }
 
-    public void setDbHelper(SQLiteOpenHelper dbHelper){
-        mDataSource.setDbHelper(dbHelper);
-    }
-
     public void addItem(ProviderItemInfo info){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
@@ -59,6 +54,7 @@ public class ProviderModel {
         }
     }
 
+    @SuppressWarnings("unused")
     public void deleteItem(final ProviderItemInfo info){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
@@ -95,7 +91,16 @@ public class ProviderModel {
     }
 
     public void checkIfNeedLoad(){
+        mState = STATE_LOADING;
         mDataSource.load();
+    }
+
+    public void clear(){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        mIds.clear();
+        mDatas.clear();
+        mState = STATE_INIT;
     }
 
     public String getContactName(int pos){
@@ -116,6 +121,16 @@ public class ProviderModel {
         return null;
     }
 
+
+    public ProviderItemInfo getProviderInfo(int position){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        if(position < mDatas.size()){
+            return mDatas.get(position);
+        }
+        return null;
+    }
+
     public ProviderItemInfo getProviderInfo(String id){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
@@ -128,6 +143,7 @@ public class ProviderModel {
     void onDataReady(ArrayList<ProviderItemInfo> datas, HashMap<String, ProviderItemInfo> idSets){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
+        mState = BaseModel.STATE_LOADED;
         if(datas != null && !datas.isEmpty()){
             mDatas = datas;
             mIds = idSets;

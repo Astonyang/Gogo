@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.BusEvent;
+import com.xxx.gogo.MainApplication;
 import com.xxx.gogo.R;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.user.UserEvent;
@@ -43,9 +44,13 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
 
         StartupMetrics.Log("MySelfFragment::onCreateView");
 
-        ScrollView root = (ScrollView) inflater.inflate(R.layout.me, container, false);
+        View view = inflater.inflate(R.layout.me, container, false);
 
-        (mLoginView = root.findViewById(R.id.login_btn)).setOnClickListener(this);
+        initToolBar(view);
+
+        ScrollView root = (ScrollView) view.findViewById(R.id.id_scroll_view);
+
+                (mLoginView = root.findViewById(R.id.login_btn)).setOnClickListener(this);
         root.findViewById(R.id.order).setOnClickListener(this);
         root.findViewById(R.id.user_profile).setOnClickListener(this);
         root.findViewById(R.id.restaurant_manager).setOnClickListener(this);
@@ -63,35 +68,38 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
 
         testBadge();
 
-        return root;
+        return view;
+    }
+
+    private void initToolBar(View root){
+        //View toolbar = root.findViewById(R.id.my_toolbar);
+        TextView titleView = (TextView) root.findViewById(R.id.id_title);
+        titleView.setText(getString(R.string.myself));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         BusFactory.getBus().unregister(this);
+        MainApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.order){
-            Intent intent = new Intent(getContext(), OrderListActivity.class);
-            startActivityForResult(intent, Constants.START_ORDER_LIST_ACTIVITY);
+            startActivityForResultIfHasLogin(OrderListActivity.class,
+                    Constants.START_ORDER_LIST_ACTIVITY);
         }else if(v.getId() == R.id.login_btn){
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivityForResult(intent, Constants.START_LOGIN_FROM_ME);
         }else if(R.id.user_profile == v.getId()){
-            Intent intent = new Intent(getContext(), UserInfoActivity.class);
-            startActivity(intent);
+            startActivityIfHasLogin(UserInfoActivity.class);
         }else if(R.id.restaurant_manager == v.getId()) {
-            Intent intent = new Intent(getContext(), StoreManagerActivity.class);
-            startActivity(intent);
+            startActivityIfHasLogin(StoreManagerActivity.class);
         }else if(R.id.setting == v.getId()){
-            Intent intent = new Intent(getContext(), SettingActivity.class);
-            startActivity(intent);
+            startActivityIfHasLogin(SettingActivity.class);
         }else if(R.id.about_us == v.getId()){
-            Intent intent = new Intent(getContext(), AboutUsActivity.class);
-            startActivity(intent);
+            startActivityIfHasLogin(AboutUsActivity.class);
         }else if(R.id.update == v.getId()){
             ToastManager.showToast(getContext(), getResources().getString(
                     R.string.update_already_is_latest_ver));
@@ -124,5 +132,23 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
     private void testBadge(){
         mBadgeView.setVisibility(View.VISIBLE);
         mBadgeView.setText("3");
+    }
+
+    private void startActivityIfHasLogin(Class clazz){
+        if(UserManager.getInstance().isLogin()){
+            Intent intent = new Intent(getContext(), clazz);
+            startActivity(intent);
+        }else {
+            ToastManager.showToast(getContext(), getString(R.string.pls_login));
+        }
+    }
+
+    private void startActivityForResultIfHasLogin(Class clazz, int requestCode){
+        if(UserManager.getInstance().isLogin()){
+            Intent intent = new Intent(getContext(), clazz);
+            startActivityForResult(intent, requestCode);
+        }else {
+            ToastManager.showToast(getContext(), getString(R.string.pls_login));
+        }
     }
 }

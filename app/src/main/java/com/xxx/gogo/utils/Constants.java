@@ -1,6 +1,9 @@
 package com.xxx.gogo.utils;
 
 public interface Constants {
+    //db
+    int DATABASE_VERSION = 1;
+
     int START_SEARCH_PROVIDER_CODE = 0;
     int START_LOGIN_FROM_SHOPCART = 1;
     int START_LOGIN_FROM_FAVO = 2;
@@ -13,4 +16,6 @@ public interface Constants {
 
     String KEY_PROVIDER_ID = "provider_id";
     String KEY_GOODS_CATEGORY_ID = "goods_category_id";
+    String KEY_ORDER_TYPE = "order_type";
+    String KEY_ORDER_POSITION = "order_position";
 }

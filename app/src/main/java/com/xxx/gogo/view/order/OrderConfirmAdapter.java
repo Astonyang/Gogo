@@ -10,43 +10,42 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.xxx.gogo.R;
+import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.order.OrderConfirmModel;
 
 public class OrderConfirmAdapter extends BaseExpandableListAdapter {
-    String[] groupStrings = {"订单一", "订单二", "订单三", "订单四"};
-    String[][] childStrings = {
-            {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
-            {"宋江", "林冲", "李逵", "鲁智深"},
-            {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
-            {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
-    };
-
     private Context mContext;
     private OrderConfirmModel mModel;
 
     public OrderConfirmAdapter(Context context, OrderConfirmModel model){
         mContext = context;
         mModel = model;
+        mModel.build(new OrderConfirmModel.Callback() {
+            @Override
+            public void onReady() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public int getGroupCount() {
-        return groupStrings.length;
+        return mModel.getGroupCount();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return childStrings[groupPosition].length;
+        return mModel.getChildCount(groupPosition);
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return groupStrings[groupPosition];
+        return mModel.getGroup(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return childStrings[groupPosition][childPosition];
+        return mModel.getItem(groupPosition, childPosition);
     }
 
     @Override
@@ -74,11 +73,13 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.name);
             groupViewHolder.imageView = (ImageView) convertView.findViewById(R.id.img);
+            groupViewHolder.tvProviderName = (TextView) convertView.findViewById(R.id.provider_name);
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
-        groupViewHolder.tvTitle.setText(groupStrings[groupPosition]);
+        groupViewHolder.tvProviderName.setText(mModel.getGroup(groupPosition));
+        groupViewHolder.tvTitle.setText(mContext.getString(R.string.order) + " " + (groupPosition + 1));
         if(isExpanded){
             groupViewHolder.imageView.setImageResource(R.drawable.ic_expand_more_black_24dp);
         }else {
@@ -105,11 +106,11 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
             viewHolder = (ItemViewHolder) convertView.getTag();
         }
 
-        OrderConfirmModel.ConfirmGoodsItem info = mModel.getItem(childPosition);
+        GoodsItemInfo info = mModel.getItem(groupPosition, childPosition);
         viewHolder.tvName.setText(info.name);
         viewHolder.imageView.setImageURI(info.imgUrl);
         viewHolder.tvCount.setText(String.valueOf(info.count));
-        viewHolder.tvPrice.setText(String.valueOf(info.unitPrice));
+        viewHolder.tvPrice.setText(String.valueOf(info.price));
 
         return convertView;
     }
@@ -119,12 +120,13 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    static class GroupViewHolder {
+    static private class GroupViewHolder {
         ImageView imageView;
         TextView tvTitle;
+        TextView tvProviderName;
     }
 
-    static class ItemViewHolder{
+    static private class ItemViewHolder{
         SimpleDraweeView imageView;
         TextView tvName;
         TextView tvPrice;

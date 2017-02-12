@@ -29,7 +29,8 @@ class ProviderNetDataSource {
             }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            mCb.onDataReady(getTestData());
+            //mCb.onDataReady(getTestData());
+            mCb.onDataReady(null);
         }
     });
 

@@ -54,6 +54,7 @@
             android:layout_height="match_parent" />
         <TextView
             android:id="@+id/get_check_num"
+            android:visibility="gone"
             android:text="@string/get_check_num"
             android:textColor="@android:color/white"
             android:gravity="center"
@@ -72,6 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"/>
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/check_num"
         android:background="#fff"
         android:layout_below="@id/div2"
@@ -196,6 +198,7 @@
         android:layout_height="1px"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/invite"
         android:background="#fff"
         android:layout_below="@id/div5"

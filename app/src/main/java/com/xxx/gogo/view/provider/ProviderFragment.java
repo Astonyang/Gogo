@@ -7,24 +7,35 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.ViewSwitcher;
+import android.widget.TextView;
+import android.widget.ViewAnimator;
+import android.widget.ViewFlipper;
 
+import com.squareup.otto.Subscribe;
+import com.xxx.gogo.MainApplication;
 import com.xxx.gogo.R;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.user.UserEvent;
+import com.xxx.gogo.manager.user.UserManager;
+import com.xxx.gogo.model.BaseModel;
 import com.xxx.gogo.model.provider.ProviderModel;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.utils.ThreadManager;
+import com.xxx.gogo.view.user.LoginActivity;
 
 public class ProviderFragment extends Fragment implements ProviderModel.Callback,
         View.OnClickListener{
-    private static final int LOADING_VIEW = 0;
-    private static final int ADD_PROVIDER_VIEW = 1;
+    private static final int NOT_LOGIN_VIEW = 0;
+    private static final int LOADING_VIEW = 1;
+    private static final int ADD_PROVIDER_VIEW = 2;
+    private static final int LIST_VIEW = 3;
 
     private ProviderAdapter mAdapter;
     private ListView mListView;
-    private ViewSwitcher mEmptyView;
+    private ViewAnimator mRootContainer;
+    private ViewFlipper mContainer;
 
     @Nullable
     @Override
@@ -33,50 +44,99 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
 
         StartupMetrics.Log("ProviderFragment::onCreateView");
 
-        FrameLayout root = (FrameLayout) inflater.inflate(R.layout.provider, container, false);
+        mRootContainer = (ViewAnimator) inflater.inflate(R.layout.provider, container, false);
 
-        mEmptyView = (ViewSwitcher) root.findViewById(R.id.empty);
-        mEmptyView.findViewById(R.id.add_provider_tip).setOnClickListener(this);
+        initToolBar(mRootContainer);
+
+        mContainer = (ViewFlipper) mRootContainer.findViewById(R.id.id_container);
+        mContainer.findViewById(R.id.add_provider_tip).setOnClickListener(this);
+        mContainer.findViewById(R.id.login_btn).setOnClickListener(this);
 
         mAdapter = new ProviderAdapter(getContext());
         ProviderModel.getInstance().setCallback(this);
 
-        mListView = (ListView) root.findViewById(R.id.contact_list_view);
+        mListView = (ListView) mRootContainer.findViewById(R.id.contact_list_view);
         mListView.setAdapter(mAdapter);
-        mEmptyView.setDisplayedChild(LOADING_VIEW);
-        mListView.setEmptyView(mEmptyView);
 
-        return root;
+        if(UserManager.getInstance().isLogin()){
+            if(ProviderModel.getInstance().getState() == BaseModel.STATE_LOADING){
+                mContainer.setDisplayedChild(LOADING_VIEW);
+            }else if (ProviderModel.getInstance().getState() == BaseModel.STATE_LOADED){
+                if(ProviderModel.getInstance().getCount() == 0){
+                    mContainer.setDisplayedChild(ADD_PROVIDER_VIEW);
+                }else {
+                    mContainer.setDisplayedChild(LIST_VIEW);
+                }
+            }else if (ProviderModel.getInstance().getState() == BaseModel.STATE_INIT){
+                ProviderModel.getInstance().checkIfNeedLoad();
+                mContainer.setDisplayedChild(LOADING_VIEW);
+            }
+        }else {
+            mContainer.setDisplayedChild(NOT_LOGIN_VIEW);
+        }
+
+        BusFactory.getBus().register(this);
+
+        return mRootContainer;
+    }
+
+    private void initToolBar(View root){
+        TextView titleView = (TextView) root.findViewById(R.id.id_title);
+        titleView.setText(getString(R.string.provider));
+        View btnContainer = root.findViewById(R.id.id_btn_container);
+        btnContainer.setVisibility(View.VISIBLE);
+        btnContainer.findViewById(R.id.add).setOnClickListener(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        BusFactory.getBus().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        MainApplication.getRefWatcher(getActivity()).watch(this);
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.add_provider_tip){
-            Intent intent = new Intent(getContext(), SearchProviderActivity.class);
+            Intent intent = new Intent(getContext(), ProviderSearchActivity.class);
+            startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
+            getActivity().overridePendingTransition(0, 0);
+        }else if (v.getId() == R.id.login_btn){
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+        }else if (v.getId() == R.id.add){
+            Intent intent = new Intent(getContext(), ProviderSearchActivity.class);
             startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
             getActivity().overridePendingTransition(0, 0);
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == Constants.START_SEARCH_PROVIDER_CODE){
-
-        }
-    }
-
-    @Override
     public void onLoadSuccess() {
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
         mAdapter.notifyDataSetChanged();
+
+        if(ProviderModel.getInstance().getCount() != 0){
+            mContainer.setDisplayedChild(LIST_VIEW);
+        }else {
+            mContainer.setDisplayedChild(ADD_PROVIDER_VIEW);
+        }
     }
 
     @Override
     public void onLoadFail() {
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
-        if(mAdapter.getCount() == 0){
-            mEmptyView.setDisplayedChild(ADD_PROVIDER_VIEW);
+        if(ProviderModel.getInstance().getCount() == 0){
+            mContainer.setDisplayedChild(ADD_PROVIDER_VIEW);
         }
     }
 
@@ -84,6 +144,9 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
     public void onAddItem() {
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
+        if(mContainer.getDisplayedChild() != LIST_VIEW){
+            mContainer.setDisplayedChild(LIST_VIEW);
+        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -91,9 +154,21 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
     public void onDeleteItem() {
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
-        if(mAdapter.getCount() == 0){
-            mEmptyView.setDisplayedChild(ADD_PROVIDER_VIEW);
+        if(ProviderModel.getInstance().getCount() == 0){
+            mContainer.setDisplayedChild(ADD_PROVIDER_VIEW);
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if (event instanceof UserEvent.UserLoginSuccess){
+            mContainer.setDisplayedChild(LOADING_VIEW);
+            ProviderModel.getInstance().checkIfNeedLoad();
+        }else if (event instanceof UserEvent.UserLogout){
+            mContainer.setDisplayedChild(NOT_LOGIN_VIEW);
+            ProviderModel.getInstance().clear();
+        }
     }
 }

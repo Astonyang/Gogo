@@ -1,7 +1,6 @@
 package com.xxx.gogo.view.order;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -11,31 +10,23 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.order.CompletedOrderModel;
 import com.xxx.gogo.model.order.OrderItemInfo;
-import com.xxx.gogo.model.order.AllOrderModel;
-import com.xxx.gogo.model.order.PendingOrderModel;
+import com.xxx.gogo.model.order.OrderModel;
 import com.xxx.gogo.utils.CommonUtils;
 import com.xxx.gogo.utils.Constants;
 
-public class OrderListAdapter extends BaseAdapter {
+class OrderListAdapter extends BaseAdapter {
     private Activity mContext;
     private int mType;
 
-    public OrderListAdapter(Activity context, int type){
+    OrderListAdapter(Activity context, int type){
         mType = type;
         mContext = context;
     }
 
     @Override
     public int getCount() {
-        if(mType == OrderListFragment.TYPE_ALL_ORDER){
-            return AllOrderModel.getInstance().getCount();
-        }else if(mType == OrderListFragment.TYPE_COMPLETED_ORDER){
-            return CompletedOrderModel.getInstance().getCount();
-        }else {
-            return PendingOrderModel.getInstance().getCount();
-        }
+        return OrderModel.getInstance().getCount(mType);
     }
 
     @Override
@@ -55,20 +46,13 @@ public class OrderListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        final OrderItemInfo itemInfo;
-        if(mType == OrderListFragment.TYPE_ALL_ORDER){
-            itemInfo = AllOrderModel.getInstance().getItem(position);
-        }else if(mType == OrderListFragment.TYPE_COMPLETED_ORDER){
-            itemInfo = CompletedOrderModel.getInstance().getItem(position);
-        }else {
-            itemInfo = PendingOrderModel.getInstance().getItem(position);
-        }
+        final OrderItemInfo itemInfo = OrderModel.getInstance().getItem(mType, position);
         viewHolder.tvOrderIndex.setText(itemInfo.id);
         viewHolder.tvState.setText(itemInfo.toStringState(mContext));
-        viewHolder.tvShopName.setText(itemInfo.shopName);
-        viewHolder.tvOrderPrice.setText(itemInfo.price);
-        viewHolder.tvGoodsNum.setText(itemInfo.goodsNum);
-        viewHolder.tvOrderStartTime.setText(itemInfo.startTime);
+        viewHolder.tvShopName.setText(itemInfo.storeName);
+        viewHolder.tvOrderPrice.setText(CommonUtils.formatPrice(itemInfo.price));
+        viewHolder.tvGoodsNum.setText(String.valueOf(itemInfo.goodsNum));
+        viewHolder.tvOrderStartTime.setText(String.valueOf(itemInfo.startTime));
 
         Drawable drawable = CommonUtils.getStateListDrawable(
                 mContext.getResources().getColor(R.color.textColor),
@@ -78,8 +62,9 @@ public class OrderListAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AllOrderModel.getInstance().setDetailItem(itemInfo);
                 Intent intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra(Constants.KEY_ORDER_POSITION, position);
+                intent.putExtra(Constants.KEY_ORDER_TYPE, mType);
                 mContext.startActivityForResult(intent, Constants.START_ORDER_DETAIL_ACTIVITY);
             }
         });
@@ -96,7 +81,7 @@ public class OrderListAdapter extends BaseAdapter {
         return null;
     }
 
-    class ViewHolder{
+    private static class ViewHolder{
         TextView tvOrderIndex;
         TextView tvState;
         TextView tvShopName;

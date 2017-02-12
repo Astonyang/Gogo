@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.order.AllOrderModel;
+import com.xxx.gogo.model.order.OrderItemDetailModel;
 import com.xxx.gogo.model.order.OrderItemInfo;
+import com.xxx.gogo.model.order.OrderModel;
 import com.xxx.gogo.utils.CommonUtils;
 import com.xxx.gogo.utils.Constants;
 
@@ -31,6 +31,17 @@ public class OrderDetailActivity extends BaseToolBarActivity implements View.OnC
     }
 
     private void initView(){
+        Intent intent = getIntent();
+        int position = -1;
+        int type = 0;
+        if(intent != null){
+            position = intent.getIntExtra(Constants.KEY_ORDER_POSITION, -1);
+            type = intent.getIntExtra(Constants.KEY_ORDER_TYPE, -1);
+        }
+        if(position == -1 || type == -1){
+            return;
+        }
+
         ListView listView = (ListView) findViewById(R.id.list_view);
         View headerView = LayoutInflater.from(this).inflate(R.layout.order_detail_header, null);
         TextView tvOrderIndex = (TextView) headerView.findViewById(R.id.order_num_value);
@@ -40,7 +51,7 @@ public class OrderDetailActivity extends BaseToolBarActivity implements View.OnC
         TextView tvOrderStartTime = (TextView) headerView.findViewById(R.id.order_start_time_value);
         TextView tvGoodsNum = (TextView) headerView.findViewById(R.id.goods_num_value);
 
-        final OrderItemInfo itemInfo = AllOrderModel.getInstance().getDetailItem();
+        final OrderItemInfo itemInfo = OrderModel.getInstance().getItem(type, position);
         if(itemInfo == null) {
             finish();
             return;
@@ -54,14 +65,15 @@ public class OrderDetailActivity extends BaseToolBarActivity implements View.OnC
         layoutParams.topMargin = CommonUtils.dp2px(this, 2);
         layoutParams.bottomMargin = CommonUtils.dp2px(this, 2);
 
-        tvShopName.setText(itemInfo.shopName);
-        tvOrderPrice.setText(itemInfo.price);
+        tvShopName.setText(itemInfo.storeName);
+        tvOrderPrice.setText(CommonUtils.formatPrice(itemInfo.price));
         tvGoodsNum.setText(itemInfo.goodsNum);
-        tvOrderStartTime.setText(itemInfo.startTime);
+        tvOrderStartTime.setText(String.valueOf(itemInfo.startTime));
 
         listView.addHeaderView(headerView);
 
-        OrderDetailListAdapter adapter = new OrderDetailListAdapter(this);
+        OrderItemDetailModel model = new OrderItemDetailModel(itemInfo);
+        OrderDetailListAdapter adapter = new OrderDetailListAdapter(this, model);
         listView.setAdapter(adapter);
 
         tvState.setOnClickListener(this);

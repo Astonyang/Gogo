@@ -10,7 +10,7 @@ import android.widget.TimePicker;
 
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.shop_mgr.ShopInfoModel;
+import com.xxx.gogo.model.store_mgr.StoreInfoModel;
 
 public class StoreManagerActivity extends BaseToolBarActivity implements View.OnClickListener{
     private EditText mNameEditView;
@@ -43,7 +43,7 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
         mStartTimeView.setOnClickListener(this);
         mEndTimeView.setOnClickListener(this);
 
-        ShopInfoModel.ShopInfo info = ShopInfoModel.getInstance().getInfo();
+        StoreInfoModel.StoreInfo info = StoreInfoModel.getInstance().getInfo();
         if(info != null){
             mNameEditView.setText(info.name);
             mAddrEditView.setText(info.addr);
@@ -59,7 +59,7 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
         if(v.getId() == R.id.bar_back){
             finish();
         }else if (v.getId() == R.id.save){
-            ShopInfoModel.ShopInfo info = new ShopInfoModel.ShopInfo();
+            StoreInfoModel.StoreInfo info = new StoreInfoModel.StoreInfo();
             info.name = mNameEditView.getText().toString();
             info.addr = mAddrEditView.getText().toString();
             info.owner = mOwnerEditView.getText().toString();
@@ -67,7 +67,7 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
             info.startTime = mStartTimeView.getText().toString();
             info.endTime = mEndTimeView.getText().toString();
 
-            ShopInfoModel.getInstance().save(info);
+            StoreInfoModel.getInstance().save(info);
 
             finish();
         }else if (v.getId() == R.id.id_send_time_begin){
