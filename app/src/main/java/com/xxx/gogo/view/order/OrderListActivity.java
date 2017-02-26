@@ -32,7 +32,7 @@ public class OrderListActivity extends BaseToolBarActivity implements View.OnCli
 
         final OrderFragmentAdapter adapter = new OrderFragmentAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

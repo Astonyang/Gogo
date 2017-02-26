@@ -22,6 +22,7 @@
 
             <ProgressBar
                 android:id="@+id/id_loading"
+                style="@style/CustomProgressBarStyle"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -43,12 +44,6 @@
                 android:layout_height="match_parent" />
 
         </com.xxx.gogo.view.often_buy.OftenBuyView>
-
-        <!--<include layout="@layout/dialog_add_shopcart"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/goods_item_height"-->
-        <!--android:id="@+id/id_add_cart"-->
-        <!--android:visibility="invisible"/>-->
 
     </LinearLayout>
 

@@ -16,6 +16,8 @@
 
     <TextView
         android:id="@+id/name"
+        android:maxLines="1"
+        android:ellipsize="middle"
         android:layout_toRightOf="@id/img"
         android:textSize="@dimen/list_group_item_text_size"
         android:gravity="center"
@@ -24,6 +26,8 @@
 
     <TextView
         android:id="@+id/provider_name"
+        android:maxLines="1"
+        android:ellipsize="middle"
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:layout_width="wrap_content"

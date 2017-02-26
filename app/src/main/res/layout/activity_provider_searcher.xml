@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_root"
     android:orientation="vertical"
     android:paddingTop="8dp"
     android:layout_width="match_parent"
@@ -20,6 +21,7 @@
     <TextView
         android:id="@+id/search_tip"
         android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
         android:gravity="center_vertical"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -33,31 +35,19 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
 
-    <ViewSwitcher
-        android:id="@+id/switcher"
+    <ListView
+        android:id="@+id/contact_list_view"
         android:visibility="gone"
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ProgressBar
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:id="@+id/contact_list_view"
-            android:cacheColorHint="#00000000"
-            android:dividerHeight="1dp"
-            android:fadingEdge="none"
-            android:fastScrollEnabled="false"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="false"
-            android:scrollbars="none" />
-
-    </ViewSwitcher>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:cacheColorHint="#00000000"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="false"
+        android:scrollbars="none" />
 
 </LinearLayout>

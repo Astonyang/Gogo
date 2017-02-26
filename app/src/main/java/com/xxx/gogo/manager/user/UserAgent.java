@@ -1,5 +1,6 @@
 package com.xxx.gogo.manager.user;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -9,13 +10,16 @@ import com.xxx.gogo.utils.ThreadManager;
 
 class UserAgent {
     private Callback mCb;
+    private Object mLoginTag = new Object();
+    private Object mRegisterTag = new Object();
+    private Object mFindPwdTag = new Object();
 
     UserAgent(Callback callback){
         mCb = callback;
     }
 
     void findPassword(String phoneNum){
-        VolleyWrapper.getInstance().requestQueue().add(new StringRequest(
+        Request request = new StringRequest(
                 NetworkInterface.USER_FIND_PASSWORD_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -32,12 +36,14 @@ class UserAgent {
                 }, 2000);
                 //mCb.onFindPasswordFail();
             }
-        }));
+        });
+        request.setTag(mFindPwdTag);
+        VolleyWrapper.getInstance().requestQueue().add(request);
     }
 
     void register(String userName, String password,
                          String checkSum, String invitationNum){
-        VolleyWrapper.getInstance().requestQueue().add(new StringRequest(
+        Request request = new StringRequest(
                 NetworkInterface.USER_REGISTER_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -56,11 +62,13 @@ class UserAgent {
 
                 //mCb.onRegisterFail();
             }
-        }));
+        });
+        request.setTag(mRegisterTag);
+        VolleyWrapper.getInstance().requestQueue().add(request);
     }
 
     void login(String userName, String password){
-        VolleyWrapper.getInstance().requestQueue().add(new StringRequest(
+        Request request = new StringRequest(
                 NetworkInterface.USER_LOGIN_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -83,7 +91,21 @@ class UserAgent {
                 }, 2000);
                 //mCb.onLoginFail();
             }
-        }));
+        });
+        request.setTag(mLoginTag);
+        VolleyWrapper.getInstance().requestQueue().add(request);
+    }
+
+    void cancelLogin(){
+        VolleyWrapper.getInstance().requestQueue().cancelAll(mLoginTag);
+    }
+
+    void cancelRegister(){
+        VolleyWrapper.getInstance().requestQueue().cancelAll(mRegisterTag);
+    }
+
+    void cancelFindPwd(){
+        VolleyWrapper.getInstance().requestQueue().cancelAll(mFindPwdTag);
     }
 
     public interface Callback{

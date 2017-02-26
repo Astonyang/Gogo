@@ -21,11 +21,12 @@
 
             <include layout="@layout/not_login" />
 
-            <ProgressBar
-                android:id="@+id/loading"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <!--<ProgressBar-->
+                <!--android:id="@+id/loading"-->
+                <!--style="@style/CustomProgressBarStyle"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
 
             <TextView
                 android:id="@+id/add_provider_tip"

@@ -26,7 +26,6 @@ public class FindPwdActivity extends BaseToolBarActivity implements View.OnClick
 
         findViewById(R.id.send_phone).setOnClickListener(this);
         createNormalToolBar(R.string.forget_password, this);
-        mLoadingDialog = DialogHelper.createLoadingDialog(this);
 
         BusFactory.getBus().register(this);
     }
@@ -49,17 +48,21 @@ public class FindPwdActivity extends BaseToolBarActivity implements View.OnClick
                 return;
             }
             UserManager.getInstance().findPassword(phone);
-            mLoadingDialog.show();
+            mLoadingDialog = DialogHelper.showLoadingDialog(this, getString(R.string.forget_password));
         }
     }
 
     @Subscribe
     public void onEvent(Object event){
         if(event instanceof UserEvent.UserFindPasswordSuccess){
-            mLoadingDialog.dismiss();
+            if(mLoadingDialog != null){
+                mLoadingDialog.dismiss();
+            }
             finish();
         }else if(event instanceof UserEvent.UserFindPasswordFail){
-            mLoadingDialog.dismiss();
+            if(mLoadingDialog != null){
+                mLoadingDialog.dismiss();
+            }
             ToastManager.showToast(this, getString(R.string.find_pwd_again));
         }
     }

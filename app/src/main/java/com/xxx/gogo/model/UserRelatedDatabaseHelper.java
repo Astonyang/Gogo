@@ -11,7 +11,9 @@ public class UserRelatedDatabaseHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_PROVIDER = "provider";
     public static final String TABLE_OFTEN_BUY = "often_buy";
-    public static final String TABLE_ORDER = "order_info";
+    public static final String TABLE_ORDER= "order_info";
+    //public static final String TABLE_ORDER_COMPLETED = "completed_order_info";
+    //public static final String TABLE_ORDER_PENDING = "pending_order_info";
 
     private static final String SQL_CREATE_PROVIDER_TABLE = "create table if not exists "
             + TABLE_PROVIDER
@@ -41,16 +43,35 @@ public class UserRelatedDatabaseHelper extends SQLiteOpenHelper {
             + ");"
             + " create INDEX provider_index on " + TABLE_OFTEN_BUY + " (provider_id); ";
 
-    private static final String SQL_CREATE_ORDER_TABLE = "create table if not exists "
+    private static final String SQL_CREATE_COMPLETED_ORDER_TABLE = "create table if not exists "
             + TABLE_ORDER
             + "(    id      TEXT PRIMARY KEY NOT NULL, "
-            + "     store_name    TEXT    NOT NULL, "
+            + "     store_name    TEXT    , "
             + "     total_price   REAL, "
             + "     goods_num    INT, "
             + "     time     LONG, "
             + "     state   INT"
             + ")";
 
+//    private static final String SQL_CREATE_COMPLETED_ORDER_TABLE = "create table if not exists "
+//            + TABLE_ORDER_COMPLETED
+//            + "(    id      TEXT PRIMARY KEY NOT NULL, "
+//            + "     store_name    TEXT    , "
+//            + "     total_price   REAL, "
+//            + "     goods_num    INT, "
+//            + "     time     LONG, "
+//            + "     state   INT"
+//            + ")";
+//
+//    private static final String SQL_CREATE_PENDING_ORDER_TABLE = "create table if not exists "
+//            + TABLE_ORDER_PENDING
+//            + "(    id      TEXT PRIMARY KEY NOT NULL, "
+//            + "     store_name    TEXT    , "
+//            + "     total_price   REAL, "
+//            + "     goods_num    INT, "
+//            + "     time     LONG, "
+//            + "     state   INT"
+//            + ")";
 
     private static UserRelatedDatabaseHelper sInstance;
 
@@ -73,7 +94,8 @@ public class UserRelatedDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PROVIDER_TABLE);
         db.execSQL(SQL_CREATE_OFTEN_BUY_TABLE);
-        db.execSQL(SQL_CREATE_ORDER_TABLE);
+        db.execSQL(SQL_CREATE_COMPLETED_ORDER_TABLE);
+        db.execSQL(SQL_CREATE_COMPLETED_ORDER_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

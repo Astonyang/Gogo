@@ -28,9 +28,9 @@ import com.xxx.gogo.view.user.LoginActivity;
 public class ProviderFragment extends Fragment implements ProviderModel.Callback,
         View.OnClickListener{
     private static final int NOT_LOGIN_VIEW = 0;
-    private static final int LOADING_VIEW = 1;
-    private static final int ADD_PROVIDER_VIEW = 2;
-    private static final int LIST_VIEW = 3;
+    //private static final int LOADING_VIEW = 1;
+    private static final int ADD_PROVIDER_VIEW = 1;
+    private static final int LIST_VIEW = 2;
 
     private ProviderAdapter mAdapter;
     private ListView mListView;
@@ -60,7 +60,7 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
 
         if(UserManager.getInstance().isLogin()){
             if(ProviderModel.getInstance().getState() == BaseModel.STATE_LOADING){
-                mContainer.setDisplayedChild(LOADING_VIEW);
+                mContainer.setDisplayedChild(LIST_VIEW);
             }else if (ProviderModel.getInstance().getState() == BaseModel.STATE_LOADED){
                 if(ProviderModel.getInstance().getCount() == 0){
                     mContainer.setDisplayedChild(ADD_PROVIDER_VIEW);
@@ -68,8 +68,8 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
                     mContainer.setDisplayedChild(LIST_VIEW);
                 }
             }else if (ProviderModel.getInstance().getState() == BaseModel.STATE_INIT){
-                ProviderModel.getInstance().checkIfNeedLoad();
-                mContainer.setDisplayedChild(LOADING_VIEW);
+                ProviderModel.getInstance().load();
+                mContainer.setDisplayedChild(LIST_VIEW);
             }
         }else {
             mContainer.setDisplayedChild(NOT_LOGIN_VIEW);
@@ -164,11 +164,10 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
     @Subscribe
     public void onEvent(Object event){
         if (event instanceof UserEvent.UserLoginSuccess){
-            mContainer.setDisplayedChild(LOADING_VIEW);
-            ProviderModel.getInstance().checkIfNeedLoad();
+            mContainer.setDisplayedChild(LIST_VIEW);
+            ProviderModel.getInstance().load();
         }else if (event instanceof UserEvent.UserLogout){
             mContainer.setDisplayedChild(NOT_LOGIN_VIEW);
-            ProviderModel.getInstance().clear();
         }
     }
 }

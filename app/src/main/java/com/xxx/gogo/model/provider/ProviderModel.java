@@ -33,24 +33,21 @@ public class ProviderModel extends BaseModel{
         mCb = new WeakReference<>(cb);
     }
 
-    public void addItem(ProviderItemInfo info){
-        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
-
-        if(mIds != null && mIds.containsKey(info.id)){
-            return;
-        }
-        mDatas.add(info);
-        mIds.put(info.id, info);
-        Collections.sort(mDatas, new Comparator<ProviderItemInfo>() {
-            @Override
-            public int compare(ProviderItemInfo o1, ProviderItemInfo o2) {
-                return o1.name.compareTo(o2.name);
-            }
-        });
-        mDataSource.addItem(info);
-        Callback callback = mCb.get();
-        if(callback != null){
-            callback.onAddItem();
+    public void addItem(final ProviderItemInfo info){
+        if(mDatas.isEmpty()){
+            ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
+                @Override
+                public void run() {
+                    ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+                        @Override
+                        public void run() {
+                            addItemInternal(info);
+                        }
+                    });
+                }
+            });
+        }else {
+            addItemInternal(info);
         }
     }
 
@@ -72,7 +69,46 @@ public class ProviderModel extends BaseModel{
         }
     }
 
-    public void deleteItem(int pos){
+    public void deleteItem(final int pos){
+        if(mDatas.isEmpty()){
+            ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
+                @Override
+                public void run() {
+                    ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+                        @Override
+                        public void run() {
+                            deleteItemInternal(pos);
+                        }
+                    });
+                }
+            });
+        }else {
+            deleteItemInternal(pos);
+        }
+    }
+
+    private void addItemInternal(ProviderItemInfo info){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        if(mIds != null && mIds.containsKey(info.id)){
+            return;
+        }
+        mDatas.add(info);
+        mIds.put(info.id, info);
+        Collections.sort(mDatas, new Comparator<ProviderItemInfo>() {
+            @Override
+            public int compare(ProviderItemInfo o1, ProviderItemInfo o2) {
+                return o1.name.compareTo(o2.name);
+            }
+        });
+        mDataSource.addItem(info);
+        Callback callback = mCb.get();
+        if(callback != null){
+            callback.onAddItem();
+        }
+    }
+
+    private void deleteItemInternal(int pos){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
         ProviderItemInfo info = mDatas.remove(pos);
@@ -90,7 +126,7 @@ public class ProviderModel extends BaseModel{
         return mDatas.size();
     }
 
-    public void checkIfNeedLoad(){
+    public void load(){
         mState = STATE_LOADING;
         mDataSource.load();
     }
@@ -120,7 +156,6 @@ public class ProviderModel extends BaseModel{
         }
         return null;
     }
-
 
     public ProviderItemInfo getProviderInfo(int position){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);

@@ -2,6 +2,7 @@ package com.xxx.gogo.view.provider;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +21,14 @@ import com.xxx.gogo.view.user.LoginActivity;
 
 class ProviderSearchResultAdapter extends BaseAdapter{
     private Activity mActivity;
-    private ProviderSearcher mDataSource;
 
-    ProviderSearchResultAdapter(Activity activity, ProviderSearcher dataSource){
-        mDataSource = dataSource;
+    ProviderSearchResultAdapter(Activity activity){
         mActivity = activity;
     }
 
     @Override
     public int getCount() {
-        return mDataSource.getCount();
+        return ProviderSearcher.getInstance().getCount();
     }
 
     @Override
@@ -46,8 +45,20 @@ class ProviderSearchResultAdapter extends BaseAdapter{
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        final ProviderItemInfo providerItemInfo = mDataSource.getItem(position);
+        final ProviderItemInfo providerItemInfo = ProviderSearcher.getInstance().getItem(position);
         viewHolder.textView.setText(providerItemInfo.name);
+        if(!UserManager.getInstance().isLogin()
+                || ProviderModel.getInstance().getProviderInfo(providerItemInfo.id) == null){
+            viewHolder.button.setEnabled(true);
+            viewHolder.button.setBackgroundResource(R.color.colorPrimary);
+            viewHolder.button.setText(R.string.add);
+            viewHolder.button.setTextColor(Color.WHITE);
+        }else {
+            viewHolder.button.setText(R.string.added);
+            viewHolder.button.setEnabled(false);
+            viewHolder.button.setBackgroundResource(R.color.background_color);
+            viewHolder.button.setTextColor(Color.BLACK);
+        }
 
         viewHolder.button.setOnClickListener(new View.OnClickListener() {
             @Override

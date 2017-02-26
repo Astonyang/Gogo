@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,19 +14,14 @@ import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.order.OrderConfirmModel;
 
-public class OrderConfirmAdapter extends BaseExpandableListAdapter {
+class OrderConfirmAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private OrderConfirmModel mModel;
 
-    public OrderConfirmAdapter(Context context, OrderConfirmModel model){
+    OrderConfirmAdapter(Context context, OrderConfirmModel model){
         mContext = context;
         mModel = model;
-        mModel.build(new OrderConfirmModel.Callback() {
-            @Override
-            public void onReady() {
-                notifyDataSetChanged();
-            }
-        });
+        mModel.build();
     }
 
     @Override
@@ -89,7 +85,7 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         ItemViewHolder viewHolder;
         if (convertView == null) {
@@ -100,6 +96,9 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
             viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.price);
             viewHolder.tvCount = (TextView) convertView.findViewById(R.id.num);
+            viewHolder.tvState = (TextView) convertView.findViewById(R.id.id_state_tv);
+            viewHolder.countContainer = convertView.findViewById(R.id.id_num_container);
+            viewHolder.btnDelete = (Button) convertView.findViewById(R.id.id_delete);
 
             convertView.setTag(viewHolder);
         } else {
@@ -109,8 +108,30 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
         GoodsItemInfo info = mModel.getItem(groupPosition, childPosition);
         viewHolder.tvName.setText(info.name);
         viewHolder.imageView.setImageURI(info.imgUrl);
-        viewHolder.tvCount.setText(String.valueOf(info.count));
-        viewHolder.tvPrice.setText(String.valueOf(info.price));
+
+        if(info.state == GoodsItemInfo.STATE_UNDERCARRIAGE){
+            viewHolder.countContainer.setVisibility(View.GONE);
+            viewHolder.tvState.setVisibility(View.VISIBLE);
+            viewHolder.btnDelete.setVisibility(View.VISIBLE);
+            viewHolder.tvPrice.setVisibility(View.INVISIBLE);
+
+            viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mModel.deleteItem(groupPosition, childPosition);
+                }
+            });
+
+            viewHolder.tvState.setText(mContext.getString(R.string.goods_under_carriage));
+        }else {
+            viewHolder.countContainer.setVisibility(View.VISIBLE);
+            viewHolder.tvState.setVisibility(View.GONE);
+            viewHolder.btnDelete.setVisibility(View.GONE);
+            viewHolder.tvPrice.setVisibility(View.VISIBLE);
+
+            viewHolder.tvCount.setText(String.valueOf(info.count));
+            viewHolder.tvPrice.setText(String.valueOf(info.price));
+        }
 
         return convertView;
     }
@@ -131,5 +152,8 @@ public class OrderConfirmAdapter extends BaseExpandableListAdapter {
         TextView tvName;
         TextView tvPrice;
         TextView tvCount;
+        TextView tvState;
+        View countContainer;
+        Button btnDelete;
     }
 }

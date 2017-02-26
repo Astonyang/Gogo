@@ -8,6 +8,8 @@ public class SettingModel {
 
     public static final String KEY_LAST_LOAD_PROVIDER_TIME = "last_load_provider_time";
     public static final String KEY_USER_ID = "user_id";
+    public static final String KEY_LAST_PURGE_DATA_TIME= "last_purge_time";
+    public static final String KEY_LAST_LOAD_CAT_FROM_SERVER_TIME = "last_load_cat_from_server";
 
     private Context mContext;
     private SharedPreferences mPref;

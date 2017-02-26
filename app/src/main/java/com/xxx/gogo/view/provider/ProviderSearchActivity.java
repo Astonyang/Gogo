@@ -1,5 +1,6 @@
 package com.xxx.gogo.view.provider;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +12,11 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
-import android.widget.ViewSwitcher;
 
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.provider.ProviderSearcher;
 import com.xxx.gogo.utils.CommonUtils;
+import com.xxx.gogo.utils.DialogHelper;
 import com.xxx.gogo.utils.ThreadManager;
 import com.xxx.gogo.utils.ToastManager;
 
@@ -30,35 +31,33 @@ public class ProviderSearchActivity extends AppCompatActivity
 
     private TextView mSearchTip;
     private SearchView mSearchView;
-    private ViewSwitcher mViewSwitcher;
     private View mDiv1;
     private ViewAnimator mFooter;
     private ListView mListView;
+    private Dialog mLoadingDialog;
 
-    private ProviderSearcher mDataSource;
     private ProviderSearchResultAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provider_searcher);
+        findViewById(R.id.id_root).setOnClickListener(this);
 
         mDiv1 = findViewById(R.id.div1);
 
         mSearchTip = (TextView) findViewById(R.id.search_tip);
         mSearchTip.setOnClickListener(this);
         mSearchView = (SearchView) findViewById(R.id.search_view);
-        mViewSwitcher = (ViewSwitcher) findViewById(R.id.switcher);
 
         mSearchView.setOnQueryTextListener(this);
-
-        mDataSource = new ProviderSearcher(this);
 
         mFooter = (ViewAnimator) LayoutInflater.from(this).inflate(
                 R.layout.list_view_footer_loading, null);
 
+        ProviderSearcher.getInstance().init(this);
         mListView = (ListView) findViewById(R.id.contact_list_view);
-        mAdapter = new ProviderSearchResultAdapter(this, mDataSource);
+        mAdapter = new ProviderSearchResultAdapter(this);
 
         mFooter.setOnClickListener(this);
         mFooter.setDisplayedChild(FOOTER_LOAD_MORE);
@@ -96,21 +95,23 @@ public class ProviderSearchActivity extends AppCompatActivity
             if(mFooter.getDisplayedChild() == FOOTER_LOAD_MORE){
                 waitForLoadingMoreData();
             }
+        }else if (v.getId() == R.id.id_root){
+            CommonUtils.hideInputMethod(mSearchView);
         }
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if(mViewSwitcher.getVisibility() == View.VISIBLE){
-            mViewSwitcher.setVisibility(View.GONE);
-            mDiv1.setVisibility(View.GONE);
-        }
         if(!TextUtils.isEmpty(newText)){
             String str = getResources().getString(R.string.search) + newText;
             if(mDiv1.getVisibility() == View.GONE){
                 mDiv1.setVisibility(View.VISIBLE);
             }
             mSearchTip.setText(str);
+        }else {
+            mSearchTip.setText("");
+            mDiv1.setVisibility(View.GONE);
+            mListView.setVisibility(View.GONE);
         }
         return true;
     }
@@ -121,17 +122,23 @@ public class ProviderSearchActivity extends AppCompatActivity
         return true;
     }
 
-    private void doSearch(String query){
-        if(mViewSwitcher.getVisibility() == View.GONE){
-            mViewSwitcher.setVisibility(View.VISIBLE);
-            mDiv1.setVisibility(View.VISIBLE);
+    private void doSearch(final String query){
+        if(!CommonUtils.isWifiConnected(this)){
+            ToastManager.showToast(this, getString(R.string.network_unavailable));
+            return;
         }
-        mViewSwitcher.setDisplayedChild(0);
-
-        mDataSource.load(query);
-
         CommonUtils.hideInputMethod(mSearchView);
         mSearchView.clearFocus();
+
+        //TODO
+        ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+            @Override
+            public void run() {
+                mLoadingDialog = DialogHelper.showLoadingDialog(ProviderSearchActivity.this,
+                        getString(R.string.search_pending));
+                ProviderSearcher.getInstance().load(query);
+            }
+        }, 50);
     }
 
     @Override
@@ -141,15 +148,16 @@ public class ProviderSearchActivity extends AppCompatActivity
 
     @Override
     public void onSuccess(int page) {
-        mAdapter.notifyDataSetChanged();
-        if(page == 0){
-            mViewSwitcher.setDisplayedChild(1);
+        if(mLoadingDialog != null){
+            mLoadingDialog.dismiss();
+            mListView.setVisibility(View.VISIBLE);
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     private void waitForLoadingMoreData(){
         mFooter.setDisplayedChild(FOOTER_LOADING);
 
-        mDataSource.loadNext();
+        ProviderSearcher.getInstance().loadNext();
     }
 }

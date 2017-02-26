@@ -23,6 +23,16 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/id_state_tv"
+        android:layout_below="@id/name"
+        android:layout_toRightOf="@id/img"
+        android:layout_alignBottom="@id/img"
+        android:layout_alignLeft="@id/name"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/price"
         android:gravity="center"
         android:layout_alignTop="@id/img"
@@ -30,22 +40,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/num"
-        android:gravity="center"
+    <FrameLayout
         android:layout_alignBottom="@id/img"
         android:layout_alignParentRight="true"
         android:layout_below="@id/price"
-        android:layout_marginTop="12dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:text="@string/count"
-        android:gravity="center"
-        android:layout_alignTop="@id/num"
-        android:layout_toLeftOf="@id/num"
-        android:layout_below="@id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/id_num_container"
+            android:layout_gravity="bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/id_delete"
+            android:visibility="gone"
+            android:text="@string/delete"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="2dp"
+            android:background="@drawable/login_btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
 </RelativeLayout>

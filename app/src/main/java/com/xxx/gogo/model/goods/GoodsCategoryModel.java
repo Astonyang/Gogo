@@ -1,31 +1,73 @@
 package com.xxx.gogo.model.goods;
 
-public class GoodsCategoryModel {
-    private LocalDataSource mDataSource;
+import com.xxx.gogo.model.BaseModel;
+import com.xxx.gogo.utils.ThreadManager;
 
-    String name[] = {"C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11",
-            "C21", "C22", "C23", "C24", "C25", "C26", "C27", "C28", "C29", "C20", "C21"};
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
-    private static class InstanceHolder{
-        private static GoodsCategoryModel sInstance = new GoodsCategoryModel();
+public class GoodsCategoryModel extends BaseModel
+        implements GoodsCategoryLocalDataSource.Callback{
+    private GoodsCategoryLocalDataSource mDataSource;
+    private WeakReference<Callback> mCb;
+
+    private List<GoodsCategoryItemInfo> mItemList;
+
+    GoodsCategoryModel(Callback callback, String providerId){
+        mCb = new WeakReference<>(callback);
+        mItemList = new ArrayList<>();
+        mDataSource = new GoodsCategoryLocalDataSource(this, providerId);
     }
 
-    public static GoodsCategoryModel getInstance(){
-        return InstanceHolder.sInstance;
+    public void load(){
+        if(mState != STATE_LOADING){
+            mDataSource.load();
+            mState = STATE_LOADING;
+        }
     }
 
-    private GoodsCategoryModel(){
+    public int getCategoryCount(){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        return mItemList.size();
     }
 
-    public int getCategoryCount(String providerId){
-        return name.length;
+    public String getCategoryName(int position){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        return mItemList.get(position).name;
     }
 
-    public String getCategoryName(String providerId, int position){
-        return name[position];
+    public String getCategoryId(int position){
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        return String.valueOf(mItemList.get(position).id);
     }
 
-    public String getCategoryId(String providerId, int position){
-        return String.valueOf(position);
+    @Override
+    public void onFail(boolean fromLocal) {
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        if(mCb != null && mCb.get() != null && mItemList.isEmpty() && !fromLocal){
+            mCb.get().onFail();
+        }
+        mState = STATE_LOADED;
+    }
+
+    @Override
+    public void onSuccess(List<GoodsCategoryItemInfo> infoList) {
+        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
+
+        mItemList = infoList;
+        if(mCb != null && mCb.get() != null){
+            mCb.get().onSuccess();
+        }
+        mState = STATE_LOADED;
+    }
+
+    public interface Callback{
+        void onSuccess();
+        void onFail();
     }
 }

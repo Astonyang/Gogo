@@ -31,12 +31,16 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
         mAddrEditView = (EditText) findViewById(R.id.id_addr);
         mTitleEditView = (EditText) findViewById(R.id.id_title);
 
-        UserInfoModel.UserInfo userInfo = UserInfoModel.getInstance().getInfo();
-        if(userInfo != null){
-            mNameEditView.setText(userInfo.name);
-            mAddrEditView.setText(userInfo.addr);
-            mTitleEditView.setText(userInfo.title);
-        }
+        UserInfoModel.getInstance().getInfo(new UserInfoModel.LoadCallback() {
+            @Override
+            public void onLoaded(UserInfoModel.UserInfo userInfo) {
+                if(userInfo != null){
+                    mNameEditView.setText(userInfo.name);
+                    mAddrEditView.setText(userInfo.addr);
+                    mTitleEditView.setText(userInfo.title);
+                }
+            }
+        });
     }
 
     @Override

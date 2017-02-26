@@ -38,7 +38,6 @@ public class UserRegisterActivity extends BaseToolBarActivity implements View.On
     }
 
     private void initView(){
-        mLoadingDialog = DialogHelper.createLoadingDialog(this);
         findViewById(R.id.go_register).setOnClickListener(this);
     }
 
@@ -59,7 +58,7 @@ public class UserRegisterActivity extends BaseToolBarActivity implements View.On
                 return;
             }
             UserManager.getInstance().register(userName, pwd, checksum, invitationNum);
-            mLoadingDialog.show();
+            mLoadingDialog = DialogHelper.showLoadingDialog(this, getString(R.string.register_pending));
         }
     }
 
@@ -67,9 +66,13 @@ public class UserRegisterActivity extends BaseToolBarActivity implements View.On
     public void onEvent(Object event){
         if(event instanceof UserEvent.UserRegisterSuccess){
             finish();
-            mLoadingDialog.dismiss();
+            if(mLoadingDialog != null){
+                mLoadingDialog.dismiss();
+            }
         }else if (event instanceof UserEvent.UserRegisterFail){
-            mLoadingDialog.dismiss();
+            if(mLoadingDialog != null){
+                mLoadingDialog.dismiss();
+            }
             ToastManager.showToast(this, getString(R.string.input_again));
         }
     }

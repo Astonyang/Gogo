@@ -7,20 +7,20 @@
     <TextView
         android:text="@string/load_more"
         android:gravity="center"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
     <TextView
         android:text="@string/loading"
         android:gravity="center"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
     <TextView
         android:text="@string/no_more_data"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="60dp" />

@@ -10,9 +10,9 @@ import com.xxx.gogo.R;
 import com.xxx.gogo.model.order.OrderModel;
 import com.xxx.gogo.utils.Constants;
 
-class OrderFragmentAdapter extends FragmentPagerAdapter {
+class OrderFragmentAdapter extends FragmentPagerAdapter implements OrderModel.Callback{
     private String[] mTitles;
-    private Fragment[] mFragments;
+    private OrderListFragment[] mFragments;
 
     OrderFragmentAdapter(Context context, FragmentManager fm) {
         super(fm);
@@ -23,7 +23,7 @@ class OrderFragmentAdapter extends FragmentPagerAdapter {
                 context.getResources().getString(R.string.completed_order),
         };
 
-        mFragments = new Fragment[mTitles.length];
+        mFragments = new OrderListFragment[mTitles.length];
 
         mFragments[0] = new OrderListFragment();
         Bundle b0 = new Bundle();
@@ -39,6 +39,8 @@ class OrderFragmentAdapter extends FragmentPagerAdapter {
         Bundle b2 = new Bundle();
         b2.putInt(Constants.KEY_ORDER_TYPE, OrderModel.TYPE_COMPLETED);
         mFragments[2].setArguments(b2);
+
+        OrderModel.getInstance().setCallback(this);
     }
 
     @Override
@@ -54,5 +56,12 @@ class OrderFragmentAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mTitles[position];
+    }
+
+    @Override
+    public void onLoaded() {
+        mFragments[0].notifyOrderLoaded();
+        mFragments[1].notifyOrderLoaded();
+        mFragments[2].notifyOrderLoaded();
     }
 }

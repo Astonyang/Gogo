@@ -22,10 +22,13 @@ class ProviderDetailAdapter extends
     private View mHeader;
     private String mProviderId;
 
-    ProviderDetailAdapter(View header, String providerId) {
+    private GoodsCategoryModel mModel;
+
+    ProviderDetailAdapter(View header, String providerId, GoodsCategoryModel model) {
         super();
         mHeader = header;
         mProviderId = providerId;
+        mModel = model;
     }
 
     @Override
@@ -41,7 +44,7 @@ class ProviderDetailAdapter extends
         final int pos = position - 1;
         Uri uri = Uri.parse(testUrl);
         imgView.setImageURI(uri);
-        textView.setText(GoodsCategoryModel.getInstance().getCategoryName(mProviderId, pos));
+        textView.setText(mModel.getCategoryName(pos));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +52,7 @@ class ProviderDetailAdapter extends
                 Intent intent = new Intent(textView.getContext(), GoodsCategoryActivity.class);
                 intent.putExtra(Constants.KEY_PROVIDER_ID, mProviderId);
 
-                String typeId = GoodsCategoryModel.getInstance().getCategoryId(mProviderId, pos);
+                String typeId = mModel.getCategoryId(pos);
                 intent.putExtra(Constants.KEY_GOODS_CATEGORY_ID, typeId);
 
                 textView.getContext().startActivity(intent);
@@ -68,7 +71,7 @@ class ProviderDetailAdapter extends
 
     @Override
     public int getItemCount() {
-        return GoodsCategoryModel.getInstance().getCategoryCount(mProviderId) + 1;
+        return mModel.getCategoryCount() + 1;
     }
 
     @Override

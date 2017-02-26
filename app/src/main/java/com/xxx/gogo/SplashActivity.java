@@ -40,7 +40,8 @@ public class SplashActivity extends Activity {
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(Object event){
-        if(event instanceof UserEvent.UserLoginSuccess || event instanceof UserEvent.UserLoginFail){
+        if(event instanceof UserEvent.UserLoginSuccess
+                || event instanceof UserEvent.UserLoginFail){
             startMainActivity();
         }
     }

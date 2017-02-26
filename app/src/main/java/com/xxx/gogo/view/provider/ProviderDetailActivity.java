@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ViewAnimator;
 
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.BaseToolBarActivity;
@@ -17,20 +18,32 @@ import com.xxx.gogo.MainActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.shopcart.ShopCartEvent;
+import com.xxx.gogo.model.goods.GoodsCategoryModel;
+import com.xxx.gogo.model.goods.GoodsCategoryModelFactory;
 import com.xxx.gogo.model.provider.ProviderItemInfo;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.CommonUtils;
 
 
-public class ProviderDetailActivity extends BaseToolBarActivity implements View.OnClickListener{
+public class ProviderDetailActivity extends BaseToolBarActivity
+        implements View.OnClickListener,
+        GoodsCategoryModel.Callback{
+    private static final int VIEW_LOADING = 0;
+    private static final int VIEW_LOAD_AGAIN = 1;
+    private static final int VIEW_GRID = 2;
+
     private TextView mShopCartCountTv;
     private TextView mTotalValueTv;
+    private ViewAnimator mViewAnimator;
+
+    private ProviderDetailAdapter mAdapter;
+    private GoodsCategoryModel mModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_provider_detail2);
+        setContentView(R.layout.activity_provider_detail);
 
         createNormalToolBar(R.string.provider_detail, this);
         initView();
@@ -39,15 +52,21 @@ public class ProviderDetailActivity extends BaseToolBarActivity implements View.
     }
 
     private void initView(){
+        mViewAnimator = (ViewAnimator) findViewById(R.id.view_animator);
+        mViewAnimator.setDisplayedChild(VIEW_LOADING);
+        mViewAnimator.findViewById(R.id.id_btn_load_again).setOnClickListener(this);
+
         View header = LayoutInflater.from(this).inflate(R.layout.goods_cat_header, null);
 
         ProviderItemInfo info = ProviderItemDetailModel.getInstance().getItemInfo();
-        ProviderDetailAdapter adapter = new ProviderDetailAdapter(header, info.id);
+        mModel = GoodsCategoryModelFactory.createModel(this, info.id);
+        mModel.load();
+        mAdapter = new ProviderDetailAdapter(header, info.id, mModel);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.id_recycler_view);
         final GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
 
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -108,6 +127,9 @@ public class ProviderDetailActivity extends BaseToolBarActivity implements View.
             BusFactory.getBus().post(new BusEvent.TabSwitcher(BusEvent.TabSwitcher.TAB_SHOPCART));
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+        }else if (v.getId() == R.id.id_btn_load_again){
+            mModel.load();
+            mViewAnimator.setDisplayedChild(VIEW_LOADING);
         }
     }
 
@@ -118,6 +140,21 @@ public class ProviderDetailActivity extends BaseToolBarActivity implements View.
             mShopCartCountTv.setText(String.valueOf(ShopCartModel.getInstance().getCount()));
             mTotalValueTv.setText(CommonUtils.formatPrice(
                     ShopCartModel.getInstance().getTotalPrice()));
+        }
+    }
+
+    @Override
+    public void onFail() {
+        mViewAnimator.setDisplayedChild(VIEW_LOAD_AGAIN);
+    }
+
+    @Override
+    public void onSuccess() {
+        if(mViewAnimator.getDisplayedChild() != VIEW_GRID){
+            mViewAnimator.setDisplayedChild(VIEW_GRID);
+        }
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

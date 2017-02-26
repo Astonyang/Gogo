@@ -27,7 +27,6 @@ import com.xxx.gogo.view.user.LoginActivity;
 import com.xxx.gogo.view.user.UserInfoActivity;
 
 public class MySelfFragment extends Fragment implements View.OnClickListener{
-    private TextView mBadgeView;
     private View mLoginView;
 
     @Override
@@ -63,10 +62,6 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
         }else {
             mLoginView.setVisibility(View.VISIBLE);
         }
-
-        mBadgeView = (TextView) root.findViewById(R.id.id_badge);
-
-        testBadge();
 
         return view;
     }
@@ -126,12 +121,6 @@ public class MySelfFragment extends Fragment implements View.OnClickListener{
         }else if (event instanceof UserEvent.UserLogout){
             mLoginView.setVisibility(View.VISIBLE);
         }
-    }
-
-    //// TODO: 17/1/17
-    private void testBadge(){
-        mBadgeView.setVisibility(View.VISIBLE);
-        mBadgeView.setText("3");
     }
 
     private void startActivityIfHasLogin(Class clazz){

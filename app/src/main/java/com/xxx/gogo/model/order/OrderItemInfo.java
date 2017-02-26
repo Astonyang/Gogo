@@ -5,15 +5,13 @@ import android.content.Context;
 import com.xxx.gogo.R;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
 
 public class OrderItemInfo {
     public static final int STATE_CREATED = 0;
     public static final int STATE_CANCELED = 1;
     public static final int STATE_PENDING = 2;
-    public static final int STATE_ACCEPTED = 3;
-    public static final int STATE_COMPLETED = 4;
+    public static final int STATE_COMPLETED = 3;
+    public static final int STATE_DENIED = 4;
 
     public String id;
     public int state;
@@ -35,10 +33,10 @@ public class OrderItemInfo {
                 resId = R.string.order_state_pending;
                 break;
             case 3:
-                resId = R.string.order_state_accepted;
+                resId = R.string.order_state_completed;
                 break;
             case 4:
-                resId = R.string.order_state_completed;
+                resId = R.string.order_detail;
                 break;
             default:
                 break;

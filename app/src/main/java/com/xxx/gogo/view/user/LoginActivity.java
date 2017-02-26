@@ -1,6 +1,7 @@
 package com.xxx.gogo.view.user;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +18,9 @@ import com.xxx.gogo.R;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.user.UserEvent;
 import com.xxx.gogo.manager.user.UserManager;
+import com.xxx.gogo.utils.CommonUtils;
 import com.xxx.gogo.utils.DialogHelper;
+import com.xxx.gogo.utils.ThreadManager;
 import com.xxx.gogo.utils.ToastManager;
 
 public class LoginActivity extends BaseToolBarActivity implements View.OnClickListener{
@@ -47,6 +50,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
     }
 
     private void initView(){
+        findViewById(R.id.id_root).setOnClickListener(this);
         findViewById(R.id.forget_pass).setOnClickListener(this);
         findViewById(R.id.fast_register).setOnClickListener(this);
         findViewById(R.id.go_login).setOnClickListener(this);
@@ -57,8 +61,6 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         mPasswordEdit = (EditText)findViewById(R.id.id_edit_password);
         mPhoneEditView.addTextChangedListener(new MyTextWatcher(mCancelPhone));
         mPasswordEdit.addTextChangedListener(new MyTextWatcher(mCancelPassword));
-
-        mLoadingDialog = DialogHelper.createLoadingDialog(this);
     }
 
     @Override
@@ -66,6 +68,10 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         if(v.getId() == R.id.bar_back){
             finish();
         }else if(v.getId() == R.id.go_login){
+            if(!CommonUtils.isWifiConnected(this)) {
+                ToastManager.showToast(this, getString(R.string.network_unavailable));
+                return;
+            }
             doLogin();
         }else if(v.getId() == R.id.fast_register){
             Intent intent = new Intent(this, UserRegisterActivity.class);
@@ -73,17 +79,40 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         }else if(v.getId() == R.id.forget_pass){
             Intent intent = new Intent(this, FindPwdActivity.class);
             startActivity(intent);
+        }else if (v.getId() == R.id.id_root){
+            CommonUtils.hideInputMethod(mPasswordEdit);
         }
     }
 
     private void doLogin(){
-        String user = mPhoneEditView.getText().toString();
-        String pass = mPasswordEdit.getText().toString();
+        final String user = mPhoneEditView.getText().toString();
+        final String pass = mPasswordEdit.getText().toString();
         if(TextUtils.isEmpty(user) || TextUtils.isEmpty(pass)){
-            ToastManager.showToast(this, getResources().getString(R.string.input_correct_pass_phone_hit));
+            ToastManager.showToast(this, getResources().getString(
+                    R.string.input_correct_pass_phone_hit));
         }else {
-            mLoadingDialog.show();
-            UserManager.getInstance().login(user, pass);
+            CommonUtils.hideInputMethod(mPasswordEdit);
+
+            /**
+             * TODO
+             * post delay task的原因：由于输入框的干扰，造成loading dialog会随着输入框的消失从上方往下移，体验不好
+             */
+            ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+                @Override
+                public void run() {
+                    UserManager.getInstance().login(user, pass);
+
+                    mLoadingDialog = DialogHelper.showLoadingDialog(LoginActivity.this,
+                            getString(R.string.login_pending));
+                    mLoadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            UserManager.getInstance().cancelLogin();
+                        }
+                    });
+                }
+            }, 50);
+
         }
     }
 
@@ -116,11 +145,15 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
     @Subscribe
     public void onEvent(Object event){
         if(event instanceof UserEvent.UserLoginSuccess){
-            mLoadingDialog.dismiss();
+            if(mLoadingDialog != null){
+                mLoadingDialog.dismiss();
+            }
             setResult(RESULT_OK);
             finish();
         }else if (event instanceof UserEvent.UserLoginFail){
-            mLoadingDialog.dismiss();
+            if(mLoadingDialog != null){
+                mLoadingDialog.dismiss();
+            }
             ToastManager.showToast(this, getString(R.string.input_again));
         }
     }

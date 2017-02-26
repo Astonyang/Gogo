@@ -34,6 +34,9 @@ public class UserManager implements UserAgent.Callback{
     }
 
     private UserManager(){
+        mUserDir = "";
+        mUserId = "";
+
         mAgent = new UserAgent(this);
     }
 
@@ -115,6 +118,18 @@ public class UserManager implements UserAgent.Callback{
                 });
             }
         });
+    }
+
+    public void cancelLogin(){
+        mAgent.cancelLogin();
+    }
+
+    public void cancelRegister(){
+        mAgent.cancelRegister();
+    }
+
+    public void cancelFindPwd(){
+        mAgent.cancelFindPwd();
     }
 
     @Override

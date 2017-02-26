@@ -41,9 +41,12 @@
     <string name="find_pwd_again">请重新发送手机号</string>
     <string name="input_again">输入有误，请重新输入</string>
     <string name="pls_login">请先登录</string>
+    <string name="login_pending">登录中</string>
+    <string name="register_pending">注册中</string>
 
     <!--provider-->
     <string name="add">添加</string>
+    <string name="added">已添加</string>
     <string name="add_provider">添加供货商</string>
     <string name="search_provider_hint">请输入供货商名字</string>
     <string name="search">搜索：  </string>
@@ -59,6 +62,7 @@
     <string name="goods_cat">商品种类</string>
     <string name="provider_icon">供货</string>
     <string name="search_provider_no_result">没找到任何供货商</string>
+    <string name="search_pending">搜索中</string>
 
     <string name="goods_item_detail">商品详情</string>
 
@@ -98,6 +102,7 @@
     <string name="order_state_pending">处理中</string>
     <string name="order_state_accepted">已接单</string>
     <string name="order_state_completed">已完成</string>
+    <string name="order_state_denied">拒绝接单</string>
     <string name="order_detail">订单详情</string>
     <string name="order_goods_name">名称</string>
     <string name="order_goods_unit_price">单价</string>
@@ -106,6 +111,12 @@
     <string name="order_goods_item_total">小计</string>
     <string name="order_goods_total_price">总价</string>
     <string name="make_order_again">再次下单</string>
+    <string name="fail_to_cancel">取消订单失败</string>
+    <string name="processing">处理中</string>
+    <string name="order_commit_success">订单提交成功</string>
+    <string name="order_commit_fail">订单提交失败</string>
+    <string name="goods_under_carriage">已下架</string>
+    <string name="delete">删除</string>
 
     <!--myself-->
     <string name="order">订单</string>
@@ -137,5 +148,7 @@
     <string name="loading">加载中...</string>
     <string name="no_more_data">没有更多数据</string>
     <string name="load_more">加载更多</string>
+    <string name="try_load_again">重新加载</string>
+    <string name="network_unavailable">网络不可用</string>
 
 </resources>

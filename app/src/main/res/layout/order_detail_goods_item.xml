@@ -3,7 +3,7 @@
     android:weightSum="1"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="18dp"
+    android:layout_height="26dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp">
 

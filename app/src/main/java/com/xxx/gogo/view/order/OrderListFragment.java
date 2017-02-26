@@ -8,13 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.squareup.otto.Subscribe;
 import com.xxx.gogo.MainApplication;
 import com.xxx.gogo.R;
-import com.xxx.gogo.model.order.OrderModel;
+import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.order.OrderEvent;
+import com.xxx.gogo.manager.order.OrderManager;
 import com.xxx.gogo.utils.Constants;
 
-public class OrderListFragment extends Fragment implements OrderModel.Callback{
+public class OrderListFragment extends Fragment
+        implements PullToRefreshBase.OnRefreshListener<ListView>{
     private int mType;
+    private PullToRefreshListView mListView;
     private OrderListAdapter mAdapter;
 
     public OrderListFragment() {
@@ -28,13 +35,14 @@ public class OrderListFragment extends Fragment implements OrderModel.Callback{
         if(bundle != null){
             mType = bundle.getInt(Constants.KEY_ORDER_TYPE);
         }
-        OrderModel.getInstance().setCallback(this);
+        BusFactory.getBus().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
+        BusFactory.getBus().unregister(this);
         MainApplication.getRefWatcher(getActivity()).watch(this);
     }
 
@@ -43,30 +51,37 @@ public class OrderListFragment extends Fragment implements OrderModel.Callback{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.order_list, container, false);
-        ListView listView = (ListView) root.findViewById(R.id.list_view);
+        mListView = (PullToRefreshListView) root.findViewById(R.id.list_view);
+        mListView.setOnRefreshListener(this);
+
         mAdapter = new OrderListAdapter(getActivity(), mType);
-        listView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         return root;
     }
 
-    @Override
-    public void onAddFail() {
-
+    public void notifyOrderLoaded(){
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    public void onAddSuccess() {
-        mAdapter.notifyDataSetChanged();
+    public void onRefresh(PullToRefreshBase refreshView) {
+        mListView.setRefreshing(true);
+        OrderManager.getInstance().checkOrderState();
     }
 
-    @Override
-    public void onLoaded() {
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onOrderChanged() {
-        mAdapter.notifyDataSetChanged();
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(Object event){
+        if(event instanceof OrderEvent.CheckOrderStateComplete){
+            if(mAdapter != null){
+                mAdapter.notifyDataSetChanged();
+                if(mListView.isRefreshing()){
+                    mListView.onRefreshComplete();
+                }
+            }
+        }
     }
 }

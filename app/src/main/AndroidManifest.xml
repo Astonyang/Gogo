@@ -36,7 +36,7 @@
 
         <activity android:name=".view.user.LoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateVisible"/>
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity android:name=".view.user.FindPwdActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateVisible"/>

@@ -7,11 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
-import com.xxx.gogo.manager.BusFactory;
-import com.xxx.gogo.manager.shopcart.ShopCartEvent;
 import com.xxx.gogo.utils.Constants;
 
 public class GoodsCategoryActivity extends BaseToolBarActivity implements View.OnClickListener{
@@ -33,15 +30,12 @@ public class GoodsCategoryActivity extends BaseToolBarActivity implements View.O
 
         createNormalToolBar(R.string.goods_list, this);
 
-        BusFactory.getBus().register(this);
-
         initView();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BusFactory.getBus().unregister(this);
     }
 
     private void initView(){
@@ -73,14 +67,6 @@ public class GoodsCategoryActivity extends BaseToolBarActivity implements View.O
     public void onClick(View v) {
         if(v.getId() == R.id.bar_back){
             finish();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void onEvent(Object event){
-        if(event instanceof ShopCartEvent.ShopCartDataChanged){
-            mAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -55,6 +55,7 @@ public class OftenBuyFragment extends Fragment
         mContainer.findViewById(R.id.login_btn).setOnClickListener(this);
         mPullRefreshListView = (PullToRefreshListView) mContainer.findViewById(
                 R.id.list_view);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         mAdapter = new OftenBuyListViewAdapter(getActivity());
         mPullRefreshListView.getRefreshableView().setAdapter(mAdapter);
@@ -65,12 +66,7 @@ public class OftenBuyFragment extends Fragment
             if(OftenBuyModel.getInstance().getState() == BaseModel.STATE_LOADING){
                 mContainer.setDisplayedChild(LOADING_VIEW);
             }else if (OftenBuyModel.getInstance().getState() == BaseModel.STATE_LOADED){
-                if(OftenBuyModel.getInstance().getCount() == 0){
-                    //// TODO: 17/2/10
-                    //mContainer.setDisplayedChild();
-                }else {
-                    mContainer.setDisplayedChild(LIST_VIEW);
-                }
+                mContainer.setDisplayedChild(LIST_VIEW);
             }else if (OftenBuyModel.getInstance().getState() == BaseModel.STATE_INIT){
                 OftenBuyModel.getInstance().load();
                 mContainer.setDisplayedChild(LOADING_VIEW);
@@ -85,7 +81,6 @@ public class OftenBuyFragment extends Fragment
     }
 
     private void initToolBar(View root){
-        //View toolbar = root.findViewById(R.id.my_toolbar);
         TextView titleView = (TextView) root.findViewById(R.id.id_title);
         titleView.setText(getString(R.string.favo));
     }
@@ -134,7 +129,6 @@ public class OftenBuyFragment extends Fragment
             OftenBuyModel.getInstance().load();
         }else if (event instanceof UserEvent.UserLogout){
             mContainer.setDisplayedChild(NOT_LOGIN_VIEW);
-            OftenBuyModel.getInstance().clear();
         }
     }
 

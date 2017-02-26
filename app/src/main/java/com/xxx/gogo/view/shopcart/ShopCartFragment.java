@@ -68,6 +68,7 @@ public class ShopCartFragment extends Fragment
 
         mPullRefreshListView = (PullToRefreshListView) mContainer.findViewById(
                 R.id.pull_refresh_list);
+        mPullRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         mAdapter = new ShopCartListViewAdapter(getContext());
         mPullRefreshListView.setAdapter(mAdapter);
@@ -79,8 +80,6 @@ public class ShopCartFragment extends Fragment
             mContainer.setDisplayedChild(LOADING_VIEW);
         }else if (ShopCartModel.getInstance().getState() == BaseModel.STATE_LOADED){
             if(ShopCartModel.getInstance().getCount() == 0){
-                //// TODO: 17/2/10
-            }else {
                 mContainer.setDisplayedChild(GO_SHOPPING);
             }
         }
@@ -163,10 +162,10 @@ public class ShopCartFragment extends Fragment
                     mDiv.setVisibility(View.GONE);
                     mNextBtn.setVisibility(View.GONE);
                 }
-            } else {
-                mTotalValueTextView.setText(CommonUtils.formatPrice(
-                        ShopCartModel.getInstance().getTotalPrice()));
             }
+            mTotalValueTextView.setText(CommonUtils.formatPrice(
+                    ShopCartModel.getInstance().getTotalPrice()));
+
         }
     }
 

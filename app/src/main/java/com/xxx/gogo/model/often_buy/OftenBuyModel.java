@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 public class OftenBuyModel extends BaseModel
         implements LowMemoryListener, OftenBuyLocalDataSource.Callback{
-    private static final long OFTEN_BUY_TIMEOUT = 1000*60*60*7;
+    private static final long OFTEN_BUY_TIMEOUT = 1000*60*60*24*7;
     private static final int OFTEN_BUY_MIN_COUNT = 1;
 
     private OftenBuyLocalDataSource mDataSource;
@@ -79,7 +79,9 @@ public class OftenBuyModel extends BaseModel
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 
         mState = STATE_INIT;
-        mGoods.clear();
+        if(mGoods != null){
+            mGoods.clear();
+        }
     }
 
     public void removeByProviderId(String providerId){

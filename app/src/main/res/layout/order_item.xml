@@ -65,61 +65,85 @@
         android:layout_width="match_parent"
         android:layout_height="1dp" />
 
-    <LinearLayout
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/order_total_price"
-            android:gravity="center"
-            android:textSize="@dimen/order_small_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/order_total_price_value"
-            android:textSize="@dimen/order_small_size"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/goods_num"
-            android:gravity="center"
-            android:textSize="@dimen/order_small_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/goods_num_value"
-            android:gravity="center"
-            android:textSize="@dimen/order_small_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/order_start_time"
+            <LinearLayout
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/order_total_price"
+                    android:gravity="center"
+                    android:textSize="@dimen/order_small_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/order_total_price_value"
+                    android:textSize="@dimen/order_small_size"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/goods_num"
+                    android:gravity="center"
+                    android:textSize="@dimen/order_small_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/goods_num_value"
+                    android:gravity="center"
+                    android:textSize="@dimen/order_small_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/order_start_time"
+                    android:gravity="center"
+                    android:textSize="@dimen/order_small_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/order_start_time_value"
+                    android:gravity="center"
+                    android:textSize="@dimen/order_small_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/id_cancel_order"
+            android:visibility="gone"
+            android:text="@string/cancel"
+            android:textColor="@android:color/white"
+            android:background="@drawable/login_btn_bg"
             android:gravity="center"
-            android:textSize="@dimen/order_small_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/order_start_time_value"
-            android:gravity="center"
-            android:textSize="@dimen/order_small_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="60dp"
+            android:layout_height="40dp" />
+
+    </FrameLayout>
 
 </LinearLayout>

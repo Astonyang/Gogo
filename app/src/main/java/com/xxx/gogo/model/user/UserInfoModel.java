@@ -5,6 +5,7 @@ import com.xxx.gogo.model.LowMemoryListener;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.Preconditions;
+import com.xxx.gogo.utils.ThreadManager;
 
 public class UserInfoModel implements LowMemoryListener{
     private static final String USER_INFO = "user/user_info";
@@ -27,19 +28,37 @@ public class UserInfoModel implements LowMemoryListener{
 
         mInfo = info;
         Gson gson = new Gson();
-        FileManager.writeFile(USER_INFO, CryptoUtil.encrypt(gson.toJson(info).getBytes()));
+        final String strJson = gson.toJson(info);
+
+        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+            @Override
+            public void run() {
+                final byte[] data = CryptoUtil.encrypt(strJson.getBytes());
+
+                FileManager.writeFile(USER_INFO, data);
+            }
+        });
     }
 
-    public UserInfo getInfo(){
+    public void getInfo(final LoadCallback callback){
         if(mInfo != null){
-            return mInfo;
+            notifyLoadResult(callback, null);
+            return;
         }
-        byte[] data = CryptoUtil.deEncrypt(FileManager.readFile(USER_INFO));
-        if(data == null){
-            return null;
-        }
-        Gson gson = new Gson();
-        return gson.fromJson(new String(data), UserInfo.class);
+        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+            @Override
+            public void run() {
+                byte[] data = CryptoUtil.deEncrypt(FileManager.readFile(USER_INFO));
+                if(data == null){
+                    notifyLoadResult(callback, null);
+                    return;
+                }
+                Gson gson = new Gson();
+                UserInfo info = gson.fromJson(new String(data), UserInfo.class);
+
+                notifyLoadResult(callback, info);
+            }
+        });
     }
 
     @Override
@@ -47,9 +66,23 @@ public class UserInfoModel implements LowMemoryListener{
         mInfo = null;
     }
 
+    private void notifyLoadResult(final LoadCallback callback, final UserInfo info){
+        ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+            @Override
+            public void run() {
+                callback.onLoaded(info);
+            }
+        });
+    }
+
+
     public static class UserInfo{
         public String name;
         public String addr;
         public String title;
+    }
+
+    public interface LoadCallback{
+        void onLoaded(UserInfo info);
     }
 }

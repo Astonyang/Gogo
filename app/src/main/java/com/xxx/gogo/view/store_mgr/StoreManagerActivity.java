@@ -43,15 +43,19 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
         mStartTimeView.setOnClickListener(this);
         mEndTimeView.setOnClickListener(this);
 
-        StoreInfoModel.StoreInfo info = StoreInfoModel.getInstance().getInfo();
-        if(info != null){
-            mNameEditView.setText(info.name);
-            mAddrEditView.setText(info.addr);
-            mOwnerEditView.setText(info.owner);
-            mPhoneEditView.setText(info.phone);
-            mStartTimeView.setText(info.startTime);
-            mEndTimeView.setText(info.endTime);
-        }
+        StoreInfoModel.getInstance().getInfo(new StoreInfoModel.Callback() {
+            @Override
+            public void onLoaded(StoreInfoModel.StoreInfo info) {
+                if(info != null){
+                    mNameEditView.setText(info.name);
+                    mAddrEditView.setText(info.addr);
+                    mOwnerEditView.setText(info.owner);
+                    mPhoneEditView.setText(info.phone);
+                    mStartTimeView.setText(info.startTime);
+                    mEndTimeView.setText(info.endTime);
+                }
+            }
+        });
     }
 
     @Override

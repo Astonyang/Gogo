@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
@@ -17,10 +18,56 @@ import com.xxx.gogo.view.shopcart.GoodsItemCountAdapter;
 
 public class DialogHelper {
 
-    public static Dialog createLoadingDialog(Context context) {
-        Dialog dialog = new Dialog(context, R.style.CustomDialog);
-        dialog.setContentView(R.layout.loading);
+    public static Dialog showDialog(Context context, String content){
+        View root = LayoutInflater.from(context).inflate(R.layout.dialog_info_view, null);
+        TextView textView = (TextView) root.findViewById(R.id.id_tip);
+        textView.setText(content);
+
+        final Dialog dialog = new Dialog(context, R.style.CustomDialog);
+        dialog.setContentView(root);
         dialog.setCanceledOnTouchOutside(false);
+
+        Window dialogWindow = dialog.getWindow();
+        if(dialogWindow != null){
+            WindowManager.LayoutParams p = dialogWindow.getAttributes();
+            p.gravity = Gravity.CENTER;
+            p.height = (int) (CommonUtils.getScreenHeight(context) * 0.15);
+            p.width = (int) (CommonUtils.getScreenWidth(context) * 0.25);
+            dialogWindow.setAttributes(p);
+        }
+
+        dialog.show();
+
+        ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        }, 600);
+
+        return dialog;
+    }
+
+    public static Dialog showLoadingDialog(Context context, String content){
+        View root = LayoutInflater.from(context).inflate(R.layout.dialog_loading_view, null);
+        TextView textView = (TextView) root.findViewById(R.id.id_tip);
+        textView.setText(content);
+
+        Dialog dialog = new Dialog(context, R.style.CustomDialog);
+        dialog.setContentView(root);
+        dialog.setCanceledOnTouchOutside(false);
+
+        Window dialogWindow = dialog.getWindow();
+        if(dialogWindow != null){
+            WindowManager.LayoutParams p = dialogWindow.getAttributes();
+            p.height = (int) (CommonUtils.getScreenHeight(context) * 0.25);
+            p.width = (int) (CommonUtils.getScreenWidth(context) * 0.3);
+            p.gravity = Gravity.CENTER;
+
+            dialogWindow.setAttributes(p);
+        }
+
+        dialog.show();
 
         return dialog;
     }

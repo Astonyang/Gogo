@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.MainApplication;
@@ -51,6 +52,8 @@ public class GoodsFragment extends Fragment{
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.goods_list, container, false);
         PullToRefreshListView listView = (PullToRefreshListView) root.findViewById(R.id.list_view);
+
+        listView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         mAdapter = new GoodsListAdapter(getContext(), mProviderId, mCategoryId);
         listView.setAdapter(mAdapter);

@@ -21,15 +21,34 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/id_recycler_view"
+    <ViewAnimator
+        android:id="@+id/view_animator"
+        android:background="@android:color/white"
         android:layout_above="@id/bar"
         android:layout_below="@id/my_toolbar"
-        android:background="#ffffff"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <include layout="@layout/loading_view" />
+
+        <Button
+            android:id="@+id/id_btn_load_again"
+            android:text="@string/try_load_again"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="18dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/login_btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ViewAnimator>
 
 </RelativeLayout>

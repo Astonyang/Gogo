@@ -8,6 +8,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.manager.BusFactory;
+import com.xxx.gogo.manager.order.OrderManager;
 import com.xxx.gogo.manager.user.UserEvent;
 import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.model.MainDatabaseHelper;
@@ -44,7 +45,7 @@ public class MainApplication extends Application{
 
         StartupMetrics.Log("before MainApplication::onCreate");
 
-        FileManager.sRootDir = getFilesDir().getAbsolutePath();
+        FileManager.sRootDir = getDir("user_data", MODE_PRIVATE).getAbsolutePath();
 
         ThreadManager.start();
 
@@ -54,8 +55,10 @@ public class MainApplication extends Application{
 
         VolleyWrapper.getInstance().init(this);
 
-        UserManager.getInstance().init(getFilesDir().getAbsolutePath());
+        UserManager.getInstance().init(FileManager.sRootDir);
         UserManager.getInstance().login();
+
+        OrderManager.getInstance().init();
 
         Fresco.initialize(this);
 

@@ -16,19 +16,16 @@ import com.xxx.gogo.utils.DialogHelper;
 
 class GoodsListAdapter extends BaseAdapter {
     private Context mContext;
-    private String mProviderId;
-    private String mGoodsCategoryId;
-
+    private GoodsModel mModel;
 
     GoodsListAdapter(Context context, String providerId, String categoryId){
         mContext = context;
-        mProviderId = providerId;
-        mGoodsCategoryId = categoryId;
+        mModel = new GoodsModel(providerId, categoryId);
     }
 
     @Override
     public int getCount() {
-        return GoodsModel.getInstance().getCount(mProviderId, mGoodsCategoryId);
+        return mModel.getCount();
     }
 
     @Override
@@ -49,8 +46,7 @@ class GoodsListAdapter extends BaseAdapter {
             viewHolder = (GoodsViewHolder) convertView.getTag();
         }
 
-        final GoodsItemInfo info = GoodsModel.getInstance().getGoods(
-                mProviderId, mGoodsCategoryId, position);
+        final GoodsItemInfo info = mModel.getGoods(position);
 
         viewHolder.tvName.setText(info.name);
         viewHolder.imageView.setImageURI(info.imgUrl);

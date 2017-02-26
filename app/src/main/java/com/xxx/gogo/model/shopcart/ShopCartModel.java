@@ -114,26 +114,6 @@ public class ShopCartModel extends BaseModel implements LowMemoryListener{
         }
     }
 
-//    public void remove(int pos){
-//        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
-//
-//        GoodsItemInfo info = mGoodsList.get(pos);
-//        remove(info);
-//        mTotalPrice -= info.count * info.price;
-//    }
-
-//    public void remove(GoodsItemInfo info){
-//        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
-//
-//        mGoodsList.remove(info);
-//        mGoodsMap.remove(info.generateId());
-//
-//        mTotalPrice -= info.count * info.price;
-//
-//        BusFactory.getBus().post(new ShopCartEvent.ShopCartDataChanged(
-//                ShopCartEvent.ShopCartDataChanged.TYPE_DELETE));
-//    }
-
     private void modifyInternal(double oldValue, double newValue){
         ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
 

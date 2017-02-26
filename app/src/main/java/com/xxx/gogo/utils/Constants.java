@@ -4,6 +4,8 @@ public interface Constants {
     //db
     int DATABASE_VERSION = 1;
 
+    String GOODS_DATA_ROOT_DIR = "goods_dir";
+
     int START_SEARCH_PROVIDER_CODE = 0;
     int START_LOGIN_FROM_SHOPCART = 1;
     int START_LOGIN_FROM_FAVO = 2;

@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.shopcart.ShopCartEvent;
+import com.xxx.gogo.manager.user.UserEvent;
+import com.xxx.gogo.model.often_buy.OftenBuyModel;
+import com.xxx.gogo.model.provider.ProviderModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.LogUtil;
@@ -29,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        //createToolBar();
-
         initViews();
 
         ShopCartModel.getInstance().load();
@@ -46,20 +47,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
     }
 
-//    protected View createToolBarContentView() {
-//        View view = LayoutInflater.from(this).inflate(R.layout.toolbar_main, null);
-//        view.findViewById(R.id.add_container).setOnClickListener(this);
-//
-//        return view;
-//    }
-
     private void initViews() {
         mTabs = (TabLayout) findViewById(R.id.tabLayout);
         mPager = (ViewPager) findViewById(R.id.viewPager);
 
         final MainFragmentAdapter adapter = new MainFragmentAdapter(this, getSupportFragmentManager());
         mPager.setAdapter(adapter);
-        mPager.setOffscreenPageLimit(4);
+
+        //// TODO: 17/2/13 must be 4 right now; need be optimized later
+        mPager.setOffscreenPageLimit(1);
         mTabs.setupWithViewPager(mPager);
         for (int i = 0; i < mTabs.getTabCount(); ++i){
             TabLayout.Tab tab = mTabs.getTabAt(i);
@@ -136,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tvCount.setText(String.valueOf(count));
                 }
             }
+        }else if (event instanceof UserEvent.UserLogout){
+            ProviderModel.getInstance().clear();
+            OftenBuyModel.getInstance().clear();
         }
     }
 }

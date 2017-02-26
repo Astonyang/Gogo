@@ -1,6 +1,7 @@
 package com.xxx.gogo.view.order;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.manager.order.OrderManager;
+import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.often_buy.OftenBuyModel;
 import com.xxx.gogo.model.order.OrderConfirmModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
@@ -18,9 +20,13 @@ import com.xxx.gogo.utils.CommonUtils;
 import com.xxx.gogo.utils.DialogHelper;
 import com.xxx.gogo.utils.LogUtil;
 
-public class OrderConfirmActivity extends BaseToolBarActivity implements View.OnClickListener{
+public class OrderConfirmActivity extends BaseToolBarActivity
+        implements View.OnClickListener, OrderConfirmModel.Callback{
     private OrderConfirmModel mModel;
+    private OrderConfirmAdapter mAdapter;
     private Dialog mLoadingDialog;
+
+    private boolean mCommitSuccess;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,15 +44,16 @@ public class OrderConfirmActivity extends BaseToolBarActivity implements View.On
         listView.addHeaderView(header);
 
         mModel = ShopCartModel.getInstance().createOrderConfirmModel();
-        OrderConfirmAdapter adapter = new OrderConfirmAdapter(this, mModel);
-        listView.setAdapter(adapter);
+        mModel.setCallback(this);
+        mAdapter = new OrderConfirmAdapter(this, mModel);
+        listView.setAdapter(mAdapter);
 
-        int count = adapter.getGroupCount();
+        int count = mAdapter.getGroupCount();
         for (int i = 0; i < count; ++i){
             listView.expandGroup(i);
         }
         TextView orderNumTv = (TextView) findViewById(R.id.order_num_tv);
-        orderNumTv.setText(String.valueOf(adapter.getGroupCount()));
+        orderNumTv.setText(String.valueOf(mAdapter.getGroupCount()));
 
         TextView totalValue = (TextView) findViewById(R.id.total_value);
         totalValue.setText(CommonUtils.formatPrice(
@@ -58,8 +65,29 @@ public class OrderConfirmActivity extends BaseToolBarActivity implements View.On
         if(v.getId() == R.id.bar_back){
             finish();
         }else if (v.getId() == R.id.next_btn){
-            mLoadingDialog = DialogHelper.createLoadingDialog(this);
-            mLoadingDialog.show();
+            mLoadingDialog = DialogHelper.showLoadingDialog(this, getString(R.string.processing));
+            mLoadingDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if(mCommitSuccess){
+                        Dialog dialogInfo = DialogHelper.showDialog(OrderConfirmActivity.this,
+                                getString(R.string.order_commit_success));
+
+                        dialogInfo.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                if(mCommitSuccess){
+                                    finish();
+                                }
+                            }
+                        });
+
+                    }else {
+                        DialogHelper.showDialog(OrderConfirmActivity.this,
+                                getString(R.string.order_commit_fail));
+                    }
+                }
+            });
 
             OrderManager.getInstance().commitOrder(mModel.getGoodsMap(),
                     new OrderManager.CommitCallback() {
@@ -67,20 +95,44 @@ public class OrderConfirmActivity extends BaseToolBarActivity implements View.On
                 public void onCommitSuccess() {
                     LogUtil.v("commit order succeed order_id = ");
 
+                    mCommitSuccess = true;
                     OftenBuyModel.getInstance().add(mModel.getGoods());
                     ShopCartModel.getInstance().clear();
 
                     mLoadingDialog.dismiss();
-                    finish();
                 }
 
                 @Override
                 public void onCommitFail() {
                     LogUtil.v("commit order failed order_id = ");
 
+                    mCommitSuccess = false;
+
+                    //TODO for test, remove later!!
+                    mModel.modifyState(0, 0, GoodsItemInfo.STATE_UNDERCARRIAGE);
+                    //todo end
+
                     mLoadingDialog.dismiss();
                 }
             });
+        }
+    }
+
+    @Override
+    public void onDataChanged() {
+        if(mModel.getCount() == 0){
+            finish();
+            return;
+        }
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onReady() {
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
         }
     }
 }
