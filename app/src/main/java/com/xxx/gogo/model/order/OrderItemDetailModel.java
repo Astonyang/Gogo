@@ -1,7 +1,9 @@
 package com.xxx.gogo.model.order;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.ThreadManager;
@@ -30,7 +32,7 @@ public class OrderItemDetailModel {
                 if(encrypted != null){
                     byte[] rawData = CryptoUtil.deEncrypt(encrypted);
                     if(rawData != null){
-                        Gson gson = new Gson();
+                        Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
                         final List<OrderItemDetailInfo> list = gson.fromJson(new String(rawData),
                                 new TypeToken<List<OrderItemDetailInfo>>(){}.getType());
 

@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.model.UserRelatedDatabaseHelper;
+import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.LogUtil;
@@ -88,7 +90,7 @@ class OrderLocalDataSource {
     }
 
     private void addOrderDetailInfo(String orderId, List<OrderItemDetailInfo> infoList){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
         String strJson = gson.toJson(infoList);
         byte[] data = CryptoUtil.encrypt(strJson.getBytes());
         FileManager.writeFile(ORDER_DETAIL_PATH + File.separator + orderId, data);
@@ -191,7 +193,7 @@ class OrderLocalDataSource {
 
     private List<OrderItemDetailInfo> loadDetail(String orderId){
         byte[] data = FileManager.readFile(ORDER_DETAIL_PATH + File.separator + orderId);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
         byte[] rawData = CryptoUtil.deEncrypt(data);
         if(rawData != null && rawData.length > 0){
             return gson.fromJson(new String(rawData),

@@ -9,12 +9,20 @@ import android.view.View;
 
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
+import com.xxx.gogo.model.goods.GoodsCategoryModelFactory;
+import com.xxx.gogo.model.goods.GoodsSubCategoryModel;
 import com.xxx.gogo.utils.Constants;
 
-public class GoodsCategoryActivity extends BaseToolBarActivity implements View.OnClickListener{
-    private GoodsCategoryAdapter mAdapter;
+public class GoodsSubCategoryActivity extends BaseToolBarActivity
+        implements View.OnClickListener, GoodsSubCategoryModel.Callback{
+
+    private GoodsSubCategoryModel mModel;
+    private GoodsSubCategoryAdapter mAdapter;
     private String mProviderId;
     private String mGoodsCategoryId;
+
+    private View mLoadingView;
+    private View mFailView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,10 +33,14 @@ public class GoodsCategoryActivity extends BaseToolBarActivity implements View.O
         Intent intent = getIntent();
         if(intent != null){
             mProviderId = intent.getStringExtra(Constants.KEY_PROVIDER_ID);
-            mGoodsCategoryId = intent.getStringExtra(Constants.KEY_GOODS_CATEGORY_ID);
+            mGoodsCategoryId = intent.getStringExtra(Constants.KEY_GOODS_PARENT_CATEGORY_ID);
         }
 
         createNormalToolBar(R.string.goods_list, this);
+
+        mModel = GoodsCategoryModelFactory.createSubCategoryModel(
+                this, mProviderId, mGoodsCategoryId);
+        mModel.load();
 
         initView();
     }
@@ -39,10 +51,17 @@ public class GoodsCategoryActivity extends BaseToolBarActivity implements View.O
     }
 
     private void initView(){
+        mLoadingView = findViewById(R.id.id_loading);
+        mFailView = findViewById(R.id.id_btn_load_again);
+
+        mFailView.setVisibility(View.INVISIBLE);
+        mFailView.setOnClickListener(this);
+
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        mAdapter = new GoodsCategoryAdapter(getSupportFragmentManager(), mProviderId);
+        mAdapter = new GoodsSubCategoryAdapter(getSupportFragmentManager(), this,
+                mProviderId, mGoodsCategoryId, mModel);
         viewPager.setAdapter(mAdapter);
         viewPager.setOffscreenPageLimit(1);
         tabLayout.setupWithViewPager(viewPager);
@@ -67,6 +86,33 @@ public class GoodsCategoryActivity extends BaseToolBarActivity implements View.O
     public void onClick(View v) {
         if(v.getId() == R.id.bar_back){
             finish();
+        }else if (v.getId() == R.id.id_btn_load_again){
+            mLoadingView.setVisibility(View.VISIBLE);
+            mFailView.setVisibility(View.INVISIBLE);
+
+            mModel.load();
         }
+    }
+
+    @Override
+    public void onLoadFail() {
+        mLoadingView.setVisibility(View.INVISIBLE);
+        mFailView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onLoadSuccess() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    //TODO fix it later
+    public void displayContent(){
+        if(isLoading()){
+            mLoadingView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public boolean isLoading(){
+        return mLoadingView.getVisibility() == View.VISIBLE;
     }
 }

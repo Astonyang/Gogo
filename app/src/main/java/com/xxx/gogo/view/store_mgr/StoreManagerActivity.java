@@ -3,6 +3,7 @@ package com.xxx.gogo.view.store_mgr;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import android.widget.TimePicker;
 import com.xxx.gogo.BaseToolBarActivity;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.store_mgr.StoreInfoModel;
+import com.xxx.gogo.utils.ToastManager;
 
 public class StoreManagerActivity extends BaseToolBarActivity implements View.OnClickListener{
     private EditText mNameEditView;
@@ -23,7 +25,7 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop_manager);
+        setContentView(R.layout.activity_store_manager);
 
         createNormalToolBar(R.string.restaurant_manager, this);
 
@@ -71,9 +73,12 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
             info.startTime = mStartTimeView.getText().toString();
             info.endTime = mEndTimeView.getText().toString();
 
-            StoreInfoModel.getInstance().save(info);
-
-            finish();
+            if(checkIfDataValid(info)){
+                StoreInfoModel.getInstance().save(info);
+                finish();
+            }else {
+                ToastManager.showToast(this, getString(R.string.input_again));
+            }
         }else if (v.getId() == R.id.id_send_time_begin){
             showTimePicker(mStartTimeView);
         }else if (v.getId() == R.id.id_sent_time_end){
@@ -92,5 +97,11 @@ public class StoreManagerActivity extends BaseToolBarActivity implements View.On
                 }, 0, 0, false);
 
         timePickerDialog.show();
+    }
+
+    private boolean checkIfDataValid(StoreInfoModel.StoreInfo info){
+        return !TextUtils.isEmpty(info.addr) && !TextUtils.isEmpty(info.name)
+                && !TextUtils.isEmpty(info.endTime) && !TextUtils.isEmpty(info.owner)
+                && !TextUtils.isEmpty(info.phone) && !TextUtils.isEmpty(info.startTime);
     }
 }

@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <include layout="@layout/loading_view" />
+
+    <Button
+        android:id="@+id/id_btn_load_again"
+        android:text="@string/try_load_again"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/login_bg"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/list_view"
@@ -19,4 +35,8 @@
         android:layout_height="match_parent">
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</ViewAnimator>

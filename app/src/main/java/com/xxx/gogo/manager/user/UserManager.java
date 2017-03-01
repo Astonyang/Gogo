@@ -1,9 +1,11 @@
 package com.xxx.gogo.manager.user;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.model.user.UserLoginInfo;
 import com.xxx.gogo.setting.SettingModel;
+import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.ThreadManager;
@@ -73,7 +75,7 @@ public class UserManager implements UserAgent.Callback{
         ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
             @Override
             public void run() {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
                 byte[] data = CryptoUtil.deEncrypt(FileManager.readGlobalFile(USER_INFO));
                 UserLoginInfo userLoginInfo = null;
                 if(data != null){
@@ -162,7 +164,7 @@ public class UserManager implements UserAgent.Callback{
         ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
             @Override
             public void run() {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
                 UserLoginInfo userLoginInfo = new UserLoginInfo("12233939", "123qwe");
 
                 byte[] data = CryptoUtil.encrypt(gson.toJson(userLoginInfo).getBytes());

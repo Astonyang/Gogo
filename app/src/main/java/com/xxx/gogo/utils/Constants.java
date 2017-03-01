@@ -1,8 +1,13 @@
 package com.xxx.gogo.utils;
 
+import com.xxx.gogo.BuildConfig;
+
 public interface Constants {
     //db
     int DATABASE_VERSION = 1;
+
+    //gson version
+    double GSON_VERSION = Double.valueOf(BuildConfig.VERSION_NAME);
 
     String GOODS_DATA_ROOT_DIR = "goods_dir";
 
@@ -17,6 +22,7 @@ public interface Constants {
     String KEY_SWITCH_SHOP_CART = "switch_to_shop_cart";
 
     String KEY_PROVIDER_ID = "provider_id";
+    String KEY_GOODS_PARENT_CATEGORY_ID = "goods_parent_category_id";
     String KEY_GOODS_CATEGORY_ID = "goods_category_id";
     String KEY_ORDER_TYPE = "order_type";
     String KEY_ORDER_POSITION = "order_position";

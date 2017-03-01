@@ -16,6 +16,7 @@ import com.xxx.gogo.model.often_buy.OftenBuyModel;
 import com.xxx.gogo.model.provider.ProviderItemInfo;
 import com.xxx.gogo.model.provider.ProviderModel;
 import com.xxx.gogo.utils.CommonUtils;
+import com.xxx.gogo.utils.FileManager;
 
 class ProviderAdapter extends BaseAdapter {
     private Context mContext;
@@ -88,6 +89,8 @@ class ProviderAdapter extends BaseAdapter {
                 String providerId = ProviderModel.getInstance().getId(pos);
                 ProviderModel.getInstance().deleteItem(pos);
                 OftenBuyModel.getInstance().removeByProviderId(providerId);
+
+                FileManager.deleteGlobalFile(providerId);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

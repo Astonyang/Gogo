@@ -1,24 +1,24 @@
 package com.xxx.gogo.model.goods;
 
-import com.xxx.gogo.utils.Preconditions;
-import com.xxx.gogo.utils.ThreadManager;
-import com.xxx.gogo.view.provider.ProviderDetailActivity;
-
 public class GoodsCategoryModelFactory {
-    private static GoodsCategoryModel sModel;
+    public static GoodsCategoryModel createCategoryModel(
+            BaseGoodsCategoryModel.Callback callback,
+            String providerId){
 
-    public static GoodsCategoryModel createModel(GoodsCategoryModel.Callback callback, String providerId){
-        ThreadManager.currentlyOn(ThreadManager.TYPE_UI);
-
-        Preconditions.checkArgument(callback instanceof ProviderDetailActivity,
-                "Must be created from ProviderDetailActivity");
-
-        sModel = new GoodsCategoryModel(callback, providerId);
-
-        return sModel;
+        GoodsCategoryNetDataSource netDataSource = new GoodsCategoryNetDataSource();
+        GoodsCategoryLocalDataSource localDataSource = new GoodsCategoryLocalDataSource(
+                netDataSource, providerId, "");
+        return new GoodsCategoryModel(localDataSource, callback);
     }
 
-    public static GoodsCategoryModel getModel(){
-        return sModel;
+    public static GoodsSubCategoryModel createSubCategoryModel(
+            BaseGoodsCategoryModel.Callback callback,
+            String providerId,
+            String parentCatId){
+
+        GoodsSubCategoryNetDataSource netDataSource = new GoodsSubCategoryNetDataSource();
+        GoodsSubCategoryLocalDataSource localDataSource = new GoodsSubCategoryLocalDataSource(
+                netDataSource, providerId, parentCatId);
+        return new GoodsSubCategoryModel(localDataSource, callback);
     }
 }

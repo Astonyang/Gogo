@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.order.OrderConfirmModel;
+import com.xxx.gogo.utils.CommonUtils;
 
 class OrderConfirmAdapter extends BaseExpandableListAdapter {
     private Context mContext;
@@ -21,7 +22,6 @@ class OrderConfirmAdapter extends BaseExpandableListAdapter {
     OrderConfirmAdapter(Context context, OrderConfirmModel model){
         mContext = context;
         mModel = model;
-        mModel.build();
     }
 
     @Override
@@ -70,10 +70,14 @@ class OrderConfirmAdapter extends BaseExpandableListAdapter {
             groupViewHolder.tvTitle = (TextView) convertView.findViewById(R.id.name);
             groupViewHolder.imageView = (ImageView) convertView.findViewById(R.id.img);
             groupViewHolder.tvProviderName = (TextView) convertView.findViewById(R.id.provider_name);
+            groupViewHolder.tvTotalTip = (TextView) convertView.findViewById(R.id.id_total_tip);
+            groupViewHolder.tvTotalPrice = (TextView) convertView.findViewById(R.id.id_total_price);
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
+        groupViewHolder.tvTotalPrice.setText(CommonUtils.formatPrice(
+                mModel.getTotalPriceForFroup(groupPosition)));
         groupViewHolder.tvProviderName.setText(mModel.getGroup(groupPosition));
         groupViewHolder.tvTitle.setText(mContext.getString(R.string.order) + " " + (groupPosition + 1));
         if(isExpanded){
@@ -130,7 +134,7 @@ class OrderConfirmAdapter extends BaseExpandableListAdapter {
             viewHolder.tvPrice.setVisibility(View.VISIBLE);
 
             viewHolder.tvCount.setText(String.valueOf(info.count));
-            viewHolder.tvPrice.setText(String.valueOf(info.price));
+            viewHolder.tvPrice.setText(CommonUtils.formatPrice(info.price));
         }
 
         return convertView;
@@ -145,6 +149,8 @@ class OrderConfirmAdapter extends BaseExpandableListAdapter {
         ImageView imageView;
         TextView tvTitle;
         TextView tvProviderName;
+        TextView tvTotalTip;
+        TextView tvTotalPrice;
     }
 
     static private class ItemViewHolder{

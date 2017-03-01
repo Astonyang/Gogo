@@ -2,14 +2,13 @@
 5 同一天同一个客户端id的下单，多次下单追加到同一个订单里
 6 常购中商品按照种类排序
 
-11. netinterface 提取公共部分
 15. 下单时间的格式
 16. 订单id格式？
 17. 启动性能
 18. how long to visit server to get new data?
 
-19 . setUserVisibleHint
-
+19. setUserVisibleHint
+26. do something when logout
 
 test case !
 

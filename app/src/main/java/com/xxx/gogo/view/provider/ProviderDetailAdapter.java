@@ -12,7 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsCategoryModel;
 import com.xxx.gogo.utils.Constants;
-import com.xxx.gogo.view.goods.GoodsCategoryActivity;
+import com.xxx.gogo.view.goods.GoodsSubCategoryActivity;
 
 class ProviderDetailAdapter extends
         RecyclerView.Adapter <ProviderDetailAdapter.ViewHolder> {
@@ -49,11 +49,11 @@ class ProviderDetailAdapter extends
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(textView.getContext(), GoodsCategoryActivity.class);
+                Intent intent = new Intent(textView.getContext(), GoodsSubCategoryActivity.class);
                 intent.putExtra(Constants.KEY_PROVIDER_ID, mProviderId);
 
                 String typeId = mModel.getCategoryId(pos);
-                intent.putExtra(Constants.KEY_GOODS_CATEGORY_ID, typeId);
+                intent.putExtra(Constants.KEY_GOODS_PARENT_CATEGORY_ID, typeId);
 
                 textView.getContext().startActivity(intent);
             }

@@ -10,7 +10,7 @@ import java.util.Locale;
 public class LogUtil {
     public static boolean DEBUG = true;
     public static boolean ENABLE_LOG2FILE = false;
-    private static String TAG = "xxx_gogo";
+    private static String TAG = "xx_haha";
 
     private static FileOutputStream sFile;
 

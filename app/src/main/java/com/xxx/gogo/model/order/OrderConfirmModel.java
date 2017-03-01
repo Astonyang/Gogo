@@ -1,9 +1,6 @@
 package com.xxx.gogo.model.order;
 
 import com.xxx.gogo.model.goods.GoodsItemInfo;
-import com.xxx.gogo.model.provider.ProviderItemInfo;
-import com.xxx.gogo.model.provider.ProviderModel;
-import com.xxx.gogo.model.provider.ProviderSearcher;
 import com.xxx.gogo.utils.ThreadManager;
 
 import java.lang.ref.WeakReference;
@@ -19,8 +16,9 @@ public class OrderConfirmModel {
     //share the same goods list with shop cart
     private ArrayList<GoodsItemInfo> mGoods;
 
-    private ArrayList<String> mProviderIds;
+    private ArrayList<String> mProviderIds; // for group
     private Map<String, List<GoodsItemInfo>> mGoodsMap;
+    private Map<String, Double> mGroupTotalPrice;
 
     private WeakReference<Callback> mCb;
 
@@ -28,6 +26,7 @@ public class OrderConfirmModel {
         mGoods = goodsInfo;
         mProviderIds = new ArrayList<>();
         mGoodsMap = new HashMap<>();
+        mGroupTotalPrice = new HashMap<>();
     }
 
     public void setCallback(Callback callback){
@@ -45,9 +44,14 @@ public class OrderConfirmModel {
                             ArrayList<GoodsItemInfo> list = new ArrayList<>();
                             list.add(info);
                             mGoodsMap.put("" + info.providerId, list);
+                            mGroupTotalPrice.put("" + info.providerId, info.count * info.price);
                         }else {
                             List<GoodsItemInfo> list = mGoodsMap.get("" + info.providerId);
                             list.add(info);
+
+                            double totalPrice = mGroupTotalPrice.get("" + info.providerId);
+                            totalPrice += info.count * info.price;
+                            mGroupTotalPrice.put("" + info.providerId, totalPrice);
                         }
                     }
                 }
@@ -95,6 +99,11 @@ public class OrderConfirmModel {
 
     public synchronized Map<String, List<GoodsItemInfo>> getGoodsMap(){
         return mGoodsMap;
+    }
+
+    public synchronized double getTotalPriceForFroup(int groupPosition){
+        String providerId = mProviderIds.get(groupPosition);
+        return mGroupTotalPrice.get(providerId);
     }
 
     public void modifyState(int groupPosition, int childPosition, int state){

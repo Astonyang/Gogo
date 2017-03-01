@@ -20,10 +20,12 @@ import com.xxx.gogo.manager.shopcart.ShopCartEvent;
 import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.model.BaseModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
+import com.xxx.gogo.model.store_mgr.StoreInfoModel;
 import com.xxx.gogo.utils.CommonUtils;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.view.order.OrderConfirmActivity;
 import com.xxx.gogo.R;
+import com.xxx.gogo.view.store_mgr.StoreManagerActivity;
 import com.xxx.gogo.view.user.LoginActivity;
 
 public class ShopCartFragment extends Fragment
@@ -36,7 +38,6 @@ public class ShopCartFragment extends Fragment
     private static final int LOADING_VIEW = 2;
 
     private ViewFlipper mContainer;
-    private PullToRefreshListView mPullRefreshListView;
     private ShopCartListViewAdapter mAdapter;
     private TextView mTotalValueTextView;
     private View mNextBtn;
@@ -66,12 +67,12 @@ public class ShopCartFragment extends Fragment
         mContainer.findViewById(R.id.clear_btn).setOnClickListener(this);
         mContainer.findViewById(R.id.id_go_shopping_btn).setOnClickListener(this);
 
-        mPullRefreshListView = (PullToRefreshListView) mContainer.findViewById(
+        PullToRefreshListView listView= (PullToRefreshListView) mContainer.findViewById(
                 R.id.pull_refresh_list);
-        mPullRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        listView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         mAdapter = new ShopCartListViewAdapter(getContext());
-        mPullRefreshListView.setAdapter(mAdapter);
+        listView.setAdapter(mAdapter);
 
         if(ShopCartModel.getInstance().getCount() != 0){
             mContainer.setDisplayedChild(LIST_VIEW);
@@ -90,7 +91,6 @@ public class ShopCartFragment extends Fragment
     }
 
     private void initToolBar(View root){
-        //View toolbar = root.findViewById(R.id.my_toolbar);
         TextView titleView = (TextView) root.findViewById(R.id.id_title);
         titleView.setText(getString(R.string.shop_cart));
     }
@@ -113,8 +113,18 @@ public class ShopCartFragment extends Fragment
     public void onClick(View v) {
         if(v.getId() == R.id.next_btn){
             if(UserManager.getInstance().isLogin()){
-                Intent intent = new Intent(getContext(), OrderConfirmActivity.class);
-                startActivity(intent);
+                StoreInfoModel.getInstance().getInfo(new StoreInfoModel.Callback() {
+                    @Override
+                    public void onLoaded(StoreInfoModel.StoreInfo storeInfo) {
+                        Intent intent;
+                        if(storeInfo == null){
+                            intent = new Intent(getContext(), StoreManagerActivity.class);
+                        }else {
+                            intent = new Intent(getContext(), OrderConfirmActivity.class);
+                        }
+                        startActivity(intent);
+                    }
+                });
             }else {
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 getContext().startActivity(intent);

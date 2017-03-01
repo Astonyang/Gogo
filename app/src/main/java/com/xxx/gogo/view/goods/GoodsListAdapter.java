@@ -9,18 +9,18 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.xxx.gogo.R;
+import com.xxx.gogo.model.PagedModel;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
-import com.xxx.gogo.model.goods.GoodsModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.DialogHelper;
 
 class GoodsListAdapter extends BaseAdapter {
     private Context mContext;
-    private GoodsModel mModel;
+    private PagedModel<GoodsItemInfo> mModel;
 
-    GoodsListAdapter(Context context, String providerId, String categoryId){
+    GoodsListAdapter(Context context, PagedModel<GoodsItemInfo> model){
         mContext = context;
-        mModel = new GoodsModel(providerId, categoryId);
+        mModel = model;
     }
 
     @Override
@@ -46,7 +46,7 @@ class GoodsListAdapter extends BaseAdapter {
             viewHolder = (GoodsViewHolder) convertView.getTag();
         }
 
-        final GoodsItemInfo info = mModel.getGoods(position);
+        final GoodsItemInfo info = mModel.getItem(position);
 
         viewHolder.tvName.setText(info.name);
         viewHolder.imageView.setImageURI(info.imgUrl);
@@ -66,6 +66,7 @@ class GoodsListAdapter extends BaseAdapter {
             }
         });
 
+        ((GoodsItemView)convertView).setGoodsInfo(info);
         return convertView;
     }
 

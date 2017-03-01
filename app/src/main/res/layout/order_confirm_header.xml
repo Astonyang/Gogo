@@ -1,14 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#fff3e0"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_text_height">
+        <TextView
+            android:id="@+id/tv_name"
+            android:text="@string/shop_mgr_name2"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/id_name"
+            style="@style/MyEditviewApperance"
+            android:layout_toRightOf="@id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:visibility="gone"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignParentRight="true"
+            android:text="@string/shop_mgr_audited"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <View
+        android:background="@color/unlogin_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:weightSum="1"
+        android:layout_marginLeft="12dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_text_height">
+        <TextView
+            android:text="@string/shop_mgr_addr"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/id_addr"
+            android:layout_weight="1"
+            style="@style/MyEditviewApperance"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:background="@color/unlogin_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:weightSum="1"
+        android:layout_marginLeft="12dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_text_height">
+        <TextView
+            android:text="@string/shop_mgr_owner"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/id_owner"
+            android:layout_weight="1"
+            style="@style/MyEditviewApperance"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:background="@color/unlogin_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:weightSum="1"
+        android:layout_marginLeft="12dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_text_height">
+        <TextView
+            android:text="@string/shop_mgr_phone"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/id_phone"
+            android:layout_weight="1"
+            style="@style/MyEditviewApperance"
+            android:inputType="phone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:background="@color/unlogin_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="60dp">
         <TextView
             android:text="@string/order_num"
             android:gravity="center"
@@ -22,4 +133,9 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-</FrameLayout>
+    <View
+        android:background="@color/unlogin_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+</LinearLayout>

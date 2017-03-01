@@ -14,47 +14,51 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <!--<include android:id="@+id/bar"-->
-        <!--layout="@layout/shopping_cart_toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="55dp"-->
-        <!--android:layout_alignParentBottom="true"/>-->
-
-    <!--<com.handmark.pulltorefresh.library.PullToRefreshExpandableListView-->
-        <!--android:id="@+id/list_view"-->
-        <!--android:layout_below="@id/my_toolbar"-->
-        <!--android:cacheColorHint="#00000000"-->
-        <!--android:divider="@color/div"-->
-        <!--android:dividerHeight="1dp"-->
-        <!--android:childDivider="#19000000"-->
-        <!--android:fadingEdge="none"-->
-        <!--android:fastScrollEnabled="false"-->
-        <!--android:footerDividersEnabled="false"-->
-        <!--android:headerDividersEnabled="false"-->
-        <!--android:scrollbars="none"-->
-        <!--android:groupIndicator="@null"-->
-        <!--android:childIndicator="@null"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
+    <FrameLayout
+        android:id="@+id/id_view_switcher"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:tabGravity="fill"
-        app:tabTextAppearance="@style/TopTabLayoutTextAppearance"
-        app:tabIndicatorHeight="4dp"
-        app:tabIndicatorColor="@color/tabTextColor"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/tabTextColor">
-    </android.support.design.widget.TabLayout>
+        android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none">
-    </android.support.v4.view.ViewPager>
+        <LinearLayout
+            android:id="@+id/id_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                app:tabGravity="fill"
+                app:tabTextAppearance="@style/TopTabLayoutTextAppearance"
+                app:tabIndicatorHeight="4dp"
+                app:tabIndicatorColor="@color/tabTextColor"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/tabTextColor">
+            </android.support.design.widget.TabLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+            </android.support.v4.view.ViewPager>
+        </LinearLayout>
+
+        <include layout="@layout/loading_view"
+            android:id="@+id/id_loading"/>
+
+        <Button
+            android:id="@+id/id_btn_load_again"
+            android:text="@string/try_load_again"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="18dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/login_btn_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
 
 </LinearLayout>

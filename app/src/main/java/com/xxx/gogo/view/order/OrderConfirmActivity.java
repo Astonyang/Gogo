@@ -10,12 +10,15 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.xxx.gogo.BaseToolBarActivity;
+import com.xxx.gogo.BusEvent;
 import com.xxx.gogo.R;
+import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.order.OrderManager;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.often_buy.OftenBuyModel;
 import com.xxx.gogo.model.order.OrderConfirmModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
+import com.xxx.gogo.model.store_mgr.StoreInfoModel;
 import com.xxx.gogo.utils.CommonUtils;
 import com.xxx.gogo.utils.DialogHelper;
 import com.xxx.gogo.utils.LogUtil;
@@ -24,7 +27,10 @@ public class OrderConfirmActivity extends BaseToolBarActivity
         implements View.OnClickListener, OrderConfirmModel.Callback{
     private OrderConfirmModel mModel;
     private OrderConfirmAdapter mAdapter;
+
     private Dialog mLoadingDialog;
+
+    private ExpandableListView mListView;
 
     private boolean mCommitSuccess;
 
@@ -39,25 +45,14 @@ public class OrderConfirmActivity extends BaseToolBarActivity
         findViewById(R.id.clear_btn).setVisibility(View.GONE);
         findViewById(R.id.next_btn).setOnClickListener(this);
 
-        ExpandableListView listView = (ExpandableListView) findViewById(R.id.list_view);
-        View header = LayoutInflater.from(this).inflate(R.layout.order_confirm_header, listView, false);
-        listView.addHeaderView(header);
+        mListView = (ExpandableListView) findViewById(R.id.list_view);
 
         mModel = ShopCartModel.getInstance().createOrderConfirmModel();
         mModel.setCallback(this);
         mAdapter = new OrderConfirmAdapter(this, mModel);
-        listView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
-        int count = mAdapter.getGroupCount();
-        for (int i = 0; i < count; ++i){
-            listView.expandGroup(i);
-        }
-        TextView orderNumTv = (TextView) findViewById(R.id.order_num_tv);
-        orderNumTv.setText(String.valueOf(mAdapter.getGroupCount()));
-
-        TextView totalValue = (TextView) findViewById(R.id.total_value);
-        totalValue.setText(CommonUtils.formatPrice(
-                ShopCartModel.getInstance().getTotalPrice()));
+        mModel.build();
     }
 
     @Override
@@ -77,6 +72,8 @@ public class OrderConfirmActivity extends BaseToolBarActivity
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 if(mCommitSuccess){
+                                    BusFactory.getBus().post(new BusEvent.TabSwitcher(
+                                            BusEvent.TabSwitcher.TAB_PROVIDER));
                                     finish();
                                 }
                             }
@@ -131,6 +128,26 @@ public class OrderConfirmActivity extends BaseToolBarActivity
 
     @Override
     public void onReady() {
+        int count = mAdapter.getGroupCount();
+        for (int i = 0; i < count; ++i){
+            mListView.expandGroup(i);
+        }
+        View header = LayoutInflater.from(this).inflate(R.layout.order_confirm_header, mListView, false);
+        mListView.addHeaderView(header);
+
+        TextView orderNumTv = (TextView) findViewById(R.id.order_num_tv);
+        orderNumTv.setText(String.valueOf(mAdapter.getGroupCount()));
+
+        TextView totalValue = (TextView) findViewById(R.id.total_value);
+        totalValue.setText(CommonUtils.formatPrice(
+                ShopCartModel.getInstance().getTotalPrice()));
+
+        StoreInfoModel.StoreInfo storeInfo = StoreInfoModel.getInstance().getInfo();
+        ((TextView) header.findViewById(R.id.id_name)).setText(storeInfo.name);
+        ((TextView) header.findViewById(R.id.id_addr)).setText(storeInfo.addr);
+        ((TextView) header.findViewById(R.id.id_owner)).setText(storeInfo.owner);
+        ((TextView) header.findViewById(R.id.id_phone)).setText(storeInfo.phone);
+
         if(mAdapter != null){
             mAdapter.notifyDataSetChanged();
         }

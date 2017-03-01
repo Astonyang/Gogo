@@ -58,8 +58,13 @@ public class ProviderDetailActivity extends BaseToolBarActivity
 
         View header = LayoutInflater.from(this).inflate(R.layout.goods_cat_header, null);
 
+        //TODO we should use view to replace this activity later!
         ProviderItemInfo info = ProviderItemDetailModel.getInstance().getItemInfo();
-        mModel = GoodsCategoryModelFactory.createModel(this, info.id);
+        if(info == null){
+            finish();
+            return;
+        }
+        mModel = GoodsCategoryModelFactory.createCategoryModel(this, info.id);
         mModel.load();
         mAdapter = new ProviderDetailAdapter(header, info.id, mModel);
 
@@ -102,6 +107,7 @@ public class ProviderDetailActivity extends BaseToolBarActivity
         strPhone += info.phone;
         phone.setText(strPhone);
 
+        findViewById(R.id.shop_cart_img).setOnClickListener(this);
         findViewById(R.id.next).setOnClickListener(this);
 
         mShopCartCountTv = (TextView) findViewById(R.id.shop_count_tv);
@@ -123,7 +129,7 @@ public class ProviderDetailActivity extends BaseToolBarActivity
     public void onClick(View v) {
         if(v.getId() == R.id.bar_back){
             finish();
-        }else if (v.getId() == R.id.next){
+        }else if (v.getId() == R.id.next || v.getId() == R.id.shop_cart_img){
             BusFactory.getBus().post(new BusEvent.TabSwitcher(BusEvent.TabSwitcher.TAB_SHOPCART));
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -144,12 +150,12 @@ public class ProviderDetailActivity extends BaseToolBarActivity
     }
 
     @Override
-    public void onFail() {
+    public void onLoadFail() {
         mViewAnimator.setDisplayedChild(VIEW_LOAD_AGAIN);
     }
 
     @Override
-    public void onSuccess() {
+    public void onLoadSuccess() {
         if(mViewAnimator.getDisplayedChild() != VIEW_GRID){
             mViewAnimator.setDisplayedChild(VIEW_GRID);
         }

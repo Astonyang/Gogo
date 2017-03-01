@@ -1,6 +1,9 @@
 package com.xxx.gogo.model.provider;
 
 import com.xxx.gogo.model.BaseModel;
+import com.xxx.gogo.utils.FileManager;
+import com.xxx.gogo.utils.FileUtil;
+import com.xxx.gogo.utils.LogUtil;
 import com.xxx.gogo.utils.ThreadManager;
 
 import java.lang.ref.WeakReference;
@@ -187,10 +190,32 @@ public class ProviderModel extends BaseModel{
         if(callback != null){
             if(mDatas != null && !mDatas.isEmpty()){
                 callback.onLoadSuccess();
+                checkIfNeedPurgeProviderData();
             }else {
                 callback.onLoadFail();
             }
         }
+    }
+
+    private void checkIfNeedPurgeProviderData(){
+        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+            @Override
+            public void run() {
+                long availableSize = FileUtil.getDiskAvaliableSize();
+                long fileSize = FileManager.getGlobalFileSize(null);
+
+                LogUtil.v("availableSize = %d MB fileSize = %d KB",
+                        availableSize/(1024*1024), fileSize / (1024));
+
+                if((float)fileSize / (float) availableSize > 0.8){
+                    LogUtil.d("clear all data from " + FileManager.sRootDir);
+
+                    for (ProviderItemInfo info : mDatas){
+                        FileManager.deleteGlobalFile(info.id);
+                    }
+                }
+            }
+        });
     }
 
     public interface Callback{

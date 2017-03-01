@@ -46,7 +46,7 @@
         <activity android:name=".view.provider.ProviderSearchActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.provider.ProviderDetailActivity" android:screenOrientation="portrait" />
-        <activity android:name=".view.goods.GoodsCategoryActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".view.goods.GoodsSubCategoryActivity" android:screenOrientation="portrait"/>
         <activity android:name=".view.order.OrderConfirmActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.order.OrderListActivity" android:screenOrientation="portrait" />
         <activity android:name=".view.order.OrderDetailActivity" android:screenOrientation="portrait" />

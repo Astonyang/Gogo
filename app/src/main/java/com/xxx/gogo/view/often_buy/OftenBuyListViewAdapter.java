@@ -13,6 +13,7 @@ import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.often_buy.OftenBuyModel;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.DialogHelper;
+import com.xxx.gogo.view.goods.GoodsItemView;
 import com.xxx.gogo.view.goods.GoodsViewHolder;
 
 class OftenBuyListViewAdapter extends BaseAdapter {
@@ -65,6 +66,7 @@ class OftenBuyListViewAdapter extends BaseAdapter {
             }
         });
 
+        ((GoodsItemView)convertView).setGoodsInfo(info);
         return convertView;
     }
 

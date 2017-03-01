@@ -1,7 +1,9 @@
 package com.xxx.gogo.model.user;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xxx.gogo.model.LowMemoryListener;
+import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.Preconditions;
@@ -27,7 +29,7 @@ public class UserInfoModel implements LowMemoryListener{
         Preconditions.checkNotNull(info);
 
         mInfo = info;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
         final String strJson = gson.toJson(info);
 
         ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
@@ -53,7 +55,7 @@ public class UserInfoModel implements LowMemoryListener{
                     notifyLoadResult(callback, null);
                     return;
                 }
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
                 UserInfo info = gson.fromJson(new String(data), UserInfo.class);
 
                 notifyLoadResult(callback, info);

@@ -1,7 +1,9 @@
 package com.xxx.gogo.model.store_mgr;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.xxx.gogo.model.LowMemoryListener;
+import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.Preconditions;
@@ -27,7 +29,7 @@ public class StoreInfoModel implements LowMemoryListener{
         Preconditions.checkNotNull(info);
 
         mInfo = info;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
         final byte[] data = gson.toJson(mInfo).getBytes();
 
         ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
@@ -36,6 +38,10 @@ public class StoreInfoModel implements LowMemoryListener{
                 FileManager.writeFile(SHOP_INFO, CryptoUtil.encrypt(data));
             }
         });
+    }
+
+    public StoreInfo getInfo(){
+        return mInfo;
     }
 
     public void getInfo(final Callback callback){
@@ -59,8 +65,9 @@ public class StoreInfoModel implements LowMemoryListener{
                     ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
                         @Override
                         public void run() {
-                            Gson gson = new Gson();
-                            callback.onLoaded(gson.fromJson(strJson, StoreInfo.class));
+                            Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
+                            mInfo = gson.fromJson(strJson, StoreInfo.class);
+                            callback.onLoaded(mInfo);
                         }
                     });
                 }else {

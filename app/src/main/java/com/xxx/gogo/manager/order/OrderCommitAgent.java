@@ -9,7 +9,6 @@ import com.xxx.gogo.net.NetworkInterface;
 import com.xxx.gogo.net.VolleyWrapper;
 import com.xxx.gogo.utils.ThreadManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

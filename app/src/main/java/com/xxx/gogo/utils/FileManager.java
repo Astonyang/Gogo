@@ -1,5 +1,7 @@
 package com.xxx.gogo.utils;
 
+import android.text.TextUtils;
+
 import com.xxx.gogo.manager.user.UserManager;
 
 import java.io.File;
@@ -7,6 +9,7 @@ import java.io.File;
 /**
  * global file 为用户无关的数据文件，存放路径区别于用户相关的数据
  */
+@SuppressWarnings("unused")
 public class FileManager {
     public static String sRootDir;
 
@@ -20,6 +23,13 @@ public class FileManager {
 
     public static byte[] readFile(String path) {
         return FileUtil.readFile(UserManager.getInstance().getUserDir() + File.separator + path);
+    }
+
+    public static long getGlobalFileSize(String path){
+        if(TextUtils.isEmpty(path)){
+            return FileUtil.getFileSize(sRootDir);
+        }
+        return FileUtil.getFileSize(sRootDir + File.separator + path);
     }
 
     public static void writeGlobalFile(String path, byte[] data) {

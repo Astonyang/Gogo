@@ -43,6 +43,7 @@
     <string name="pls_login">请先登录</string>
     <string name="login_pending">登录中</string>
     <string name="register_pending">注册中</string>
+    <string name="login_again">登录失败，请重试</string>
 
     <!--provider-->
     <string name="add">添加</string>

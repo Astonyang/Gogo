@@ -14,6 +14,7 @@ import com.xxx.gogo.R;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
 import com.xxx.gogo.model.shopcart.ShopCartModel;
 import com.xxx.gogo.utils.DialogHelper;
+import com.xxx.gogo.view.goods.GoodsItemView;
 import com.xxx.gogo.view.goods.GoodsViewHolder;
 
 class ShopCartListViewAdapter extends BaseAdapter{
@@ -70,6 +71,10 @@ class ShopCartListViewAdapter extends BaseAdapter{
                 return true;
             }
         });
+
+        GoodsItemView goodsItemView = (GoodsItemView) convertView.findViewById(
+                R.id.goods_item_at_cart);
+        goodsItemView.setGoodsInfo(info);
 
         return convertView;
     }

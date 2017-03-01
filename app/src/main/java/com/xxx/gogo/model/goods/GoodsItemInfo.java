@@ -12,6 +12,8 @@ public class GoodsItemInfo {
     public long catId;
     public long secondaryCatId;
     public long id;
+    public String largeImgUrl;
+    public String spec;
 
     // 是否被下架
     // 正常：STATE_NORMAL

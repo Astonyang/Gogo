@@ -154,7 +154,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             if(mLoadingDialog != null){
                 mLoadingDialog.dismiss();
             }
-            ToastManager.showToast(this, getString(R.string.input_again));
+            ToastManager.showToast(this, getString(R.string.login_again));
         }
     }
 }

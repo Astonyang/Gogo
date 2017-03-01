@@ -11,6 +11,7 @@
 
         <ImageView
             android:id="@+id/shop_cart_img"
+            android:clickable="true"
             android:layout_marginLeft="15dp"
             android:src="@drawable/icon_shoppingcart"
             android:scaleType="centerCrop"
