@@ -17,6 +17,7 @@ public class UserManager implements UserAgent.Callback{
 
     private String mUserDir;
     private String mUserId;
+    private String mPassword;
 
     private UserAgent mAgent;
 
@@ -44,6 +45,10 @@ public class UserManager implements UserAgent.Callback{
 
     public String getUserId(){
         return mUserId;
+    }
+
+    public String getPassword(){
+        return mPassword;
     }
 
     public String getUserDir(){
@@ -87,6 +92,7 @@ public class UserManager implements UserAgent.Callback{
                     @Override
                     public void run() {
                         if(info != null){
+                            mPassword = info.pwd;
                             login(info.userName, info.pwd);
                         }else {
                             onLoginFail();
@@ -101,6 +107,7 @@ public class UserManager implements UserAgent.Callback{
         if(mIsLogin){
             return;
         }
+        mPassword = password;
         mAgent.login(userName, password);
     }
 
@@ -137,6 +144,8 @@ public class UserManager implements UserAgent.Callback{
     @Override
     public void onLoginFail() {
         mShouldStartMainActivity = true;
+        mPassword = "";
+        mUserId = "";
 
         BusFactory.getBus().post(new UserEvent.UserLoginFail());
     }

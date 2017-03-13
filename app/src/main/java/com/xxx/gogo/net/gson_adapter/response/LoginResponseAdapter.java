@@ -1,4 +1,4 @@
-package com.xxx.gogo.net.gson_adapter;
+package com.xxx.gogo.net.gson_adapter.response;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -7,19 +7,18 @@ import com.xxx.gogo.net.NetworkResponse;
 
 import java.io.IOException;
 
-public class RegisterResponseAdapter
-        extends TypeAdapter<NetworkResponse.RegisterResponse>
+public class LoginResponseAdapter
+        extends TypeAdapter<NetworkResponse.LoginResponse>
         implements BaseResponseAdapter{
 
-    private ResponseAdapterHelper<RegisterResponseAdapter> mHelper =
-            new ResponseAdapterHelper<>(this);
+    private ResponseAdapterHelper mHelper = new ResponseAdapterHelper(this);
 
-    private NetworkResponse.RegisterResponse mResponse;
+    private NetworkResponse.LoginResponse mResponse;
 
     @Override
-    public NetworkResponse.RegisterResponse read(JsonReader in) throws IOException {
+    public NetworkResponse.LoginResponse read(JsonReader in) throws IOException {
 
-        mResponse = new NetworkResponse.RegisterResponse();
+        mResponse = new NetworkResponse.LoginResponse();
 
         mHelper.read(in, mResponse);
 
@@ -27,7 +26,7 @@ public class RegisterResponseAdapter
     }
 
     @Override
-    public void write(JsonWriter out, NetworkResponse.RegisterResponse value)
+    public void write(JsonWriter out, NetworkResponse.LoginResponse value)
             throws IOException {
 
     }
@@ -35,11 +34,9 @@ public class RegisterResponseAdapter
     @Override
     public void doRead(JsonReader in) throws IOException {
         in.beginObject();
-
         if(in.nextName().equals("customer_id")){
             mResponse.userId = in.nextString();
         }
-
         in.endObject();
     }
 }

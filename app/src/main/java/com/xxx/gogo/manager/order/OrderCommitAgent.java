@@ -1,82 +1,102 @@
 package com.xxx.gogo.manager.order;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.xxx.gogo.model.order.OrderItemDetailInfo;
 import com.xxx.gogo.model.order.OrderItemInfo;
-import com.xxx.gogo.net.NetworkInterface;
-import com.xxx.gogo.net.VolleyWrapper;
-import com.xxx.gogo.utils.ThreadManager;
+import com.xxx.gogo.net.NetworkProtocolFactory;
+import com.xxx.gogo.net.NetworkResponse;
+import com.xxx.gogo.net.NetworkServiceFactory;
 
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 class OrderCommitAgent {
 
     void commit(List<OrderItemInfo> orderList,
                 List<List<OrderItemDetailInfo>> detailList,
                 final Callback callback){
+        Call<NetworkResponse.OrderCommitResponse> call = NetworkServiceFactory.getInstance()
+                .getService().commitOrder(NetworkProtocolFactory.buildOrderCommitRequest(orderList));
+        call.enqueue(new retrofit2.Callback<NetworkResponse.OrderCommitResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse.OrderCommitResponse> call,
+                                   Response<NetworkResponse.OrderCommitResponse> response) {
+                if(callback == null){
+                    return;
+                }
+                if(response.isSuccessful() && response.body().isSuccessful()){
+                    callback.onSuccess();
+                }else {
+                    callback.onFail();
+                }
+            }
 
-        VolleyWrapper.getInstance().requestQueue().add(new StringRequest(
-                NetworkInterface.COMMIT_ORDER_URL, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-                callback.onSuccess();
+            public void onFailure(Call<NetworkResponse.OrderCommitResponse> call, Throwable t) {
+                if(callback != null){
+                    callback.onFail();
+                }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onSuccess();
-                    }
-                }, 2000);
-            }
-        }));
+        });
     }
 
     void cancel(String orderId, final Callback callback){
-        VolleyWrapper.getInstance().requestQueue().add(new StringRequest(
-                NetworkInterface.CANCEL_ORDER_URL, new Response.Listener<String>() {
+        Call<NetworkResponse.OrderCancelResponse> call = NetworkServiceFactory.getInstance()
+                .getService().cancelOrder(NetworkProtocolFactory.buildOrderCancelRequest(orderId));
+
+        call.enqueue(new retrofit2.Callback<NetworkResponse.OrderCancelResponse>() {
             @Override
-            public void onResponse(String response) {
-                callback.onSuccess();
+            public void onResponse(Call<NetworkResponse.OrderCancelResponse> call,
+                                   Response<NetworkResponse.OrderCancelResponse> response) {
+                if(callback == null){
+                    return;
+                }
+                if(response.isSuccessful() && response.body().isSuccessful()){
+                    callback.onSuccess();
+                }else {
+                    callback.onFail();
+                }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
-                    @Override
-                    public void run() {
-                        //callback.onFail();
-                        callback.onSuccess();
-                    }
-                }, 2000);
+            public void onFailure(Call<NetworkResponse.OrderCancelResponse> call, Throwable t) {
+                if(callback != null){
+                    callback.onFail();
+                }
             }
-        }));
+        });
     }
 
     void queryOrderState(final QueryStateCallback callback){
-        VolleyWrapper.getInstance().requestQueue().add(new StringRequest(
-                NetworkInterface.CANCEL_ORDER_URL, new Response.Listener<String>() {
+        Call<NetworkResponse.OrderQueryStateResponse> call = NetworkServiceFactory.getInstance()
+                .getService().queryOrderState(NetworkProtocolFactory.buildOrderQueryStateRequest());
+        call.enqueue(new retrofit2.Callback<NetworkResponse.OrderQueryStateResponse>() {
             @Override
-            public void onResponse(String response) {
-                callback.onState(null);
+            public void onResponse(Call<NetworkResponse.OrderQueryStateResponse> call,
+                                   Response<NetworkResponse.OrderQueryStateResponse> response) {
+                if(callback == null){
+                    return;
+                }
+                if(response.isSuccessful() && response.body().isSuccessful()){
+                    callback.onState(null);
+                }else {
+                    callback.onState(null);
+                }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                ThreadManager.postTask(ThreadManager.TYPE_UI, new Runnable() {
-                    @Override
-                    public void run() {
-                        //callback.onFail();
-                        callback.onState(null);
-                    }
-                }, 2000);
+            public void onFailure(Call<NetworkResponse.OrderQueryStateResponse> call, Throwable t) {
+                if(callback != null){
+                    callback.onState(null);
+                }
             }
-        }));
+        });
+    }
+
+    void modify(){
+
     }
 
     public interface Callback{

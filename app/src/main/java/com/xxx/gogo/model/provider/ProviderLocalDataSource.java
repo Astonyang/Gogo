@@ -18,8 +18,6 @@ class ProviderLocalDataSource {
 
     private static final String DELETE_SQL = "delete from " + UserRelatedDatabaseHelper.TABLE_PROVIDER;
 
-    private static final long REQUEST_LOAD_INTERVAL = 1000*60*60*24;
-
     private ProviderModel mCb;
     private ProviderNetDataSource mDataSource;
 
@@ -115,15 +113,8 @@ class ProviderLocalDataSource {
                         public void run() {
                             mCb.onDataReady(list, idSet);
 
-//                        long lastTime = SettingModel.getInstance().getLong(
-//                                SettingModel.KEY_LAST_LOAD_PROVIDER_TIME, 0);
-//                        if(System.currentTimeMillis() - lastTime > REQUEST_LOAD_INTERVAL){
-
-                            mDataSource.load();
-
-//                            SettingModel.getInstance().putLong(SettingModel.KEY_LAST_LOAD_PROVIDER_TIME,
-//                                    System.currentTimeMillis());
-//                        }
+                            //// TODO: 17/3/2 should read version info from pref
+                            mDataSource.load("");
                         }
                     });
 

@@ -52,8 +52,8 @@ public class UserRegisterActivity extends BaseToolBarActivity implements View.On
             String checksum = ((EditText)findViewById(R.id.check_num_edit)).getText().toString();
             String invitationNum = ((EditText)findViewById(R.id.invite_edit)).getText().toString();
 
-            if(!pwd.equals(confirmPwd) || TextUtils.isEmpty(userName) || TextUtils.isEmpty(pwd)
-                    || TextUtils.isEmpty(checksum) || TextUtils.isEmpty(invitationNum)){
+            if(!pwd.equals(confirmPwd) || TextUtils.isEmpty(userName) || TextUtils.isEmpty(pwd)){
+                    //|| TextUtils.isEmpty(checksum) || TextUtils.isEmpty(invitationNum)){
                 ToastManager.showToast(this, getString(R.string.input_again));
                 return;
             }

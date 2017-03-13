@@ -8,6 +8,7 @@ import com.xxx.gogo.utils.ThreadManager;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class OftenBuyModel extends BaseModel
         implements LowMemoryListener, OftenBuyLocalDataSource.Callback{
@@ -119,7 +120,7 @@ public class OftenBuyModel extends BaseModel
     }
 
     @Override
-    public void onLoadSuccess(ArrayList<GoodsItemInfo> goods) {
+    public void onLoadSuccess(List<GoodsItemInfo> goods) {
         if(goods != null && !goods.isEmpty()) {
             synchronized (this) {
                 mGoods.addAll(goods);

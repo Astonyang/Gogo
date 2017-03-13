@@ -7,10 +7,18 @@ import android.database.sqlite.SQLiteDatabase;
 import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.model.UserRelatedDatabaseHelper;
 import com.xxx.gogo.model.goods.GoodsItemInfo;
+import com.xxx.gogo.net.NetworkProtocolFactory;
+import com.xxx.gogo.net.NetworkResponse;
+import com.xxx.gogo.net.NetworkServiceFactory;
 import com.xxx.gogo.utils.LogUtil;
 import com.xxx.gogo.utils.ThreadManager;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 class OftenBuyLocalDataSource {
     private static final String QUERY_GOODS_SQL = "select * from "
@@ -70,7 +78,11 @@ class OftenBuyLocalDataSource {
 
                 if(mCb != null){
                     if(success){
-                        mCb.onLoadSuccess(list);
+                        if(list.isEmpty()){
+                            mDataSource.load(OftenBuyLocalDataSource.this);
+                        }else {
+                            mCb.onLoadSuccess(list);
+                        }
                     }else {
                         mCb.onLoadFail();
                     }
@@ -80,6 +92,8 @@ class OftenBuyLocalDataSource {
     }
 
     void add(final ArrayList<GoodsItemInfo> list){
+        mDataSource.commit(list);
+
         ThreadManager.postTask(ThreadManager.TYPE_DB, new Runnable() {
             @Override
             public void run() {
@@ -144,10 +158,23 @@ class OftenBuyLocalDataSource {
         });
     }
 
+    void onDataReady(final List<GoodsItemInfo> goodsItemInfoList){
+        ThreadManager.postTask(ThreadManager.TYPE_WORKER, new Runnable() {
+            @Override
+            public void run() {
+                if(goodsItemInfoList != null){
+                    mCb.onLoadSuccess(goodsItemInfoList);
+                }else {
+                    mCb.onLoadFail();
+                }
+            }
+        });
+    }
+
     interface Callback{
         void onAdded();
         void onRemoved(String providerId);
-        void onLoadSuccess(ArrayList<GoodsItemInfo> goods);
+        void onLoadSuccess(List<GoodsItemInfo> goods);
         void onLoadFail();
     }
 }

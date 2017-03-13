@@ -107,7 +107,6 @@ public class OrderConfirmActivity extends BaseToolBarActivity
 
                     //TODO for test, remove later!!
                     mModel.modifyState(0, 0, GoodsItemInfo.STATE_UNDERCARRIAGE);
-                    //todo end
 
                     mLoadingDialog.dismiss();
                 }

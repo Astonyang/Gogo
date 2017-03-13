@@ -143,6 +143,10 @@ public class ProviderSearchActivity extends AppCompatActivity
 
     @Override
     public void onFail() {
+        if(mLoadingDialog != null){
+            mLoadingDialog.dismiss();
+        }
+        mFooter.setDisplayedChild(FOOTER_LOAD_MORE);
         ToastManager.showToast(this, getString(R.string.search_provider_no_result));
     }
 
@@ -153,6 +157,11 @@ public class ProviderSearchActivity extends AppCompatActivity
             mListView.setVisibility(View.VISIBLE);
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onHasNoData() {
+        mFooter.setDisplayedChild(FOOTER_NO_MORE);
     }
 
     private void waitForLoadingMoreData(){

@@ -3,11 +3,17 @@ package com.xxx.gogo.model.store_mgr;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.xxx.gogo.model.LowMemoryListener;
+import com.xxx.gogo.net.NetworkProtocolFactory;
+import com.xxx.gogo.net.NetworkResponse;
+import com.xxx.gogo.net.NetworkServiceFactory;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.Preconditions;
 import com.xxx.gogo.utils.ThreadManager;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StoreInfoModel implements LowMemoryListener{
     private static final String SHOP_INFO = "user/shop_info";
@@ -32,10 +38,27 @@ public class StoreInfoModel implements LowMemoryListener{
         Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
         final byte[] data = gson.toJson(mInfo).getBytes();
 
-        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+        Call<NetworkResponse.StoreInfoCommitResponse> call = NetworkServiceFactory.getInstance().
+                getService().commitStoreInfo(NetworkProtocolFactory.buildStoreInfoCommitRequest());
+
+        call.enqueue(new retrofit2.Callback<NetworkResponse.StoreInfoCommitResponse>() {
             @Override
-            public void run() {
-                FileManager.writeFile(SHOP_INFO, CryptoUtil.encrypt(data));
+            public void onResponse(Call<NetworkResponse.StoreInfoCommitResponse> call,
+                                   Response<NetworkResponse.StoreInfoCommitResponse> response) {
+
+                if(response.isSuccessful() && response.body().isSuccessful()){
+                    ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+                        @Override
+                        public void run() {
+                            FileManager.writeFile(SHOP_INFO, CryptoUtil.encrypt(data));
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.StoreInfoCommitResponse> call, Throwable t) {
+
             }
         });
     }
@@ -49,7 +72,28 @@ public class StoreInfoModel implements LowMemoryListener{
             callback.onLoaded(mInfo);
             return;
         }
+        Call<NetworkResponse.StoreInfoLoadResponse> call = NetworkServiceFactory.getInstance()
+                .getService().loadStoreInfo(NetworkProtocolFactory.buildStoreInfoLoadRequest());
+        call.enqueue(new retrofit2.Callback<NetworkResponse.StoreInfoLoadResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse.StoreInfoLoadResponse> call,
+                                   Response<NetworkResponse.StoreInfoLoadResponse> response) {
 
+                if(response.isSuccessful() && response.body().isSuccessful()){
+
+                }else {
+                    loadFromDisk(callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.StoreInfoLoadResponse> call, Throwable t) {
+                loadFromDisk(callback);
+            }
+        });
+    }
+
+    private void loadFromDisk(final Callback callback){
         ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
             @Override
             public void run() {

@@ -80,6 +80,7 @@ public class OrderManager {
                                     if(storeInfo != null){
                                         info.storeName = storeInfo.name;
                                     }
+                                    //// TODO: 17/3/2 check if need modify order
                                     mAgent.commit(orderList, detailList, new OrderCommitAgent.Callback(){
                                         @Override
                                         public void onFail() {

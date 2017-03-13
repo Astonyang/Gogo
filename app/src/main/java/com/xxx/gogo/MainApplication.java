@@ -14,9 +14,9 @@ import com.xxx.gogo.manager.user.UserManager;
 import com.xxx.gogo.model.MainDatabaseHelper;
 import com.xxx.gogo.model.UserRelatedDatabaseHelper;
 import com.xxx.gogo.net.NetworkServiceFactory;
-import com.xxx.gogo.net.VolleyWrapper;
 import com.xxx.gogo.setting.SettingModel;
 import com.xxx.gogo.utils.FileManager;
+import com.xxx.gogo.utils.LogUtil;
 import com.xxx.gogo.utils.StartupMetrics;
 import com.xxx.gogo.utils.ThreadManager;
 
@@ -50,12 +50,13 @@ public class MainApplication extends Application{
 
         ThreadManager.start();
 
+        LogUtil.init(FileManager.sRootDir);
+
         SettingModel.getInstance().init(getApplicationContext());
 
         MainDatabaseHelper.init(getApplicationContext());
 
         NetworkServiceFactory.getInstance().create();
-        VolleyWrapper.getInstance().init(this);
 
         UserManager.getInstance().init(FileManager.sRootDir);
         UserManager.getInstance().login();

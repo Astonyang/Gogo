@@ -3,11 +3,18 @@ package com.xxx.gogo.model.user;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.xxx.gogo.model.LowMemoryListener;
+import com.xxx.gogo.net.NetworkProtocolFactory;
+import com.xxx.gogo.net.NetworkResponse;
+import com.xxx.gogo.net.NetworkServiceFactory;
 import com.xxx.gogo.utils.Constants;
 import com.xxx.gogo.utils.CryptoUtil;
 import com.xxx.gogo.utils.FileManager;
 import com.xxx.gogo.utils.Preconditions;
 import com.xxx.gogo.utils.ThreadManager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserInfoModel implements LowMemoryListener{
     private static final String USER_INFO = "user/user_info";
@@ -32,12 +39,27 @@ public class UserInfoModel implements LowMemoryListener{
         Gson gson = new GsonBuilder().setVersion(Constants.GSON_VERSION).create();
         final String strJson = gson.toJson(info);
 
-        ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+        Call<NetworkResponse.UserInfoCommitResponse> call = NetworkServiceFactory.getInstance()
+                .getService().commitUserInfo(NetworkProtocolFactory.buildUserInfoCommitRequest());
+        call.enqueue(new Callback<NetworkResponse.UserInfoCommitResponse>() {
             @Override
-            public void run() {
-                final byte[] data = CryptoUtil.encrypt(strJson.getBytes());
+            public void onResponse(Call<NetworkResponse.UserInfoCommitResponse> call,
+                                   Response<NetworkResponse.UserInfoCommitResponse> response) {
+                if(response.isSuccessful() && response.body().isSuccessful()){
+                    ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
+                        @Override
+                        public void run() {
+                            final byte[] data = CryptoUtil.encrypt(strJson.getBytes());
 
-                FileManager.writeFile(USER_INFO, data);
+                            FileManager.writeFile(USER_INFO, data);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.UserInfoCommitResponse> call, Throwable t) {
+
             }
         });
     }
@@ -47,6 +69,29 @@ public class UserInfoModel implements LowMemoryListener{
             notifyLoadResult(callback, null);
             return;
         }
+
+        Call<NetworkResponse.UserInfoLoadResponse> call = NetworkServiceFactory.getInstance().
+                getService().loadUserInfo(NetworkProtocolFactory.buildUserInfoLoadRequest());
+        call.enqueue(new Callback<NetworkResponse.UserInfoLoadResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse.UserInfoLoadResponse> call,
+                                   Response<NetworkResponse.UserInfoLoadResponse> response) {
+                if(response.isSuccessful() && response.body().isSuccessful()){
+
+                }else {
+                    loadFromDisk(callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.UserInfoLoadResponse> call, Throwable t) {
+                loadFromDisk(callback);
+            }
+        });
+
+    }
+
+    private void loadFromDisk(final LoadCallback callback){
         ThreadManager.postTask(ThreadManager.TYPE_FILE, new Runnable() {
             @Override
             public void run() {

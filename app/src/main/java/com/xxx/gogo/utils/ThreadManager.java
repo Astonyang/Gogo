@@ -13,10 +13,12 @@ public class ThreadManager {
     public static final int TYPE_DB = 1;
     public static final int TYPE_FILE = 2;
     public static final int TYPE_WORKER = 3;
+    public static final int TYPE_LOG = 4;
 
     private static HandlerThread sDbThread;
     private static HandlerThread sFileThread;
     private static HandlerThread sWorkerThread;
+    private static HandlerThread sLogThread;
 
     private static HashMap<Integer, Handler> sMaps = new HashMap<>();
 
@@ -34,12 +36,17 @@ public class ThreadManager {
         sWorkerThread = new HandlerThread("xxx_worker_thread");
         sWorkerThread.start();
         sMaps.put(TYPE_WORKER, new Handler(sWorkerThread.getLooper()));
+
+        sLogThread = new HandlerThread("xxx_log_thread");
+        sLogThread.start();
+        sMaps.put(TYPE_LOG, new Handler(sLogThread.getLooper()));
     }
 
     public synchronized static void stop(){
         sDbThread.quit();
         sFileThread.quit();
         sWorkerThread.quit();
+        sLogThread.quit();
     }
 
     public synchronized static void postTask(int type, Runnable runnable){

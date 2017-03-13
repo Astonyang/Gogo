@@ -1,4 +1,4 @@
-package com.xxx.gogo.net.gson_adapter;
+package com.xxx.gogo.net.gson_adapter.response;
 
 import com.google.gson.stream.JsonReader;
 

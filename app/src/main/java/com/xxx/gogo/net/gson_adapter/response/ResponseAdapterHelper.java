@@ -1,14 +1,14 @@
-package com.xxx.gogo.net.gson_adapter;
+package com.xxx.gogo.net.gson_adapter.response;
 
 import com.google.gson.stream.JsonReader;
 import com.xxx.gogo.net.NetworkResponse;
 
 import java.io.IOException;
 
-public class ResponseAdapterHelper<T> {
-    private T mAdapter;
+public class ResponseAdapterHelper {
+    private Object mAdapter;
 
-    public ResponseAdapterHelper(T adapter){
+    public ResponseAdapterHelper(Object adapter){
         mAdapter = adapter;
     }
 

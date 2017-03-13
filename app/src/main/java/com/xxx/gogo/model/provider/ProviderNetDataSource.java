@@ -1,57 +1,80 @@
 package com.xxx.gogo.model.provider;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.xxx.gogo.net.NetworkInterface;
-import com.xxx.gogo.net.RequestHelper.StringRequestWithoutEcho;
-import com.xxx.gogo.net.VolleyWrapper;
-import com.xxx.gogo.utils.ThreadManager;
+import com.xxx.gogo.net.NetworkProtocolFactory;
+import com.xxx.gogo.net.NetworkResponse;
+import com.xxx.gogo.net.NetworkServiceFactory;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 class ProviderNetDataSource {
     private ProviderLocalDataSource mCb;
-
-    private StringRequest loadDataRequest = new StringRequest(Request.Method.GET,
-            NetworkInterface.LOAD_PROVIDER_URL,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    ThreadManager.postTask(ThreadManager.TYPE_WORKER, new Runnable() {
-                        @Override
-                        public void run() {
-                            mCb.onDataReady(null);
-                        }
-                    });
-                }
-            }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            //mCb.onDataReady(getTestData());
-            mCb.onDataReady(null);
-        }
-    });
 
     ProviderNetDataSource(ProviderLocalDataSource callback){
         mCb = callback;
     }
 
     void addItem(ProviderItemInfo info){
-        StringRequestWithoutEcho request = new StringRequestWithoutEcho(
-                NetworkInterface.ADD_PROVIDER_URL);
-        VolleyWrapper.getInstance().requestQueue().add(request);
+        Call<NetworkResponse.ProviderAddResponse> call = NetworkServiceFactory.getInstance()
+                .getService().addProvider(NetworkProtocolFactory.buildProviderAddRequest(info.id));
+        call.enqueue(new Callback<NetworkResponse.ProviderAddResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse.ProviderAddResponse> call,
+                                   Response<NetworkResponse.ProviderAddResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.ProviderAddResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     void deleteItem(ProviderItemInfo info){
-        StringRequestWithoutEcho request = new StringRequestWithoutEcho(
-                NetworkInterface.DELETE_PROVIDER_URL);
-        VolleyWrapper.getInstance().requestQueue().add(request);
+        Call<NetworkResponse.ProviderRemoveResponse> call = NetworkServiceFactory.getInstance()
+                .getService().removeProvider(NetworkProtocolFactory.buildProviderRemoveRequest(info.id));
+        call.enqueue(new Callback<NetworkResponse.ProviderRemoveResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse.ProviderRemoveResponse> call,
+                                   Response<NetworkResponse.ProviderRemoveResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.ProviderRemoveResponse> call, Throwable t) {
+
+            }
+        });
     }
 
-    void load(){
-        VolleyWrapper.getInstance().requestQueue().add(loadDataRequest);
+    void load(String contentVersion){
+        Call<NetworkResponse.ProviderLoadResponse> call = NetworkServiceFactory.getInstance()
+                .getService().loadProvider(NetworkProtocolFactory.buildProviderLoadRequest(contentVersion));
+        call.enqueue(new Callback<NetworkResponse.ProviderLoadResponse>() {
+            @Override
+            public void onResponse(Call<NetworkResponse.ProviderLoadResponse> call,
+                                   Response<NetworkResponse.ProviderLoadResponse> response) {
+                if(mCb == null){
+                    return;
+                }
+                if(response.isSuccessful() && response.body().isSuccessful()){
+                    mCb.onDataReady(null);
+                }else {
+                    mCb.onDataReady(getTestData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkResponse.ProviderLoadResponse> call, Throwable t) {
+                if(mCb != null){
+                    mCb.onDataReady(null);
+                }
+            }
+        });
     }
 
     private ArrayList<ProviderItemInfo> getTestData(){
