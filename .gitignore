@@ -1,0 +1,11 @@
+*.iml
+.gradle/
+.idea/
+/build
+/app/build/
+/android-pulltorefresh/build/
+gradle/
+gradlew.bat
+gradlew
+/update/build/
+local.properties

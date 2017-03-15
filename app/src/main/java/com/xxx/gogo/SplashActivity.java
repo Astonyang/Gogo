@@ -28,6 +28,8 @@ public class SplashActivity extends Activity {
         }else {
             LogUtil.v("shouldStartMainActivity return false");
         }
+        String str =null;
+        str.toString();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.otto.Subscribe;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xxx.gogo.manager.BusFactory;
 import com.xxx.gogo.manager.order.OrderManager;
 import com.xxx.gogo.manager.user.UserEvent;
@@ -66,6 +67,8 @@ public class MainApplication extends Application{
         Fresco.initialize(this);
 
         BusFactory.getBus().register(this);
+//        测试阶段建议设置成true，发布时设置为false
+        CrashReport.initCrashReport(getApplicationContext(), "2a4d8ad976", true);
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
