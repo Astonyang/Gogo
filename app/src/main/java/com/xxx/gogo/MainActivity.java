@@ -1,9 +1,9 @@
 package com.xxx.gogo;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId() == R.id.add_container){
             Intent intent = new Intent(this, ProviderSearchActivity.class);
             startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
-            overridePendingTransition(0, 0);
         }
     }
 

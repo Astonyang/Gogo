@@ -28,8 +28,6 @@ public class SplashActivity extends Activity {
         }else {
             LogUtil.v("shouldStartMainActivity return false");
         }
-        String str =null;
-        str.toString();
     }
 
     @Override
@@ -50,8 +48,6 @@ public class SplashActivity extends Activity {
 
     private void startMainActivity(){
         startActivity(new Intent(this, MainActivity.class));
-        overridePendingTransition(0, 0);
-
         finish();
     }
 }

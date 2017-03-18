@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/ActivityAnimTheme</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -46,4 +48,10 @@
         <item name="android:maxHeight">30dip</item>
     </style>
 
+    <style name="ActivityAnimTheme" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenExitAnimation">@anim/out_from_left</item>
+        <item name="android:activityOpenEnterAnimation">@anim/in_from_right</item>
+        <item name="android:activityCloseEnterAnimation">@anim/in_from_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/out_from_right</item>
+    </style>
 </resources>

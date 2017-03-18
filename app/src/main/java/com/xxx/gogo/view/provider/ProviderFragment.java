@@ -107,14 +107,12 @@ public class ProviderFragment extends Fragment implements ProviderModel.Callback
         if(v.getId() == R.id.add_provider_tip){
             Intent intent = new Intent(getContext(), ProviderSearchActivity.class);
             startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
-            getActivity().overridePendingTransition(0, 0);
         }else if (v.getId() == R.id.login_btn){
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
         }else if (v.getId() == R.id.add){
             Intent intent = new Intent(getContext(), ProviderSearchActivity.class);
             startActivityForResult(intent, Constants.START_SEARCH_PROVIDER_CODE);
-            getActivity().overridePendingTransition(0, 0);
         }
     }
 
